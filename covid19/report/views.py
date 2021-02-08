@@ -25,7 +25,8 @@ def countriespage(request): # This is a FORM PAGE
             selected_country = form.cleaned_data['country'];
             print(selected_country);
 
-            return render(request, 'report/country_assessment.html', {'form':form,'country_content':selected_country})
+            return render(request, 'report/country_assessment.html',
+                          {'form':form,'country_content':selected_country})
 
     return render(request, 'report/country_assessment.html', {'form':form,'country_content':'Brazil'})
 
