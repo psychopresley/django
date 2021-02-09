@@ -101,5 +101,36 @@ admin.site.register(CountryReport)
 
 5 - Create superuser -> python manage.py createsuperuser
 
-6 - run server
 
+
+=============================================================================
+
+Connecting models - templates - views:
+
+1 - Views.py -> from 'App name'.models import 'Model name' -> 
+
+def index(request): 
+    var = Country.objects.order_by('column name')
+    var_dict = {'key name': var}
+    
+    return render(request,'App name'/'page name'.html, context=var_dict)
+
+
+
+=============================================================================
+
+Protecting passwords:
+
+1 - pip install bcrypt and pip install django[argon2];
+
+2 - Settings.py -> insert anywhere (better after the password comment): 
+
+PASSWORD_HASHERS = [
+	'django.contrib.auth.hashers.Argon2PasswordHasher',
+	'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+	'django.contrib.auth.hashers.BCryptPasswordHasher',
+	'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+	'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+]
+
+3 - Include the desired validators in AUTH_PASSWORD_VALIDATORS

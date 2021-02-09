@@ -4,7 +4,7 @@
 import os
 import django
 from pandas import read_csv
-from report.models import Country
+from report.models import CountryInfo
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','covid19.settings')
 django.setup()

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from . import forms
+from report.models import Country
 
 # Create your views here.
 # THIS IS THE INITIAL (INDEX) PAGE:
