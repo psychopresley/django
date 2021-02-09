@@ -1,0 +1,105 @@
+- Start a new project: django-admin startproject 'ProjectName'
+
+- Start a new app: python manage.py startapp 'AppName'
+
+- Running the server: python manage.py runserver
+
+- Activate/deactivate the virtual environment: activate/deactivate 'Env Name'
+
+- List the vEnvs: conda info --envs
+
+- Create vEnvs: conda create --name 'EnvName' django
+
+=============================================================================
+
+Creating an App:
+
+1 - Start a new app: python manage.py startapp 'AppName';
+
+2 - settings.py -> INSTALLED APPS -> add string with the name of the app;
+
+3 - views.py -> def index(request):
+
+4 - urls.py -> from AppName import views / from django.urls import path, include -> urlpatterns -> add path('App folder/', include('App Folder.urls'))
+
+
+=============================================================================
+
+Creating a Template:
+
+1 - Create 'templates' folder inside the project folder;
+
+2 - Settings.py -> TEMPLATE_DIR = BASE_DIR.joinpath('templates'); -> TEMPLATES.DIRS = [TEMPLATE_DIR,],
+
+3 - Create folder of the App inside the templates folder;
+
+4 - views.py -> create function def index(request): return render(request, 'App folder/index.html')
+
+
+=============================================================================
+
+Creating a Static files folder:
+
+1 - Create 'static' folder inside the project folder;
+
+2 - Settings.py -> STATIC_DIR = BASE_DIR.joinpath('static'); -> under STATIC_URL (in the end): STATICFILES_DIRS = [STATIC_DIR,],
+
+3 - Create folder of the App inside the static folder;
+
+4 - Use template tag to reference the files in the HTML document
+
+
+=============================================================================
+
+Creating a Form:
+
+1 - Create 'forms_page.html' in the application template's folder (same of index.html);
+
+2 - In the App's folder, create the forms.py file;
+
+3 - forms.py -> from django import forms -> class FormName(forms.Form): -> name = forms.CharField(); email = forms.EmailField; etc.;
+
+4 - views.py -> from . import forms;
+
+5 - def form_name_view(request):
+ -> form = forms.FormName()
+
+ -> if request.method == 'POST':
+	form = forms.FormName(request.POST)
+
+	if form.is_valid():
+		# Do omething here
+		form.cleaned_data['name' or 'email or etc]
+
+ -> return render(request,'app folder/form_page.html', {'form':form});
+
+6 - In the form page -> <body> <form method='post'> {{form.as_p}}{% csrf_token %}
+
+
+=============================================================================
+
+Creating a Model:
+
+1 - App folder -> models.py -> 
+	class Topic(models.Model):
+		top_name = models.CharField(max_length=264);
+
+	def __str__(self):
+		return #some string content
+
+2 - Migrate db: python manage.py makemigrations app_name -> python manage.py migrate app_name
+
+3 - Confirm migration: python manage.py shell -> from app_name.models import class_name (ex: CountryReport) -> print(class_name.objects.all())
+
+4 - register the models in admin.py -> from report.models import Country, CountryInfo, CountryReport -> 
+
+# Register models in admin.py:
+
+admin.site.register(Country)
+admin.site.register(CountryInfo)
+admin.site.register(CountryReport)
+
+5 - Create superuser -> python manage.py createsuperuser
+
+6 - run server
+
