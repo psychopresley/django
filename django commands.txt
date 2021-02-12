@@ -133,4 +133,4 @@ PASSWORD_HASHERS = [
 	'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 ]
 
-3 - Include the desired validators in AUTH_PASSWORD_VALIDATORS
+3 - Include or modify the desired validators in AUTH_PASSWORD_VALIDATORS

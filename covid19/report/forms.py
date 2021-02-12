@@ -1,6 +1,6 @@
 from django import forms
 from django.core import validators
-from report.models import Country
+from report.models import Country, CountryInfo
 
 COUNTRIES = Country.objects.all()
 COUNTRIES_LIST = [(x,x) for x in COUNTRIES];

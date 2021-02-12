@@ -9,8 +9,40 @@
   {% csrf_token %}
 </form>
 
-<br><hr> <h1 style="color:powderblue;">{{country_content}}</h1>
+<br><hr> <h1 style="color:powderblue;">{{country_name}}</h1>
+<p style="font-style: italic; font-size: small;">{{country_region}}, <span style="color: blue;">{{country_coord}}</span></p>
 
-<br><p>You chose {{country_content}}. This means you're curious about it, am I right? Well, let's get started then!</p>
+<br><p>You chose {{country_name}}. This means you're curious about it, am I right? Well, let's get started then!</p>
+
+<p>
+
+  {{country_name}} is situated in latitude: {{country_latitude}} and in longitude: {{country_longitude}}. It is also
+  situated in the region of {{country_region}}.
+
+</p>
+
+<table class="table">
+  <caption>Country basic info</caption>
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Country</th>
+      <td>{{country_name}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Coordinates</th>
+      <td style="color: blue;">{{country_coord}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Region</th>
+      <td style="font-style: italic;">{{country_region}}</td>
+    </tr>
+  </tbody>
+</table>
 
 {% endblock content %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from . import forms
-from report.models import Country
+from report.models import Country, CountryInfo
 
 # Create your views here.
 # THIS IS THE INITIAL (INDEX) PAGE:
@@ -24,12 +24,18 @@ def countriespage(request): # This is a FORM PAGE
 
         if form.is_valid():
             selected_country = form.cleaned_data['country'];
-            print(selected_country);
+            country_info = CountryInfo.objects.get(country__name=selected_country)
 
-            return render(request, 'report/country_assessment.html',
-                          {'form':form,'country_content':selected_country})
+            country_dict = {
+                            'country_name':selected_country,
+                            'country_coord':country_info._coordinates_(),
+                            'country_region':country_info._region_(),
+                            }
 
-    return render(request, 'report/country_assessment.html', {'form':form,'country_content':'Brazil'})
+            return render(request,'report/country_assessment.html',
+                          {'form':form,**country_dict})
+
+    return render(request, 'report/country_assessment.html', {'form':form,'country_name':'Brazil'})
 
 def deathpage(request):
     return render(request, 'report/death_cases.html')
