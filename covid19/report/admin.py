@@ -1,7 +1,7 @@
 from django.contrib import admin
-from report.models import Country, CountryInfo, CountryReport
+from report.models import Country, CountryInfo, DateReport
 
 # Register your models here.
 admin.site.register(Country)
 admin.site.register(CountryInfo)
-admin.site.register(CountryReport)
+admin.site.register(DateReport)

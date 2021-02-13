@@ -1,0 +1,13 @@
+h1.country-title{
+  font-size: 42px;
+  color: powderblue;
+}
+
+.country-title-footer{
+  font-style: italic;
+  font-size: small;
+}
+
+.coordinates{
+  color: blue;
+}

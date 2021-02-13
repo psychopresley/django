@@ -1,48 +1,58 @@
-<!DOCTYPE html>
 {% extends 'report/base.html' %}
 
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'report/css/countries_page.css' %}">
 
-<form method="post">
-  {{form.as_p}}
-  <input type="submit" class="btn btn-success" value="Generate report">
-  {% csrf_token %}
-</form>
+<div class="display_page" id="countries_page">
 
-<br><hr> <h1 style="color:powderblue;">{{country_name}}</h1>
-<p style="font-style: italic; font-size: small;">{{country_region}}, <span style="color: blue;">{{country_coord}}</span></p>
+  <form method="POST">
+    {{form.as_p}}
+    <input type="submit" class="btn btn-success" value="Generate report">
+    {% csrf_token %}
+  </form>
 
-<br><p>You chose {{country_name}}. This means you're curious about it, am I right? Well, let's get started then!</p>
+  <!-- COUNTRY TITLE AND FOOTER -->
 
-<p>
+  <br><br>
+  <h1 class="country-title">{{country_name}}</h1>
+  <p class="country-title-footer">{{country_region}}, <span class="coordinates">{{country_coord}}</span></p>
 
-  {{country_name}} is situated in latitude: {{country_latitude}} and in longitude: {{country_longitude}}. It is also
-  situated in the region of {{country_region}}.
+  <!-- BLOCK CONTENT -->
 
-</p>
+  <!-- <br><p>You chose {{country_name}}. This means you're curious about it, am I right? Well, let's get started then!</p>
 
-<table class="table">
-  <caption>Country basic info</caption>
-  <thead>
-    <tr>
-      <th scope="col"></th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">Country</th>
-      <td>{{country_name}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Coordinates</th>
-      <td style="color: blue;">{{country_coord}}</td>
-    </tr>
-    <tr>
-      <th scope="row">Region</th>
-      <td style="font-style: italic;">{{country_region}}</td>
-    </tr>
-  </tbody>
-</table>
+  <p>
+
+    {{country_name}} is situated in latitude: {{country_latitude}} and in longitude: {{country_longitude}}. It is also
+    situated in the region of {{country_region}}.
+
+  </p> -->
+
+  <table class="table">
+    <caption>Country basic info</caption>
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Country</th>
+        <td>{{country_name}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Coordinates</th>
+        <td class="coordinates">{{country_coord}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Region</th>
+        <td style="font-style: italic;">{{country_region}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
 
 {% endblock content %}

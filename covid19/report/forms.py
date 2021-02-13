@@ -7,7 +7,8 @@ COUNTRIES_LIST = [(x,x) for x in COUNTRIES];
 
 class FormName(forms.Form):
     country= forms.CharField(label='Select country', label_suffix=': ',
-                             widget=forms.Select(choices=COUNTRIES_LIST));
+                             widget=forms.Select(choices=COUNTRIES_LIST),
+                             initial='Brazil');
 
     country.widget.attrs.update({'class': 'form-select-sm'})
 

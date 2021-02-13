@@ -44,8 +44,7 @@ class CountryInfo(models.Model):
         return '%s, %s' % (lat + lat_suffix, long + long_suffix)
 
 
-
-class CountryReport(models.Model):
+class DateReport(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     date = models.DateField()
     confirmed = models.IntegerField()
