@@ -44,8 +44,61 @@ class CountryInfo(models.Model):
         return '%s, %s' % (lat + lat_suffix, long + long_suffix)
 
 
+class StatusReport(models.Model):
+    country = models.OneToOneField(Country, on_delete=models.CASCADE, primary_key=True,)
+    confirmed = models.IntegerField()
+    confirmed_new = models.IntegerField()
+    confirmed_pct_change = models.FloatField()
+    confirmed_rank_region = models.IntegerField()
+    confirmed_rank_world = models.IntegerField()
+    deaths = models.IntegerField()
+    deaths_new = models.IntegerField()
+    deaths_pct_change = models.FloatField()
+    deaths_rank_region = models.IntegerField()
+    deaths_rank_world = models.IntegerField()
+    recovered = models.IntegerField(default=0)
+    recovered_new = models.IntegerField()
+    recovered_pct_change = models.FloatField()
+    recovered_rank_region = models.IntegerField()
+    recovered_rank_world = models.IntegerField()
+    active = models.IntegerField(default=0)
+    active_new = models.IntegerField()
+    active_pct_change = models.FloatField()
+    active_rank_region = models.IntegerField()
+    active_rank_world = models.IntegerField()
+
+    def __str__(self):
+        return self.country
+
+
+class WeekReport(models.Model):
+    country = models.ManyToManyField(Country)
+    week = models.CharField(max_length=2)
+    year = models.CharField(max_length=4)
+    confirmed = models.IntegerField()
+    deaths = models.IntegerField()
+    recovered = models.IntegerField(default=0)
+    active = models.IntegerField(default=0)
+
+    def __str__(self):
+        return '%s %s - %s' % (self.country, self.week, self.year)
+
+
+class MonthReport(models.Model):
+    country = models.ManyToManyField(Country)
+    month = models.CharField(max_length=10)
+    year = models.CharField(max_length=4)
+    confirmed = models.IntegerField()
+    deaths = models.IntegerField()
+    recovered = models.IntegerField(default=0)
+    active = models.IntegerField(default=0)
+
+    def __str__(self):
+        return '%s %s - %s' % (self.country, self.month, self.year)
+
+
 class DateReport(models.Model):
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    country = models.ManyToManyField(Country)
     date = models.DateField()
     confirmed = models.IntegerField()
     deaths = models.IntegerField()
