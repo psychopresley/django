@@ -18,15 +18,6 @@ class CountryInfo(models.Model):
     def __str__(self):
         return self.country.name
 
-    def _lat_(self):
-        return self.latitude
-
-    def _long_(self):
-        return self.longitude
-
-    def _region_(self):
-        return self.region
-
     def _coordinates_(self):
         lat = str(abs(self.latitude)) + '°'
         long = str(abs(self.longitude)) + '°'
@@ -46,6 +37,7 @@ class CountryInfo(models.Model):
 
 class StatusReport(models.Model):
     country = models.OneToOneField(Country, on_delete=models.CASCADE, primary_key=True,)
+    date = models.DateField()
     confirmed = models.IntegerField()
     confirmed_new = models.IntegerField()
     confirmed_pct_change = models.FloatField()
@@ -68,20 +60,7 @@ class StatusReport(models.Model):
     active_rank_world = models.IntegerField()
 
     def __str__(self):
-        return self.country
-
-
-class WeekReport(models.Model):
-    country = models.ManyToManyField(Country)
-    week = models.CharField(max_length=2)
-    year = models.CharField(max_length=4)
-    confirmed = models.IntegerField()
-    deaths = models.IntegerField()
-    recovered = models.IntegerField(default=0)
-    active = models.IntegerField(default=0)
-
-    def __str__(self):
-        return '%s %s - %s' % (self.country, self.week, self.year)
+        return self.country.name
 
 
 class MonthReport(models.Model):
@@ -95,6 +74,19 @@ class MonthReport(models.Model):
 
     def __str__(self):
         return '%s %s - %s' % (self.country, self.month, self.year)
+
+
+class WeekReport(models.Model):
+    country = models.ManyToManyField(Country)
+    week = models.CharField(max_length=2)
+    year = models.CharField(max_length=4)
+    confirmed = models.IntegerField()
+    deaths = models.IntegerField()
+    recovered = models.IntegerField(default=0)
+    active = models.IntegerField(default=0)
+
+    def __str__(self):
+        return '%s %s - %s' % (self.country, self.week, self.year)
 
 
 class DateReport(models.Model):

@@ -29,16 +29,15 @@ def countriespage(request): # This is a FORM PAGE
         if form.is_valid():
             selected_country = form.cleaned_data['country'];
 
-
     country_info = CountryInfo.objects.get(country__name=selected_country)
-
     country_dict = {
                     'country_name':selected_country,
                     'country_coord':country_info._coordinates_(),
-                    'country_region':country_info._region_(),
+                    'country_region':country_info.__dict__['region'],
                     }
 
-    return render(request,'report/country_assessment.html',{'form':form,'nav_countries':'active',**country_dict})
+    return render(request,'report/country_assessment.html',
+                  {'form':form,'nav_countries':'active',**country_dict})
 
 def deathpage(request):
     context_dict = {'nav_deaths':'active'}
