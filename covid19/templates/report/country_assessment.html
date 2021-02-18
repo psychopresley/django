@@ -6,52 +6,94 @@
 
 <div class="display_page" id="countries_page">
 
-  <form method="POST">
-    {{form.as_p}}
-    <input type="submit" class="btn btn-success" value="Generate report">
-    {% csrf_token %}
-  </form>
+
+<!-- FORM LAYOUT -->
+
+<div class="row">
+  <div class="col-sm-8">
+
+  </div>
+  <div class="col-sm-4">
+    <form method="POST">
+      {{form.as_p}}
+      <input type="submit" class="btn btn-success" value="Generate report">
+      {% csrf_token %}
+    </form>
+</div>
+</div>
 
   <!-- COUNTRY TITLE AND FOOTER -->
 
+<!-- country flags embeded from https://flagpedia.net/download/api -->
   <br><br>
-  <h1 class="country-title">{{country_name}}</h1>
+  <h1 class="country-title">
+    <img
+      src="https://flagcdn.com/48x36/{{internet_code}}.png"
+      srcset="https://flagcdn.com/96x72/{{internet_code}}.png 2x,
+        https://flagcdn.com/144x108/{{internet_code}}.png 3x"
+      width="48"
+      height="36"
+      alt={{country_name}}>
+      {{country_name}}
+  </h1>
   <p class="country-title-footer">{{country_region}}, <span class="coordinates">{{country_coord}}</span></p>
+  <br> <!-- END OF COUNTRY TITLE AND FOOTER -->
 
-  <!-- BLOCK CONTENT -->
 
-  <!-- <br><p>You chose {{country_name}}. This means you're curious about it, am I right? Well, let's get started then!</p>
+  <!-- COUNTRY INFO TABLE COLUMN -->
 
-  <p>
+  <div class="row">
 
-    {{country_name}} is situated in latitude: {{country_latitude}} and in longitude: {{country_longitude}}. It is also
-    situated in the region of {{country_region}}.
+    <div class="col-sm-8">
+      <table class="table table-borderless table-hover">
+        <tbody>
+          <tr>
+            <th scope="row" class="text-primary">Confirmed</th>
+            <td>
+              <p>
+                There are <span class="number">{{confirmed_cases}}</span> reported cases in the country:<br>
+                  - <span class="number number-rank">#{{confirmed_cases_region_rank}}</span> in the region and <span class="number number-rank">#{{confirmed_cases_world_rank}}</span> in the world; <br>
+                  - <span class="number number-new">{{new_confirmed_cases}}</span> new cases in the last 24h;<br>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-success">Active</th>
+            <td>
+              <p>
+                There are <span class="number">{{active_cases}}</span> active cases:<br>
+                  - <span class="number number-rank">#{{active_cases_region_rank}}</span> in the region and <span class="number number-rank">#{{active_cases_world_rank}}</span> in the world; <br>
+                  - <span class="number number-new">{{new_active_cases}}</span> new cases in the last 24h;<br>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-danger">Deaths</th>
+            <td>
+              <p>
+                A total of <span class="number">{{death_cases}}</span> pacients died of covid-19:<br>
+                  - <span class="number number-rank">#{{death_cases_region_rank}}</span> in the region and <span class="number number-rank">#{{death_cases_world_rank}}</span> in the world; <br>
+                  - <span class="number number-new">{{new_death_cases}}</span> new cases in the last 24h;<br>
+                  - death rate of <span class="number number-rate">{{death_rate}}%</span>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div> <!-- END OF COUNTRY INFO TABLE COLUMN -->
 
-  </p> -->
 
-  <table class="table">
-    <caption>Country basic info</caption>
-    <thead>
-      <tr>
-        <th scope="col"></th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Country</th>
-        <td>{{country_name}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Coordinates</th>
-        <td class="coordinates">{{country_coord}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Total confirmed</th>
-        <td style="font-style: italic;">{{confirmed_cases}}</td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- COUNTRY MAP IMAGE COLUMN -->
+
+    <div class="col-sm-4">
+      <figure class="figure">
+        <img src={{map_image}} class="figure-img img-fluid rounded" alt="{{country_name}}">
+        <figcaption class="figure-caption"><p class="country-title-footer">Region: {{country_region}}; Coord.: <span class="coordinates">{{country_coord}}</span></p></figcaption>
+      </figure>
+
+    </div>
+
+  </div>  <!-- END OF COUNTRY MAP IMAGE COLUMN -->
 
 </div>
 

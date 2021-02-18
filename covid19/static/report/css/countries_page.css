@@ -11,3 +11,20 @@ h1.country-title{
 .coordinates{
   color: blue;
 }
+
+.number{
+  color: black;
+  font-weight: bold;
+}
+
+.number.number-rank{
+  color: green;
+}
+
+.number.number-new{
+  color: orange;
+}
+
+.number.number-rate{
+  color: red;
+}

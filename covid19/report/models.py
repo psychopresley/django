@@ -14,6 +14,8 @@ class CountryInfo(models.Model):
     latitude = models.FloatField(default=90)
     longitude = models.FloatField(default=0)
     region = models.CharField(max_length=30)
+    internet_code = models.CharField(max_length=2,default='br')
+    map_image = models.URLField(max_length=264,default='www.google.com')
 
     def __str__(self):
         return self.country.name
@@ -37,7 +39,7 @@ class CountryInfo(models.Model):
 
 class StatusReport(models.Model):
     country = models.OneToOneField(Country, on_delete=models.CASCADE, primary_key=True,)
-    date = models.CharField(max_length=10,default='not available')
+    date = models.CharField(max_length=10,default='undefined')
     confirmed = models.IntegerField()
     confirmed_new = models.IntegerField()
     confirmed_pct_change = models.FloatField()
