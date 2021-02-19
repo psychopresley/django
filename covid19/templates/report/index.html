@@ -1,12 +1,15 @@
 {% extends "report/base.html" %}
 
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'report/css/countries_page.css' %}">
 
   <div class="display_page" id="index_page">
 
     <!-- CARD PLOT CONTENT -->
 
     <br><h3>I. The world in numbers</h3>
+    <p class="country-title-footer">as of {{report_date}}</p>
 
     <p><br>
 

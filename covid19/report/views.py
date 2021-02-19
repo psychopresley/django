@@ -6,7 +6,9 @@ from report.models import Country, CountryInfo, StatusReport
 # THIS IS THE INITIAL (INDEX) PAGE:
 
 def index(request):
-    context_dict = {'nav_index':'active'}
+    status_date = StatusReport.objects.get(country__name='Brazil').__dict__['date']
+
+    context_dict = {'nav_index':'active','report_date':status_date,}
     return render(request, 'report/index.html',context=context_dict)
 
 # THESE ARE THE OTHER PAGES:
@@ -45,6 +47,8 @@ def countriespage(request): # This is a FORM PAGE
                     'confirmed_cases_world_rank': status_info['confirmed_rank_world'],
                     'confirmed_cases_region_rank': status_info['confirmed_rank_region'],
                     'new_confirmed_cases': '{:,}'.format(status_info['confirmed_new']),
+                    'new_confirmed_rank_region': '{:,}'.format(status_info['confirmed_new_rank_region']),
+                    'new_confirmed_rank_world': '{:,}'.format(status_info['confirmed_new_rank_world']),
                     'confirmed_pct_change': '%.2f' % status_info['confirmed_pct_change'],
                     'death_cases': '{:,}'.format(status_info['deaths']),
                     'death_cases_world_rank': status_info['deaths_rank_world'],
@@ -53,6 +57,7 @@ def countriespage(request): # This is a FORM PAGE
                     'new_death_cases': '{:,}'.format(status_info['deaths_new']),
                     'death_pct_change': '%.2f' % status_info['deaths_pct_change'],
                     'active_cases': '{:,}'.format(status_info['active']),
+                    'active_pct': '%.2f%%' % (status_info['active']/status_info['confirmed']*100),
                     'new_active_cases': '{:,}'.format(status_info['active_new']),
                     'active_cases_world_rank': status_info['active_rank_world'],
                     'active_cases_region_rank': status_info['active_rank_region'],

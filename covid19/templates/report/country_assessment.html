@@ -48,34 +48,57 @@
       <table class="table table-borderless table-hover">
         <tbody>
           <tr>
-            <th scope="row" class="text-primary">Confirmed</th>
+            <th scope="row" data-bs-toggle="tooltip" title="Confirmed cases">
+              <i class="bi bi-file-earmark-medical" style="font-size: 5rem; color: cornflowerblue;"></i>
+              <!-- <img src="{% static 'report/images/medical-records.png' %}" alt="HTML5 Icon" style="width:7em;"> -->
+            </th>
             <td>
               <p>
-                There are <span class="number">{{confirmed_cases}}</span> reported cases in the country:<br>
-                  - <span class="number number-rank">#{{confirmed_cases_region_rank}}</span> in the region and <span class="number number-rank">#{{confirmed_cases_world_rank}}</span> in the world; <br>
-                  - <span class="number number-new">{{new_confirmed_cases}}</span> new cases in the last 24h;<br>
+                <ul class="report">
+                  <li>Confirmed infections: <span class="number">{{confirmed_cases}}</span>. It ranks
+                    <span class="number number-rank">#{{confirmed_cases_region_rank}}</span> in the region and
+                    <span class="number number-rank">#{{confirmed_cases_world_rank}}</span> in the world;
+                  </li>
+                  <!-- <li><span class="number number-rank">#{{confirmed_cases_region_rank}}</span> in the region and <span class="number number-rank">#{{confirmed_cases_world_rank}}</span> in the world;</li> -->
+                  <li>Last 24h: <span class="number number-new">{{new_confirmed_cases}}</span> new cases
+                     (<span class="number number-rank">#{{new_confirmed_rank_region}}</span> in the region,
+                     <span class="number number-rank">#{{new_confirmed_rank_world}}</span> in the world);<br></li>
+
+                </ul>
+
               </p>
             </td>
           </tr>
           <tr>
-            <th scope="row" class="text-success">Active</th>
+            <th scope="row" data-bs-toggle="tooltip" title="Active cases">
+                <i class="bi bi-people" style="font-size: 5rem; color: green;"></i>
+            </th>
             <td>
               <p>
-                There are <span class="number">{{active_cases}}</span> active cases:<br>
-                  - <span class="number number-rank">#{{active_cases_region_rank}}</span> in the region and <span class="number number-rank">#{{active_cases_world_rank}}</span> in the world; <br>
-                  - <span class="number number-new">{{new_active_cases}}</span> new cases in the last 24h;<br>
+                <ul>
+                  <li>Still active: <span class="number">{{active_cases}}</span> cases. This is
+                    <span class="number number-rate">{{active_pct}}</span> of the total reported;</li>
+                    <li><span class="number number-rank">#{{active_cases_region_rank}}</span> in the region and
+                    <span class="number number-rank">#{{active_cases_world_rank}}</span> in the world;</li>
+                  <li>In the last 24h: <span class="number number-new">{{new_active_cases}}</span> cases;</li>
+                </ul>
+
               </p>
             </td>
           </tr>
           <tr>
-            <th scope="row" class="text-danger">Deaths</th>
+            <th scope="row" data-bs-toggle="tooltip" title="Deaths">
+              <i class="bi bi-emoji-frown" style="font-size: 5rem; color: red;"></i>
+            </th>
             <td>
-              <p>
-                A total of <span class="number">{{death_cases}}</span> pacients died of covid-19:<br>
-                  - <span class="number number-rank">#{{death_cases_region_rank}}</span> in the region and <span class="number number-rank">#{{death_cases_world_rank}}</span> in the world; <br>
-                  - <span class="number number-new">{{new_death_cases}}</span> new cases in the last 24h;<br>
-                  - death rate of <span class="number number-rate">{{death_rate}}%</span>
-              </p>
+                <ul>
+                  <li><span class="number">{{death_cases}}</span> pacients lost the battle against the coronavirus. It ranks
+                    <span class="number number-rank">#{{death_cases_region_rank}}</span> in the region and
+                    <span class="number number-rank">#{{death_cases_world_rank}}</span> in the world;</li>
+                  <li><span class="number number-new">{{new_death_cases}}</span> new cases in the last 24h;</li>
+                  <li>mortality rate: <span class="number number-rate">{{death_rate}}%</span></li>
+                </ul>
+
             </td>
           </tr>
         </tbody>
@@ -87,7 +110,7 @@
 
     <div class="col-sm-4">
       <figure class="figure">
-        <img src={{map_image}} class="figure-img img-fluid rounded" alt="{{country_name}}">
+        <img src={{map_image}} class="figure-img img-fluid rounded" alt="{{country_name}} >
         <figcaption class="figure-caption"><p class="country-title-footer">Region: {{country_region}}; Coord.: <span class="coordinates">{{country_coord}}</span></p></figcaption>
       </figure>
 
