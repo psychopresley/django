@@ -1,5 +1,5 @@
 Country,Region,Latitude,Longitude,site,internet_code,map_image
-Afghanistan,Eastern Mediterranean,33.0,65.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,af,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Afghanistan,Eastern Mediterranean,33.0,65.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,af,https://upload.wikimedia.org/wikipedia/commons/1/19/Afghanistan_%28orthographic_projection%29.svg
 Albania,Europe,41.0,20.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,al,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Algeria,Africa,28.0,2.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,dz,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Andorra,Europe,42.0,1.5,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,ad,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
@@ -28,30 +28,30 @@ Ivory Coast,Africa,8.0,-6.0,https://www.iapb.org/wp-content/uploads/Africa-map.j
 Sri Lanka,South-East Asia,8.0,81.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,lk,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Germany,Europe,51.0,9.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,de,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Finland,Europe,62.0,26.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,fi,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-United Arab Emirates,Eastern Mediterranean,23.0,54.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ae,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-India,South-East Asia,21.0,78.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,in,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+United Arab Emirates,Eastern Mediterranean,23.0,54.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ae,https://upload.wikimedia.org/wikipedia/commons/c/cd/United_Arab_Emirates_%28orthographic_projection%29.svg
+India,South-East Asia,21.0,78.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,in,https://upload.wikimedia.org/wikipedia/commons/b/bb/India_%28orthographic_projection%29.svg
 Italy,Europe,43.0,12.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,it,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Russia,Europe,60.0,90.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,ru,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Sweden,Europe,63.0,16.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,se,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 United Kingdom,Europe,55.0,0.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,uk,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Spain,Europe,40.0,-4.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,es,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Belgium,Europe,51.0,5.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,be,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Egypt,Eastern Mediterranean,27.0,31.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,eg,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Iran,Eastern Mediterranean,32.0,54.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ir,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Egypt,Eastern Mediterranean,27.0,31.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,eg,https://upload.wikimedia.org/wikipedia/commons/a/a1/EGY_orthographic.svg
+Iran,Eastern Mediterranean,32.0,54.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ir,https://upload.wikimedia.org/wikipedia/commons/a/a8/Iran_%28orthographic_projection%29.svg
 Israel,Europe,31.0,35.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,il,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Lebanon,Eastern Mediterranean,34.0,36.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,lb,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Iraq,Eastern Mediterranean,33.0,44.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,iq,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Bahrain,Eastern Mediterranean,26.0,51.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,bh,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Kuwait,Eastern Mediterranean,29.0,48.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,kw,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Oman,Eastern Mediterranean,22.0,56.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,om,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Austria,Europe,48.0,14.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,at,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Lebanon,Eastern Mediterranean,34.0,36.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,lb,https://upload.wikimedia.org/wikipedia/commons/9/96/Lebanon_%28orthographic_projection%29.svg
+Iraq,Eastern Mediterranean,33.0,44.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,iq,https://upload.wikimedia.org/wikipedia/commons/5/5c/Iraq_%28orthographic%29.svg
+Bahrain,Eastern Mediterranean,26.0,51.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,bh,https://upload.wikimedia.org/wikipedia/commons/8/83/Map_of_Bahrain.svg
+Kuwait,Eastern Mediterranean,29.0,48.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,kw,https://upload.wikimedia.org/wikipedia/commons/4/41/KWT_orthographic.svg
+Oman,Eastern Mediterranean,22.0,56.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,om,https://upload.wikimedia.org/wikipedia/commons/e/e2/Oman_%28better%29_%28orthographic_projection%29.svg
+Austria,Europe,48.0,14.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,at,https://upload.wikimedia.org/wikipedia/commons/9/9d/EU-Austria.svg
 Croatia,Europe,45.0,15.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,hr,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Switzerland,Europe,47.0,8.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,ch,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Georgia,Europe,42.0,43.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,ge,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Greece,Europe,39.0,22.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,gr,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 North Macedonia,Europe,41.61,21.75,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,mk,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Norway,Europe,60.0,9.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,no,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Pakistan,Eastern Mediterranean,30.0,70.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,pk,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Pakistan,Eastern Mediterranean,30.0,70.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,pk,https://upload.wikimedia.org/wikipedia/commons/b/b6/Pakistan_%28orthographic_projection%29.svg
 Romania,Europe,46.0,25.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,ro,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Denmark,Europe,56.0,10.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,dk,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Estonia,Europe,59.0,26.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,ee,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
@@ -66,28 +66,28 @@ Nigeria,Africa,9.0,9.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,ng
 Ireland,Europe,53.0,-8.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,ie,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Luxembourg,Europe,50.0,6.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,lu,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Monaco,Europe,43.73,7.42,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,mc,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Qatar,Eastern Mediterranean,25.35,51.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,qa,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Qatar,Eastern Mediterranean,25.35,51.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,qa,https://upload.wikimedia.org/wikipedia/commons/d/d4/QAT_orthographic.svg
 Armenia,Europe,40.0,45.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,am,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Czech Republic,Europe,50.0,16.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,cz,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Dominican Republic,Americas,19.0,-70.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,do,https://upload.wikimedia.org/wikipedia/commons/9/95/Dominican_Republic_%28orthographic_projection%29.svg
 Ecuador,Americas,-2.0,-78.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,ec,https://upload.wikimedia.org/wikipedia/commons/e/e3/ECU_orthographic.svg
-Indonesia,South-East Asia,-1.0,114.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,id,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Indonesia,South-East Asia,-1.0,114.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,id,https://upload.wikimedia.org/wikipedia/commons/0/05/Indonesia_%28orthographic_projection%29.svg
 Latvia,Europe,57.0,25.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,lv,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Morocco,Eastern Mediterranean,32.0,-7.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ma,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Morocco,Eastern Mediterranean,32.0,-7.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ma,https://upload.wikimedia.org/wikipedia/commons/7/78/Morocco_%28orthographic_projection%2C_WS_claimed%29.svg
 Portugal,Europe,39.0,-8.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,pt,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Saudi Arabia,Eastern Mediterranean,24.0,45.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,sa,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Saudi Arabia,Eastern Mediterranean,24.0,45.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,sa,https://upload.wikimedia.org/wikipedia/commons/4/47/Saudi_Arabia_%28orthographic_projection%29.svg
 Senegal,Africa,15.0,-14.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,sn,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Chile,Americas,-34.0,-71.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,cl,https://upload.wikimedia.org/wikipedia/commons/c/cc/CHL_orthographic_%28%2Ball_claims%29.svg
-Jordan,Eastern Mediterranean,31.0,37.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,jo,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Jordan,Eastern Mediterranean,31.0,37.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,jo,https://upload.wikimedia.org/wikipedia/commons/b/b2/Jordan_%28orthographic_projection%29.svg
 Ukraine,Europe,49.0,32.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,ua,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Hungary,Europe,47.0,20.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,hu,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Liechtenstein,Europe,47.0,10.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,li,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Poland,Europe,52.0,19.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,pl,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Tunisia,Eastern Mediterranean,34.0,10.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,tn,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Tunisia,Eastern Mediterranean,34.0,10.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,tn,https://upload.wikimedia.org/wikipedia/commons/3/3f/Tunisia_location_%28orthographic_projection%29.svg
 Bosnia and Herzegovina,Europe,44.0,18.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,ba,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Slovenia,Europe,46.0,15.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,si,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 South Africa,Africa,-31.0,23.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,za,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Bhutan,South-East Asia,28.0,90.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,bt,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Bhutan,South-East Asia,28.0,90.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,bt,https://upload.wikimedia.org/wikipedia/commons/c/ce/Bhutan_%28orthographic_projection%29.svg
 Cameroon,Africa,4.0,12.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,cm,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Costa Rica,Americas,10.0,-84.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,cr,https://upload.wikimedia.org/wikipedia/commons/8/89/CRI_orthographic.svg
 Peru,Americas,-10.0,-76.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,pe,https://upload.wikimedia.org/wikipedia/commons/0/07/PER_orthographic.svg
@@ -95,7 +95,7 @@ Serbia,Europe,44.0,21.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-
 Slovakia,Europe,49.0,20.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,sk,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Togo,Africa,9.0,1.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,tg,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Malta,Europe,36.0,14.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,mt,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Bangladesh,South-East Asia,24.0,90.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,bd,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Bangladesh,South-East Asia,24.0,90.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,bd,https://upload.wikimedia.org/wikipedia/commons/f/f2/Bangladesh_%28orthographic_projection%29.svg
 Bulgaria,Europe,43.0,25.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,bg,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Maldives,South-East Asia,3.0,73.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,mv,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Moldova,Europe,47.0,28.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,md,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
@@ -139,12 +139,12 @@ Uzbekistan,Europe,41.0,65.0,https://www.iapb.org/wp-content/uploads/worldmap-eur
 Bahamas,Americas,25.0,-78.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,bs,https://upload.wikimedia.org/wikipedia/commons/d/de/The_Bahamas_on_the_globe_%28Americas_centered%29.svg
 Benin,Africa,9.0,2.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,bj,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Liberia,Africa,6.0,-9.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,lr,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Somalia,Eastern Mediterranean,5.0,46.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,so,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Somalia,Eastern Mediterranean,5.0,46.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,so,https://upload.wikimedia.org/wikipedia/commons/4/4c/Somalia_%28orthographic_projection%29.svg
 Tanzania,Africa,-6.0,35.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,tz,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Barbados,Americas,13.0,-60.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,bb,https://upload.wikimedia.org/wikipedia/commons/a/a1/BRB_orthographic.svg
 Gambia,Africa,13.0,-15.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,gm,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Montenegro,Europe,43.0,19.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,me,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Djibouti,Eastern Mediterranean,12.0,43.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,dj,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Djibouti,Eastern Mediterranean,12.0,43.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,dj,https://upload.wikimedia.org/wikipedia/commons/b/b7/Djibouti_%28orthographic_projection%29.svg
 Kyrgyzstan,Europe,41.0,75.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,kg,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Mauritius,Africa,-20.0,58.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,mu,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Zambia,Africa,-13.0,28.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,zm,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
@@ -158,29 +158,28 @@ Madagascar,Africa,-19.0,47.0,https://www.iapb.org/wp-content/uploads/Africa-map.
 Niger,Africa,18.0,8.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,ne,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Papua New Guinea,Western Pacific,-6.0,144.0,https://www.iapb.org/wp-content/uploads/WPR_Map-400x267.jpg,pg,https://upload.wikimedia.org/wikipedia/commons/7/79/Papua_New_Guinea_%28orthographic_projection%29.svg
 Zimbabwe,Africa,-19.0,29.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,zw,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-East Timor,South-East Asia,-9.0,126.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,tl,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+East Timor,South-East Asia,-9.0,126.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,tl,https://upload.wikimedia.org/wikipedia/commons/b/bc/Timor_Leste_%28orthographic_projection%29.svg
 Eritrea,Africa,15.0,40.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,er,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Uganda,Africa,1.0,32.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,ug,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Dominica,Americas,15.0,-61.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,dm,https://upload.wikimedia.org/wikipedia/commons/7/78/Dominica_on_the_globe_%28Americas_centered%29.svg
 Grenada,Americas,12.0,-62.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,gd,https://upload.wikimedia.org/wikipedia/commons/6/6e/Grenada_on_the_globe_%28Americas_centered%29.svg
 Mozambique,Africa,-19.0,36.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,mz,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Syria,Eastern Mediterranean,35.0,39.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,sy,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Syria,Eastern Mediterranean,35.0,39.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,sy,https://upload.wikimedia.org/wikipedia/commons/1/11/Syria_%28orthographic_projection%29.svg
 Belize,Americas,17.0,-89.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,bz,https://upload.wikimedia.org/wikipedia/commons/4/43/BLZ_orthographic.svg
 Laos,Western Pacific,18.0,105.0,https://www.iapb.org/wp-content/uploads/WPR_Map-400x267.jpg,la,https://upload.wikimedia.org/wikipedia/commons/b/bc/Laos_%28orthographic_projection%29.svg
-Libya,Eastern Mediterranean,26.0,17.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ly,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Libya,Eastern Mediterranean,26.0,17.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ly,https://upload.wikimedia.org/wikipedia/commons/9/9e/Libya_%28centered_orthographic_projection%29.svg
 Guinea-Bissau,Africa,12.0,-15.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,gw,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Mali,Africa,18.0,-4.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,ml,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Saint Kitts and Nevis,Americas,17.0,-63.0,https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Americas_%28orthographic_projection%29.svg/1200px-Americas_%28orthographic_projection%29.svg.png,kn,https://upload.wikimedia.org/wikipedia/commons/5/5d/KNA_orthographic.svg
-West Bank and Gaza,Eastern Mediterranean,32.0,35.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ps,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Burma,South-East Asia,22.0,96.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,mm,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+West Bank and Gaza,Eastern Mediterranean,32.0,35.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ps,https://upload.wikimedia.org/wikipedia/commons/a/ad/State_of_Palestine_%28orthographic_projection%29.svg
+Burma,South-East Asia,22.0,96.0,https://www.iapb.org/wp-content/uploads/worldmap-southeast-asia-cropped.png,mm,https://upload.wikimedia.org/wikipedia/commons/c/cb/Myanmar_%28orthographic_projection%29.svg
 Botswana,Africa,-25.0,26.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,bw,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Burundi,Africa,-4.0,30.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,bi,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Sierra Leone,Africa,8.0,-13.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,sl,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Malawi,Africa,-14.0,34.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,mw,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-South Sudan,Africa,8.0,30.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,ss,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Western Sahara,Africa,25.0,-13.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,eh,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+South Sudan,Africa,8.0,30.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,ss,https://upload.wikimedia.org/wikipedia/commons/f/f8/Sudan_%28orthographic_projection%29_highlighted.svg
 Sao Tome and Principe,Africa,1.0,7.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,st,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
-Yemen,Eastern Mediterranean,15.0,44.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ye,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
+Yemen,Eastern Mediterranean,15.0,44.0,https://www.iapb.org/wp-content/uploads/worldmap-eastern-mediterranean-cropped.png,ye,https://upload.wikimedia.org/wikipedia/commons/f/f1/Yemen_%28orthographic_projection%29.svg
 Comoros,Africa,-12.0,44.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,km,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Tajikistan,Europe,39.0,71.0,https://www.iapb.org/wp-content/uploads/worldmap-europe-cropped.png,tj,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg
 Lesotho,Africa,-29.0,28.0,https://www.iapb.org/wp-content/uploads/Africa-map.jpg,ls,https://upload.wikimedia.org/wikipedia/commons/b/bc/BRA_orthographic.svg

@@ -39,7 +39,7 @@ class CountryInfo(models.Model):
 
 class StatusReport(models.Model):
     country = models.OneToOneField(Country, on_delete=models.CASCADE, primary_key=True,)
-    date = models.CharField(max_length=10,default='undefined')
+    date = models.CharField(max_length=22,default='undefined')
     confirmed = models.IntegerField()
     confirmed_new = models.IntegerField()
     confirmed_pct_change = models.FloatField()

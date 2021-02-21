@@ -41,7 +41,7 @@ try:
                     info = status_table.loc[status_table['Country/Region']==item]
 
                     entry = StatusReport.objects.get_or_create(country=country[0],
-                                                               date=info.Date.values[0],
+                                                               date=info.date_modified.values[0],
                                                                confirmed=int(info.Confirmed.values[0]),
                                                                confirmed_new=int(info.Confirmed_new_cases.values[0]),
                                                                confirmed_pct_change=float(info['Confirmed_daily_%inc_by_country'].values[0]),
