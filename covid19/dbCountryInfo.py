@@ -1,5 +1,3 @@
-# To execute this file in the python shell just run the following
-# command line: exec(open('populate_CountryInfo.py').read())
 
 import os
 import django
@@ -40,7 +38,7 @@ def main():
         config_filepath = r"C:\Users\user\Documents\GitHub\django\covid19\static\report\config"
 
         if 'config.csv' in os.listdir(config_filepath):
-            print('Reading table from csv file')
+            print('Reading configuration file')
             config = read_csv(os.path.join(config_filepath,'config.csv'),index_col='var').fillna('-')
         else:
     	    raise FileNotFoundError('No configuration file "config.csv" found.')
