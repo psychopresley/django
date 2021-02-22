@@ -6,6 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','covid19.settings')
 django.setup()
 
 from pandas import read_json, read_csv
+from time import ctime
 from report.models import Country, StatusReport
 
 def main():
@@ -46,6 +47,10 @@ def main():
         #  - aux2: Set 0, for reload database from 'country_report.json' file or 1 for update existing entries;
         #  - aux3: Set 1, for confirmation need in case aux1 is set to 0;
 
+        log_dbStatusReport=[]
+        log_dbStatusReport.append('\n----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------\n')
+        log_dbStatusReport.append('\n'+ 'Local time: ' + ctime() + '\n\n')
+
         config_filepath = r"C:\Users\user\Documents\GitHub\django\covid19\static\report\config"
 
         if 'config.csv' in os.listdir(config_filepath):
@@ -60,7 +65,6 @@ def main():
 
         if not task:
             db_del(StatusReport,confirm_before=confirm_value)
-
         else:
             country_report = os.path.join(config.loc['status_report'].file_path,
                                               config.loc['status_report'].file_name)
@@ -150,6 +154,7 @@ def main():
 
                     country.save()
                     print('{} updated in models.StatusReport'.format(item))
+                log_dbStatusReport.append('\n models.StatusReport updated succesfully \n')
             else:
                 db_del(StatusReport,confirm_before=confirm_value)
 
@@ -196,11 +201,24 @@ def main():
                     else:
                         print(item + ' is not on StatusReport.models')
 
-        print('Script executed succesfully!')
+        message = 'Script executed succesfully!'
+        print(message)
+        log_dbStatusReport.append('\n {} \n'.format(message))
     except:
-        print('Something went wrong! The script was not executed')
+        message = 'Something went wrong! The script was not executed'
+        print(message)
+        log_dbStatusReport.append('\n {} \n'.format(message))
     finally:
-        print('End of execution of the populate_StatusReport.py script')
+        message = 'End of execution of the populate_StatusReport.py script'
+        print(message)
+        log_dbStatusReport.append('\n {} \n'.format(message))
+
+        log_dir = r'C:\Users\user\Documents\GitHub\django\covid19\static\report\log'
+        os.chdir(log_dir)
+
+        log = open('log_dbStatusReport.txt','w')
+        log.writelines(log_dbStatusReport)
+        log.close()
 
 
 if __name__ == '__main__':
