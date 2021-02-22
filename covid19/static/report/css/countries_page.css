@@ -1,0 +1,35 @@
+ul.report{
+  list-style-type: square;
+}
+
+h1.country-title{
+  font-size: 42px;
+  color: powderblue;
+}
+
+.country-title-footer{
+  font-style: italic;
+  font-size: small;
+}
+
+.coordinates{
+  color: blue;
+}
+
+.number{
+  color: black;
+  font-family: "Times New Roman", Times, serif;;
+  font-weight: bold;
+}
+
+.number.number-rank{
+  color: green;
+}
+
+.number.number-new{
+  color: orange;
+}
+
+.number.number-rate{
+  color: red;
+}

@@ -1,16 +1,123 @@
-<!DOCTYPE html>
 {% extends 'report/base.html' %}
 
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'report/css/countries_page.css' %}">
 
-<form method="post">
-  {{form.as_p}}
-  <input type="submit" class="btn btn-success" value="Generate report">
-  {% csrf_token %}
-</form>
+<div class="display_page" id="countries_page">
 
-<br><hr> <h1 style="color:powderblue;">{{country_content}}</h1>
 
-<br><p>You chose {{country_content}}. This means you're curious about it, am I right? Well, let's get started then!</p>
+<!-- FORM LAYOUT -->
+
+<div class="row">
+  <div class="col-sm-8">
+
+  </div>
+  <div class="col-sm-4">
+    <form method="POST">
+      {{form.as_p}}
+      <input type="submit" class="btn btn-success" value="Generate report">
+      {% csrf_token %}
+    </form>
+</div>
+</div>
+
+  <!-- COUNTRY TITLE AND FOOTER -->
+
+<!-- country flags embeded from https://flagpedia.net/download/api -->
+  <br><br>
+  <h1 class="country-title">
+    <img
+      src="https://flagcdn.com/48x36/{{internet_code}}.png"
+      srcset="https://flagcdn.com/96x72/{{internet_code}}.png 2x,
+        https://flagcdn.com/144x108/{{internet_code}}.png 3x"
+      width="48"
+      height="36"
+      alt={{country_name}}>
+      {{country_name}}
+  </h1>
+  <p class="country-title-footer">{{country_region}}, <span class="coordinates">{{country_coord}}</span></p>
+  <br> <!-- END OF COUNTRY TITLE AND FOOTER -->
+
+
+  <!-- COUNTRY INFO TABLE COLUMN -->
+
+  <div class="row">
+
+    <div class="col-sm-8">
+      <table class="table table-borderless table-hover">
+        <tbody>
+          <tr>
+            <th scope="row" data-bs-toggle="tooltip" title="Confirmed cases">
+              <i class="bi bi-file-earmark-medical" style="font-size: 5rem; color: cornflowerblue;"></i>
+              <!-- <img src="{% static 'report/images/medical-records.png' %}" alt="HTML5 Icon" style="width:7em;"> -->
+            </th>
+            <td>
+              <p>
+                <ul class="report">
+                  <li>Confirmed infections: <span class="number">{{confirmed_cases}}</span>. It ranks
+                    <span class="number number-rank">#{{confirmed_cases_region_rank}}</span> in the region and
+                    <span class="number number-rank">#{{confirmed_cases_world_rank}}</span> in the world;
+                  </li>
+                  <!-- <li><span class="number number-rank">#{{confirmed_cases_region_rank}}</span> in the region and <span class="number number-rank">#{{confirmed_cases_world_rank}}</span> in the world;</li> -->
+                  <li>Last 24h: <span class="number number-new">{{new_confirmed_cases}}</span> new cases
+                     (<span class="number number-rank">#{{new_confirmed_rank_region}}</span> in the region,
+                     <span class="number number-rank">#{{new_confirmed_rank_world}}</span> in the world);<br></li>
+
+                </ul>
+
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" data-bs-toggle="tooltip" title="Active cases">
+                <i class="bi bi-people" style="font-size: 5rem; color: green;"></i>
+            </th>
+            <td>
+              <p>
+                <ul>
+                  <li>Still active: <span class="number">{{active_cases}}</span> cases. This is
+                    <span class="number number-rate">{{active_pct}}</span> of the total reported;</li>
+                    <li><span class="number number-rank">#{{active_cases_region_rank}}</span> in the region and
+                    <span class="number number-rank">#{{active_cases_world_rank}}</span> in the world;</li>
+                  <li>In the last 24h: <span class="number number-new">{{new_active_cases}}</span> cases;</li>
+                </ul>
+
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" data-bs-toggle="tooltip" title="Deaths">
+              <i class="bi bi-emoji-frown" style="font-size: 5rem; color: red;"></i>
+            </th>
+            <td>
+                <ul>
+                  <li><span class="number">{{death_cases}}</span> pacients lost the battle against the coronavirus. It ranks
+                    <span class="number number-rank">#{{death_cases_region_rank}}</span> in the region and
+                    <span class="number number-rank">#{{death_cases_world_rank}}</span> in the world;</li>
+                  <li><span class="number number-new">{{new_death_cases}}</span> new cases in the last 24h;</li>
+                  <li>mortality rate: <span class="number number-rate">{{death_rate}}%</span></li>
+                </ul>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div> <!-- END OF COUNTRY INFO TABLE COLUMN -->
+
+
+  <!-- COUNTRY MAP IMAGE COLUMN -->
+
+    <div class="col-sm-4">
+      <figure class="figure">
+        <img src={{map_image}} class="figure-img img-fluid rounded" alt="{{country_name}} >
+        <figcaption class="figure-caption"><p class="country-title-footer">Region: {{country_region}}; Coord.: <span class="coordinates">{{country_coord}}</span></p></figcaption>
+      </figure>
+
+    </div>
+
+  </div>  <!-- END OF COUNTRY MAP IMAGE COLUMN -->
+
+</div>
 
 {% endblock content %}

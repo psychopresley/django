@@ -1,0 +1,3 @@
+var,file_path,file_name,aux1,aux2,aux3
+status_report,C:\Users\user\Documents\GitHub\COVID-19\consolidated_data,country_report.json,1,1,0
+countryinfo_file,C:\Users\user\Documents\GitHub\django\covid19\static\report\config,countries_table.csv,1,1,0
