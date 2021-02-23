@@ -1,11 +1,7 @@
 
 ----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------
 
-Local time: Sun Feb 21 20:35:47 2021
+Local time: Tue Feb 23 10:20:35 2021
 
 
- models.StatusReport updated succesfully 
-
- Script executed succesfully! 
-
- End of execution of the populate_StatusReport.py script 
+ --> current file has not been modified. Nothing to do here.
