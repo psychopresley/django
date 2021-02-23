@@ -50,14 +50,6 @@ def main():
         log_dbStatusReport.append('\n----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------\n')
         log_dbStatusReport.append('\n'+ 'Local time: ' + ctime() + '\n\n')
 
-        # config_filepath = r"C:\Users\user\Documents\GitHub\django\covid19\static\report\config"
-        #
-        # if 'config.csv' in os.listdir(config_filepath):
-        #     print('Reading configuration file')
-        #     config = read_csv(os.path.join(config_filepath,'config.csv'),index_col='var').fillna('-')
-        # else:
-    	#     raise FileNotFoundError('No configuration file "config.csv" found.')
-
         task = config.loc['status_report'].aux1
         update = config.loc['status_report'].aux2
         confirm_value=config.loc['status_report'].aux3
