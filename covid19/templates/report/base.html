@@ -24,10 +24,18 @@
     <!-- Page header with subtitles -->
    <div class="container">
     <div class="page-header">
-        <h1>The Covid-19 Report</h1>
+        <h1><a class="header-link" href="{% url 'admin:index' %}">The Covid-19 Report</a></h1>
          <p><em>Infos and vizzes you won't see around</em></p>
          <hr>
+
     </div>
+    <style>
+      a.header-link{
+        text-decoration: none;
+        color: black;
+        cursor: default;
+      }
+    </style>
    </div>
 
     <div class="container-sm">
@@ -38,6 +46,7 @@
         <div class="col-lg-3 col-md-4 col-sm-4">
           <div class="card">
             <img src="{% static 'report/images/profile_picture.jpg' %}" class="card-img-top img-fluid" alt="Profile picture">
+
             <div class="card-body">
               <h5 class="card-title">Márcio Garcia</h5>
               <p class="card-text">

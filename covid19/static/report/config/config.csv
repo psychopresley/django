@@ -1,4 +1,4 @@
 var,file_path,file_name,aux1,aux2,aux3,aux4
-status_report,C:\Users\user\Documents\GitHub\COVID-19\consolidated_data,country_report.json,1,1,0,Tue Feb 23 07:07:10 2021
+status_report,C:\Users\user\Documents\GitHub\COVID-19\consolidated_data,country_report.json,1,1,0,Thu Feb 25 08:49:31 2021
 countryinfo_file,C:\Users\user\Documents\GitHub\django\covid19\static\report\config,countries_table.csv,1,1,0,0
 labelmap_file_file,C:\Users\user\Documents\GitHub\django\covid19\static\report\config,label_map.csv,0,0,0,0

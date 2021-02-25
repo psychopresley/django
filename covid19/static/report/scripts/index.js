@@ -1,1 +1,1 @@
-$('p').css('text-align','justify')
+$('p').css('text-align','justify');
