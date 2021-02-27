@@ -23,5 +23,6 @@ urlpatterns = [
     path('confirmed_cases/', views.confirmedpage, name='confirmedpage'),
     path('death_cases/', views.deathpage, name='deathpage'),
     path('read_me/', views.readpage, name='readpage'),
+    path('word_data/', views.worldpage, name='worldpage'),
     path('countries/', views.countriespage, name='countriespage'),
 ]

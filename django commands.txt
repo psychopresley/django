@@ -168,7 +168,7 @@ if settings.DEBUG:
 
 ===========================================================================
 
-Creating a cutom filter:
+Creating a custom filter:
 
 1 - On app folder create "templatetags" folder with __ini__.py file;
 
@@ -189,3 +189,27 @@ Creating a cutom filter:
         return value.replace(arg,'')
 
 On template html file: {% load "custom_filters .py file name" %}
+
+
+===========================================================================
+
+Creating a Class based view:
+
+1 - On views.py -> from django.http import HttpResponse
+                   from django.views.generic import View
+
+
+2 - class IndexView(TemplateView):
+       template_name = 'report/index.html'
+
+       def get_context_data(self,**kwargs):
+           status_date = StatusReport.objects.get(country__name='Brazil').date
+           context = super().get_context_data(**kwargs)
+
+           context['nav_index'] = 'active'
+           context['report_date'] = status_date
+
+           return context
+
+
+3 - On urls.py -> path('',views.IndexView.as_view(), name='index')

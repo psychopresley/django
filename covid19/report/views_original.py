@@ -1,25 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.views.generic import View,TemplateView
 from . import forms
 from report.models import Country, CountryInfo, StatusReport
 
 # Create your views here.
-
 # THIS IS THE INITIAL (INDEX) PAGE:
 
-class IndexView(TemplateView):
-    template_name = 'report/index.html'
+def index(request):
+    status_date = StatusReport.objects.get(country__name='Brazil').date
 
-    def get_context_data(self,**kwargs):
-        status_date = StatusReport.objects.get(country__name='Brazil').date
-        context = super().get_context_data(**kwargs)
-
-        context['nav_index'] = 'active'
-        context['report_date'] = status_date
-
-        return context
-
+    context_dict = {'nav_index':'active','report_date':status_date,}
+    return render(request, 'report/index.html',context=context_dict)
 
 # THESE ARE THE OTHER PAGES:
 
@@ -72,5 +62,5 @@ def readpage(request):
     context_dict = {'nav_readme':'active'}
     return render(request, 'report/read_me.html',context=context_dict)
 
-# def worldpage(request):
-#     return render(request, 'report/world_data.html')
+def worldpage(request):
+    return render(request, 'report/world_data.html')

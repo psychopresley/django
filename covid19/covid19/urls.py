@@ -19,7 +19,7 @@ from django.conf import settings
 from report import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
     path('report/', include('report.urls')),
     path('admin/', admin.site.urls),
 ]
