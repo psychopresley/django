@@ -164,3 +164,28 @@ if settings.DEBUG:
     urlpatterns.append(path('__debug__/', include(debug_toolbar.urls)))
 
 4 - run server
+
+
+===========================================================================
+
+Creating a cutom filter:
+
+1 - On app folder create "templatetags" folder with __ini__.py file;
+
+2 - create a "any name".py file to store your custom filters;
+
+3 - import modules and create the functions. Example:
+
+    from django import template
+
+    @register.filter(name='name of the filter to be called on html template')
+    register = template.Library()
+
+    def cut_filter(value,arg):
+        """
+        put some string here.
+        """
+
+        return value.replace(arg,'')
+
+On template html file: {% load "custom_filters .py file name" %}

@@ -32,37 +32,24 @@ def countriespage(request): # This is a FORM PAGE
             selected_country = form.cleaned_data['country'];
 
     country = CountryInfo.objects.get(country__name=selected_country)
-    status = StatusReport.objects.get(country__name=selected_country)
+    status = StatusReport.objects.get(country__name=selected_country).__dict__
 
-    country_dict = {
-                    'country_name':selected_country,
-                    'country_coord':country._coordinates_(),
-                    'country_region':country.region,
-                    'internet_code':country.internet_code,
-                    'map_image':country.map_image,
-                    }
 
-    status_dict = {
-                    'confirmed_cases': '{:,}'.format(status.confirmed),
-                    'confirmed_cases_world_rank': status.confirmed_rank_world,
-                    'confirmed_cases_region_rank': status.confirmed_rank_region,
-                    'new_confirmed_cases': '{:,}'.format(status.confirmed_new),
-                    'new_confirmed_rank_region': '{:,}'.format(status.confirmed_new_rank_region),
-                    'new_confirmed_rank_world': '{:,}'.format(status.confirmed_new_rank_world),
-                    'confirmed_pct_change': '%.2f' % status.confirmed_pct_change,
-                    'death_cases': '{:,}'.format(status.deaths),
-                    'death_cases_world_rank': status.deaths_rank_world,
-                    'death_cases_region_rank': status.deaths_rank_region,
-                    'death_rate': "%.2f" % (status.deaths/status.confirmed*100),
-                    'new_death_cases': '{:,}'.format(status.deaths_new),
-                    'death_pct_change': '%.2f' % status.deaths_pct_change,
-                    'active_cases': '{:,}'.format(status.active),
-                    'active_pct': '%.2f%%' % (status.active/status.confirmed*100),
-                    'new_active_cases': '{:,}'.format(status.active_new),
-                    'active_cases_world_rank': status.active_rank_world,
-                    'active_cases_region_rank': status.active_rank_region,
-                    'report_date': status.date,
-                    }
+    # PASSING COUNTRYINFO MODEL VARIABLES AS TEMPLATE TAGS
+    country_dict = {'country_name':selected_country,
+                    'country_coord':country._coordinates_(),}
+
+    for k,v in country.__dict__.items():
+        country_dict = {**country_dict,**{k:country.__dict__[k]}}
+
+
+    # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
+    status_dict = {'active_pct':status['active']/status['confirmed'],
+                   'mortality':status['deaths']/status['confirmed'],}
+
+    for k,v in status.items():
+        status_dict = {**status_dict,**{k:status[k]}}
+
 
     return render(request,'report/country_assessment.html',
                   {'form':form,'nav_countries':'active',**country_dict,**status_dict})
