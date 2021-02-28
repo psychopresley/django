@@ -6,30 +6,47 @@ from report.models import Country, CountryInfo, StatusReport
 
 # Create your views here.
 
-# THIS IS THE INITIAL (INDEX) PAGE:
+# THIS IS THE HOME (INDEX) PAGE:
 
 class IndexView(TemplateView):
     template_name = 'report/index.html'
 
     def get_context_data(self,**kwargs):
-        status_date = StatusReport.objects.get(country__name='Brazil').date
         context = super().get_context_data(**kwargs)
 
         context['nav_index'] = 'active'
-        context['report_date'] = status_date
+        context['report_date'] = StatusReport.objects.get(country__name='Brazil').date
 
         return context
 
 
 # THESE ARE THE OTHER PAGES:
 
-def activepage(request):
-    context_dict = {'nav_active':'active'}
-    return render(request, 'report/active_cases.html',context=context_dict)
+# This is a model in case of using function based views:
 
-def confirmedpage(request):
-    context_dict = {'nav_confirmed':'active'}
-    return render(request, 'report/confirmed_cases.html',context=context_dict)
+# def activepage(request):
+#     context_dict = {'nav_active':'active'}
+#     return render(request, 'report/active.html',context=context_dict)
+
+class ActiveView(TemplateView):
+    template_name = 'report/active.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['nav_active'] = 'active'
+
+        return context
+
+
+class ConfirmedView(TemplateView):
+    template_name = 'report/confirmed.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['nav_confirmed'] = 'active'
+
+        return context
+
 
 def countriespage(request): # This is a FORM PAGE
     form = forms.FormName()
@@ -61,16 +78,25 @@ def countriespage(request): # This is a FORM PAGE
         status_dict = {**status_dict,**{k:status[k]}}
 
 
-    return render(request,'report/country_assessment.html',
+    return render(request,'report/countries.html',
                   {'form':form,'nav_countries':'active',**country_dict,**status_dict})
 
-def deathpage(request):
-    context_dict = {'nav_deaths':'active'}
-    return render(request, 'report/death_cases.html',context=context_dict)
 
-def readpage(request):
-    context_dict = {'nav_readme':'active'}
-    return render(request, 'report/read_me.html',context=context_dict)
+class DeathsView(TemplateView):
+    template_name = 'report/deaths.html'
 
-# def worldpage(request):
-#     return render(request, 'report/world_data.html')
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['nav_deaths'] = 'active'
+
+        return context
+
+
+class ReadMeView(TemplateView):
+    template_name = 'report/read_me.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['nav_readme'] = 'active'
+
+        return context
