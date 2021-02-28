@@ -21,13 +21,6 @@ class IndexView(TemplateView):
 
 
 # THESE ARE THE OTHER PAGES:
-
-# This is a model in case of using function based views:
-
-# def activepage(request):
-#     context_dict = {'nav_active':'active'}
-#     return render(request, 'report/active.html',context=context_dict)
-
 class ActiveView(TemplateView):
     template_name = 'report/active.html'
 
@@ -100,3 +93,11 @@ class ReadMeView(TemplateView):
         context['nav_readme'] = 'active'
 
         return context
+
+
+# ==============================================================================
+# This is a model in case of using function based views:
+
+# def activepage(request):
+#     context_dict = {'nav_active':'active'}
+#     return render(request, 'report/active.html',context=context_dict)
