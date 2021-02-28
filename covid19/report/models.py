@@ -24,6 +24,9 @@ class CountryInfo(models.Model):
         lat = str(abs(self.latitude)) + '°'
         long = str(abs(self.longitude)) + '°'
 
+        long_suffix=''
+        lat_suffix=''
+
         if self.latitude < 0:
             lat_suffix = 'S'
         elif self.latitude > 0:
@@ -34,7 +37,7 @@ class CountryInfo(models.Model):
         elif self.longitude > 0:
             long_suffix = 'E'
 
-        return '%s, %s' % (lat + lat_suffix, long + long_suffix)
+        return '({}, {})'.format(lat + lat_suffix, long + long_suffix)
 
 
 class StatusReport(models.Model):

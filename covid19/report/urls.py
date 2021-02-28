@@ -19,10 +19,9 @@ from report import views
 app_name = 'report'
 
 urlpatterns = [
-    path('active_cases/', views.activepage, name='activepage'),
-    path('confirmed_cases/', views.confirmedpage, name='confirmedpage'),
-    path('death_cases/', views.deathpage, name='deathpage'),
-    path('read_me/', views.readpage, name='readpage'),
-    path('word_data/', views.worldpage, name='worldpage'),
+    path('active/', views.ActiveView.as_view(), name='activepage'),
+    path('confirmed/', views.ConfirmedView.as_view(), name='confirmedpage'),
+    path('deaths/', views.DeathsView.as_view(), name='deathspage'),
+    path('read_me/', views.ReadMeView.as_view(), name='readpage'),
     path('countries/', views.countriespage, name='countriespage'),
 ]

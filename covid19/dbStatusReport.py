@@ -1,4 +1,3 @@
-
 import os
 import django
 
@@ -51,14 +50,6 @@ def main():
         log_dbStatusReport.append('\n----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------\n')
         log_dbStatusReport.append('\n'+ 'Local time: ' + ctime() + '\n\n')
 
-        config_filepath = r"C:\Users\user\Documents\GitHub\django\covid19\static\report\config"
-
-        if 'config.csv' in os.listdir(config_filepath):
-            print('Reading configuration file')
-            config = read_csv(os.path.join(config_filepath,'config.csv'),index_col='var').fillna('-')
-        else:
-    	    raise FileNotFoundError('No configuration file "config.csv" found.')
-
         task = config.loc['status_report'].aux1
         update = config.loc['status_report'].aux2
         confirm_value=config.loc['status_report'].aux3
@@ -110,6 +101,7 @@ def main():
             df_aux = df_aux.loc[df_aux['Date']==max(df_aux['Date'])]
             df_aux.Date = df_aux.Date.transform(lambda x:x.strftime("%B %d{}, %Y".format(ordinal(x.day))))
 
+            log_dbStatusReport.append('\n Most recent date on report: {} \n'.format(max(df_aux['Date'])))
             status_report = df_aux.copy()
 
             print("Status_report table generated succesfully!")
@@ -221,5 +213,40 @@ def main():
         log.close()
 
 
+
 if __name__ == '__main__':
-    main()
+    config_filepath = r"C:\Users\user\Documents\GitHub\django\covid19\static\report\config"
+
+    if 'config.csv' in os.listdir(config_filepath):
+        print('Reading configuration file')
+        config = read_csv(os.path.join(config_filepath,'config.csv'),index_col='var').fillna('-')
+    else:
+        raise FileNotFoundError('No configuration file "config.csv" found.')
+
+    country_report = os.path.join(config.loc['status_report'].file_path,
+                                  config.loc['status_report'].file_name)
+
+    last_modified = config.loc['status_report'].aux4
+    current_date = ctime(os.path.getmtime(country_report))
+
+    if current_date == last_modified:
+        log_dbStatusReport=[]
+        log_dbStatusReport.append('\n----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------\n')
+        log_dbStatusReport.append('\n'+ 'Local time: ' + ctime() + '\n\n')
+        log_dbStatusReport.append('\n --> current file has not been modified. Nothing to do here.')
+
+        log_dir = r'C:\Users\user\Documents\GitHub\django\covid19\static\report\log'
+        os.chdir(log_dir)
+
+        log = open('log_dbStatusReport.txt','w')
+        log.writelines(log_dbStatusReport)
+        log.close()
+
+        print('No necessary actions for the current file')
+        pass
+    else:
+        main()
+
+        os.chdir(config_filepath)
+        config.loc['status_report','aux4'] = current_date
+        config.to_csv('config.csv')
