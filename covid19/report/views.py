@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View,TemplateView
 from . import forms
-from report.models import Country, CountryInfo, StatusReport
+from report.models import Country,StatusReport
 
 # Create your views here.
 
@@ -42,16 +42,16 @@ class ConfirmedView(TemplateView):
 
 
 def countriespage(request): # This is a FORM PAGE
-    form = forms.FormName()
+    form = forms.SelectCountry()
     selected_country = form['country'].initial
 
     if request.method == 'POST':
-        form = forms.FormName(request.POST);
+        form = forms.SelectCountry(request.POST);
 
         if form.is_valid():
             selected_country = form.cleaned_data['country'];
 
-    country = CountryInfo.objects.get(country__name=selected_country)
+    country = Country.objects.get(name=selected_country)
     status = StatusReport.objects.get(country__name=selected_country).__dict__
 
 
