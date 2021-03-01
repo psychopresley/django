@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Country, CountryInfo, StatusReport, MonthReport
+from .models import Country,StatusReport
 from django.utils.translation import gettext_lazy as _
 
 admin.site.disable_action('delete_selected')
@@ -49,12 +49,12 @@ class LocationListFilter(admin.SimpleListFilter):
             return queryset.filter(longitude__lt=0)
 
 
-@admin.register(CountryInfo)
-class CountryInfoAdmin(admin.ModelAdmin):
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('General info', {
-            'fields': ('country', 'region',)
+            'fields': ('name', 'region',)
         }),
         ('More options', {
             'classes': ('collapse',),
@@ -63,19 +63,14 @@ class CountryInfoAdmin(admin.ModelAdmin):
     )
 
     # fields = ('country','region',('latitude','longitude'),'internet_code','map_image')
-    ordering = ['country']   # ordering = ['-country'] for descending order
+    ordering = ['name']   # ordering = ['-country'] for descending order
 
     list_filter =('region',LocationListFilter,)
     list_display = ['__str__','region','_coordinates_']
-    search_fields = ['country__name']
+    search_fields = ['name']
 
     actions_on_bottom = True
     actions_on_top = False
-
-
-@admin.register(Country)
-class CountryAdmin(admin.ModelAdmin):
-    ordering = ['name']   # ordering = ['-name'] for descending order
 
 
 @admin.register(StatusReport)
