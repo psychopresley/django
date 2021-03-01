@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View,TemplateView
 from . import forms
-from report.models import Country,StatusReport
+from report.models import StatusReport
 
 # Create your views here.
 
@@ -51,28 +51,21 @@ def countriespage(request): # This is a FORM PAGE
         if form.is_valid():
             selected_country = form.cleaned_data['country'];
 
-    country = Country.objects.get(name=selected_country)
-    status = StatusReport.objects.get(country__name=selected_country).__dict__
-
-
-    # PASSING COUNTRYINFO MODEL VARIABLES AS TEMPLATE TAGS
-    country_dict = {'country_name':selected_country,
-                    'country_coord':country._coordinates_(),}
-
-    for k,v in country.__dict__.items():
-        country_dict = {**country_dict,**{k:country.__dict__[k]}}
-
-
     # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
-    status_dict = {'active_pct':status['active']/status['confirmed'],
-                   'mortality':status['deaths']/status['confirmed'],}
+    status = StatusReport.objects.get(country__name=selected_country)
+    status_dict = {'country_name':selected_country,
+                   'country_coord':status.country._coordinates_(),
+                   'active_pct':status.__dict__['active']/status.__dict__['confirmed'],
+                   'mortality':status.__dict__['deaths']/status.__dict__['confirmed'],
+                   **status.country.__dict__,
+                  }
 
-    for k,v in status.items():
-        status_dict = {**status_dict,**{k:status[k]}}
+    for k,v in status.__dict__.items():
+        status_dict = {**status_dict,**{k:status.__dict__[k]}}
 
 
     return render(request,'report/countries.html',
-                  {'form':form,'nav_countries':'active',**country_dict,**status_dict})
+                  {'form':form,'nav_countries':'active',**status_dict})
 
 
 class DeathsView(TemplateView):
