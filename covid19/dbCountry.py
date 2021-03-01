@@ -32,7 +32,7 @@ def main():
     try:
         # In the config.csv file, on 'countryinfo_file' row of columns 'var':
         #  - aux1: Set 0, for delete all entries in database or 1 for add/update entries;
-        #  - aux2: Set 0, for reload database from 'country_report.json' file or 1 for update existing entries;
+        #  - aux2: Set 0, for reload database from 'countries_table.csv' file or 1 for update existing entries;
         #  - aux3: Set 1, for confirmation need in case aux1 is set to 0;
 
         log_dbCountry=[]
@@ -47,30 +47,30 @@ def main():
         else:
     	    raise FileNotFoundError('No configuration file "config.csv" found.')
 
-        task = config.loc['status_report'].aux1
-        confirm_value=config.loc['status_report'].aux3
+        task = config.loc['country_file'].aux1
+        confirm_value=config.loc['country_file'].aux3
 
         if not task:
             db_del(Country,confirm_before=confirm_value)
         else:
             print("Reading 'country_report.json' file")
 
-            country_report = os.path.join(config.loc['status_report'].file_path,
-                                          config.loc['status_report'].file_name)
+            countries_table = os.path.join(config.loc['country_file'].file_path,
+                                          config.loc['country_file'].file_name)
 
-            df = read_json(country_report)
-            countries_list = df['Country/Region'].unique()
+            df = read_csv(countries_table)
+            countries_list = df['Country'].unique()
 
-            label_map_file = os.path.join(config.loc['labelmap_file'].file_path,
-                                          config.loc['labelmap_file'].file_name)
-
-            label_map = read_csv(label_map_file,header=None,index_col=0)
+            # label_map_file = os.path.join(config.loc['labelmap_file'].file_path,
+            #                               config.loc['labelmap_file'].file_name)
+            #
+            # label_map = read_csv(label_map_file,header=None,index_col=0)
 
             # reading label map dictionary:
-            label_dict = label_map.to_dict()[1]
-            df['Country/Region'] = df['Country/Region'].transform(lambda x: label_dict[x] if x in label_dict.keys() else x)
+            # label_dict = label_map.to_dict()[1]
+            # df['Country/Region'] = df['Country/Region'].transform(lambda x: label_dict[x] if x in label_dict.keys() else x)
 
-            log_dbCountry.append('\n - Most recent date on report: {}'.format(max(df.Date)))
+            # log_dbCountry.append('\n - Most recent date on report: {}'.format(max(df.Date)))
 
             db_del(Country,confirm_before=confirm_value)
             print('Inserting all countries in the list to models.Country')
