@@ -1,11 +1,11 @@
+
 import os
 import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','covid19.settings')
 django.setup()
 
-from pandas import read_json, read_csv
-from time import ctime
+from pandas import read_csv
 from report.models import Country
 
 def main():
@@ -15,7 +15,7 @@ def main():
         flag = True
 
         if confirm_before:
-            confirm_delete = input('This will erase all entries in models.Country. Press "n" if you wish to skip delete or any other key to continue: ')
+            confirm_delete = input('This will erase all entries in models.{}. Press "n" if you wish to skip delete or any other key to continue: '.format(database))
 
             if confirm_delete == 'n':
                 flag = False
@@ -32,12 +32,8 @@ def main():
     try:
         # In the config.csv file, on 'countryinfo_file' row of columns 'var':
         #  - aux1: Set 0, for delete all entries in database or 1 for add/update entries;
-        #  - aux2: Set 0, for reload database from 'country_report.json' file or 1 for update existing entries;
+        #  - aux2: Set 0, for reload database from 'countries_table.csv' file or 1 for update existing entries;
         #  - aux3: Set 1, for confirmation need in case aux1 is set to 0;
-
-        log_dbCountry=[]
-        log_dbCountry.append('\n----------dbCountry.py SCRIPT EXECUTION REPORT-----------\n')
-        log_dbCountry.append('\n'+ '--> Local time: ' + ctime() + '\n\n')
 
         config_filepath = r"C:\Users\user\Documents\GitHub\django\covid19\static\report\config"
 
@@ -47,58 +43,58 @@ def main():
         else:
     	    raise FileNotFoundError('No configuration file "config.csv" found.')
 
-        task = config.loc['status_report'].aux1
-        confirm_value=config.loc['status_report'].aux3
+        task = config.loc['countryinfo_file'].aux1
+        update = config.loc['countryinfo_file'].aux2
+        confirm_value=config.loc['countryinfo_file'].aux3
 
         if not task:
             db_del(Country,confirm_before=confirm_value)
+
         else:
-            print("Reading 'country_report.json' file")
+            country_table_file = os.path.join(config.loc['countryinfo_file'].file_path,
+                                              config.loc['countryinfo_file'].file_name)
 
-            country_report = os.path.join(config.loc['status_report'].file_path,
-                                          config.loc['status_report'].file_name)
+            countries_table = read_csv(country_table_file)
+            countries_list = countries_table['Country'].unique()
 
-            df = read_json(country_report)
-            countries_list = df['Country/Region'].unique()
+            if update:
+                print('updating all entries in models.Country')
 
-            label_map_file = os.path.join(config.loc['labelmap_file'].file_path,
-                                          config.loc['labelmap_file'].file_name)
+                for item in countries_list:
+                    info = countries_table.loc[countries_table['Country']==item]
+                    country = Country.objects.get(name=item)
 
-            label_map = read_csv(label_map_file,header=None,index_col=0)
+                    country.latitude = float(info.Latitude.values[0])
+                    country.longitude = float(info.Longitude.values[0])
+                    country.region = region=info.Region.values[0]
+                    country.internet_code = info.internet_code.values[0]
+                    country.map_image = info.map_image.values[0]
 
-            # reading label map dictionary:
-            label_dict = label_map.to_dict()[1]
-            df['Country/Region'] = df['Country/Region'].transform(lambda x: label_dict[x] if x in label_dict.keys() else x)
+                    country.save()
+                    print('{} updated in models.Country'.format(item))
+            else:
+                db_del(Country,confirm_before=confirm_value)
 
-            log_dbCountry.append('\n - Most recent date on report: {}'.format(max(df.Date)))
+                print('Inserting all countries in the list to models.Country')
 
-            db_del(Country,confirm_before=confirm_value)
-            print('Inserting all countries in the list to models.Country')
+                for item in countries_list:
+                    info = countries_table.loc[countries_table['Country']==item]
 
-            for country in countries_list:
-                entry = Country.objects.get_or_create(name=country)[0]
-                entry.save()
+                    entry = Country.objects.get_or_create(name=item,
+                                                          latitude=info.Latitude.values[0],
+                                                          longitude=info.Longitude.values[0],
+                                                          region=info.Region.values[0],
+                                                          internet_code=info.internet_code.values[0],
+                                                          map_image=info.map_image.values[0])[0]
+                    entry.save()
 
-                print('{} inserted into models.Country'.format(country))
+                    print(item + ' inserted into models.Country')
 
-        message = 'Script executed succesfully!'
-        print(message)
-        log_dbCountry.append('\n - {}'.format(message))
+        print('Script executed succesfully!')
     except:
-        message = 'Something went wrong! The script was not executed'
-        print(message)
-        log_dbCountry.append('\n {}'.format(message))
+        print('Something went wrong! The script was not executed')
     finally:
-        message = 'End of execution of the populate_Country.py script'
-        print(message)
-        log_dbCountry.append('\n {}'.format(message))
-
-        log_dir = r'C:\Users\user\Documents\GitHub\django\covid19\static\report\log'
-        os.chdir(log_dir)
-
-        log = open('log_dbCountry.txt','w')
-        log.writelines(log_dbCountry)
-        log.close()
+        print('End of execution of the dbCountry.py script')
 
 
 if __name__ == '__main__':
