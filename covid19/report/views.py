@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View,TemplateView
+from django.views.generic.detail import DetailView
 from . import forms
 from report.models import StatusReport
 
@@ -39,6 +40,17 @@ class ConfirmedView(TemplateView):
         context['nav_confirmed'] = 'active'
 
         return context
+
+
+# class CountriesDetailView(DetailView):
+#     model = StatusReport
+#     template_name = 'report/countries.html'
+#
+#     def get_context_data(self,**kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['nav_countries'] = 'active'
+#
+#         return context
 
 
 def countriespage(request): # This is a FORM PAGE
