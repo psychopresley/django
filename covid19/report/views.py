@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View,TemplateView
-from django.views.generic.detail import DetailView
 from . import forms
 from report.models import StatusReport
 
@@ -16,7 +15,7 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         context['nav_index'] = 'active'
-        context['report_date'] = StatusReport.objects.get(country__name='Brazil').date
+        context['report_date'] = StatusReport.objects.order_by('-date')[0].date
 
         return context
 
@@ -64,17 +63,14 @@ def countriespage(request): # This is a FORM PAGE
             selected_country = form.cleaned_data['country'];
 
     # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
-    status = StatusReport.objects.get(country__name=selected_country)
-    status_dict = {'country_name':selected_country,
-                   'country_coord':status.country._coordinates_(),
-                   'active_pct':status.__dict__['active']/status.__dict__['confirmed'],
-                   'mortality':status.__dict__['deaths']/status.__dict__['confirmed'],
+    status = StatusReport.objects.get(country=selected_country)
+
+    status_dict = {'country_coord':status.country._coordinates_(),
                    **status.country.__dict__,
                   }
 
     for k,v in status.__dict__.items():
         status_dict = {**status_dict,**{k:status.__dict__[k]}}
-
 
     return render(request,'report/countries.html',
                   {'form':form,'nav_countries':'active',**status_dict})

@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 # Create your models here.
 
@@ -35,7 +36,7 @@ class Country(models.Model):
 
 class StatusReport(models.Model):
     country = models.OneToOneField(Country, on_delete=models.CASCADE, primary_key=True,)
-    date = models.CharField(max_length=22,default='undefined')
+    date = models.DateField(default=date.today)
     confirmed = models.IntegerField()
     confirmed_new = models.IntegerField()
     confirmed_pct_change = models.FloatField()
@@ -59,11 +60,15 @@ class StatusReport(models.Model):
     recovered_new_rank_world = models.IntegerField(default=0)
     active = models.IntegerField(default=0)
     active_new = models.IntegerField()
+    active_pct = models.FloatField(default=0)
     active_pct_change = models.FloatField()
     active_rank_region = models.IntegerField()
     active_rank_world = models.IntegerField()
     active_new_rank_region = models.IntegerField(default=0)
     active_new_rank_world = models.IntegerField(default=0)
+    mortality = models.FloatField(default=0)
+    mortality_rank_region = models.IntegerField(default=1000)
+    mortality_rank_world = models.IntegerField(default=1000)
 
     def __str__(self):
         return self.country.name
