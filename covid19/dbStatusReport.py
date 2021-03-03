@@ -110,7 +110,6 @@ def main():
             df_aux.Date = df_aux.Date.transform(lambda x:date(x.year, x.month, x.day))
             # df_aux.Date = df_aux.Date.transform(lambda x:x.strftime("%B %d{}, %Y".format(ordinal(x.day))))
 
-            log_dbStatusReport.append('\n Most recent date on report: {} \n'.format(max(df_aux['Date'])))
             status_report = df_aux.copy()
 
             print("Status_report table generated succesfully!")
@@ -153,9 +152,9 @@ def main():
                     country.active_rank_world=int(info.Active_rank_in_world.values[0])
                     country.active_new_rank_region=int(info.Active_new_cases_rank_in_region.values[0])
                     country.active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0])
-                    country.mortality=float(info.mortality.values[0]),
-                    country.mortality_rank_region=int(info.mortality_rank_region.values[0]),
-                    country.mortality_rank_world=int(info.mortality_rank_world.values[0]),
+                    country.mortality=float(info.mortality.values[0])
+                    country.mortality_rank_region=int(info.mortality_rank_region.values[0])
+                    country.mortality_rank_world=int(info.mortality_rank_world.values[0])
 
                     country.save()
                     print('{} updated in models.StatusReport'.format(item))
@@ -212,6 +211,7 @@ def main():
 
         message = 'Script executed succesfully!'
         print(message)
+        log_dbStatusReport.append('\n Most recent date on report: {} \n'.format(StatusReport.objects.order_by('-date')[0].date))
         log_dbStatusReport.append('\n {} \n'.format(message))
     except:
         message = 'Something went wrong! The script was not executed'
