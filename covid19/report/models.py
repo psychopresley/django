@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 # Create your models here.
 
@@ -35,7 +36,7 @@ class Country(models.Model):
 
 class StatusReport(models.Model):
     country = models.OneToOneField(Country, on_delete=models.CASCADE, primary_key=True,)
-    date = models.CharField(max_length=22,default='undefined')
+    date = models.DateField(default=date.today)
     confirmed = models.IntegerField()
     confirmed_new = models.IntegerField()
     confirmed_pct_change = models.FloatField()
@@ -59,29 +60,36 @@ class StatusReport(models.Model):
     recovered_new_rank_world = models.IntegerField(default=0)
     active = models.IntegerField(default=0)
     active_new = models.IntegerField()
+    active_pct = models.FloatField(default=0)
     active_pct_change = models.FloatField()
     active_rank_region = models.IntegerField()
     active_rank_world = models.IntegerField()
     active_new_rank_region = models.IntegerField(default=0)
     active_new_rank_world = models.IntegerField(default=0)
+    mortality = models.FloatField(default=0)
+    mortality_rank_region = models.IntegerField(default=1000)
+    mortality_rank_world = models.IntegerField(default=1000)
 
     def __str__(self):
         return self.country.name
 
 
-# class MonthReport(models.Model):
-#     country = models.ManyToManyField(Country)
-#     month = models.CharField(max_length=10)
-#     year = models.CharField(max_length=4)
-#     confirmed = models.IntegerField()
-#     deaths = models.IntegerField()
-#     recovered = models.IntegerField(default=0)
-#     active = models.IntegerField(default=0)
-#
-#     def __str__(self):
-#         return '%s %s - %s' % (self.country, self.month, self.year)
-#
-#
+class MonthReport(models.Model):
+    country = models.ForeignKey(Country,on_delete=models.CASCADE,default='undefined')
+    month = models.CharField(max_length=7,default='2000-01')
+    confirmed = models.IntegerField(default=0)
+    confirmed_pct_change = models.FloatField(default=0)
+    confirmed_rank_region = models.IntegerField(default=0)
+    confirmed_rank_world = models.IntegerField(default=0)
+    deaths = models.IntegerField(default=0)
+    deaths_pct_change = models.FloatField(default=0)
+    deaths_rank_region = models.IntegerField(default=0)
+    deaths_rank_world = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.country.name
+
+
 # class WeekReport(models.Model):
 #     country = models.ManyToManyField(Country)
 #     week = models.CharField(max_length=2)

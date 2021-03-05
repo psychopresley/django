@@ -5,6 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','covid19.settings')
 django.setup()
 
 from pandas import read_json, read_csv
+from datetime import date
 from time import ctime
 from report.models import Country, StatusReport
 
@@ -98,10 +99,17 @@ def main():
                 df_aux[column_region_rank]=df_aux.groupby(['Date','region'])[column].rank(method='min',ascending=False)
                 df_aux[column_new_region_rank]=df_aux.groupby(['Date','region'])[column_new].rank(method='min',ascending=False)
 
-            df_aux = df_aux.loc[df_aux['Date']==max(df_aux['Date'])]
-            df_aux.Date = df_aux.Date.transform(lambda x:x.strftime("%B %d{}, %Y".format(ordinal(x.day))))
+            # Columns calculated specificly for Status Report model db:
+            df_aux['active_pct'] = df_aux['Active'] / df_aux['Confirmed']
+            df_aux['mortality'] = df_aux['Deaths'] / df_aux['Confirmed']
+            df_aux['mortality_rank_region'] = df_aux.groupby(['Date','region'])['mortality'].rank(method='min',ascending=False)
+            df_aux['mortality_rank_world'] = df_aux.groupby('Date')['mortality'].rank(method='min',ascending=False)
 
-            log_dbStatusReport.append('\n Most recent date on report: {} \n'.format(max(df_aux['Date'])))
+            # Filtering by the latest date:
+            df_aux = df_aux.loc[df_aux['Date']==max(df_aux['Date'])]
+            df_aux.Date = df_aux.Date.transform(lambda x:date(x.year, x.month, x.day))
+            # df_aux.Date = df_aux.Date.transform(lambda x:x.strftime("%B %d{}, %Y".format(ordinal(x.day))))
+
             status_report = df_aux.copy()
 
             print("Status_report table generated succesfully!")
@@ -138,11 +146,15 @@ def main():
                     country.recovered_new_rank_world=int(info.Recovered_new_cases_rank_in_world.values[0])
                     country.active=int(info.Active.values[0])
                     country.active_new=int(info.Active_new_cases.values[0])
+                    country.active_pct=float(info.active_pct.values[0])
                     country.active_pct_change=float(info['Active_daily_%inc_by_country'].values[0])
                     country.active_rank_region=int(info.Active_rank_in_region.values[0])
                     country.active_rank_world=int(info.Active_rank_in_world.values[0])
                     country.active_new_rank_region=int(info.Active_new_cases_rank_in_region.values[0])
                     country.active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0])
+                    country.mortality=float(info.mortality.values[0])
+                    country.mortality_rank_region=int(info.mortality_rank_region.values[0])
+                    country.mortality_rank_world=int(info.mortality_rank_world.values[0])
 
                     country.save()
                     print('{} updated in models.StatusReport'.format(item))
@@ -182,11 +194,15 @@ def main():
                                                                    recovered_new_rank_world=int(info.Recovered_new_cases_rank_in_world.values[0]),
                                                                    active=int(info.Active.values[0]),
                                                                    active_new=int(info.Active_new_cases.values[0]),
+                                                                   active_pct=float(info.active_pct.values[0]),
                                                                    active_pct_change=float(info['Active_daily_%inc_by_country'].values[0]),
                                                                    active_rank_region=int(info.Active_rank_in_region.values[0]),
                                                                    active_rank_world=int(info.Active_rank_in_world.values[0]),
                                                                    active_new_rank_region=int(info.Active_new_cases_rank_in_region.values[0]),
-                                                                   active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0]))[0]
+                                                                   active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0]),
+                                                                   mortality_rank_region=int(info.mortality_rank_region.values[0]),
+                                                                   mortality_rank_world=int(info.mortality_rank_world.values[0]),
+                                                                   mortality=float(info.mortality.values[0]))[0]
 
                         entry.save()
                         print('{} inserted into models.StatusReport'.format(item))
@@ -195,6 +211,7 @@ def main():
 
         message = 'Script executed succesfully!'
         print(message)
+        log_dbStatusReport.append('\n Most recent date on report: {} \n'.format(StatusReport.objects.order_by('-date')[0].date))
         log_dbStatusReport.append('\n {} \n'.format(message))
     except:
         message = 'Something went wrong! The script was not executed'

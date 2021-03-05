@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>The Covid-19 Report</title>
+
+    <!-- Include own expanded styling configuration -->
+    <link rel="stylesheet" href="{% static 'report/css/base.css' %}">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Page header with subtitles -->
+   <div class="container">
+    <div class="page-header">
+        <h1><a class="header-link" href="{% url 'admin:index' %}">The Covid-19 Report</a></h1>
+         <p><em>Infos and vizzes you won't see around</em></p>
+        <hr>
+
+    </div>
+    <style>
+      a.header-link{
+        text-decoration: none;
+        color: black;
+        cursor: default;
+      }
+    </style>
+   </div>
+
+    <div class="container-sm">
+      <div class="row">
+
+        <!-- AUTHOR INFO SIDEBAR -->
+
+        <div class="col-lg-3 col-md-4 col-sm-4">
+          <div class="card">
+            <img src="{% static 'report/images/profile_picture.jpg' %}" class="card-img-top img-fluid" alt="Profile picture">
+
+            <div class="card-body">
+              <h5 class="card-title">Márcio Garcia</h5>
+              <p class="card-text">
+                Electrical Engineer graduated at Federal Univesity of Bahia (2003) and Master of Science
+                in Electrical Engineering (2008), with emphasis in Advanced Control. Expertise areas include
+                Industrial Instrumentation and Process control and automation, regulatory PID,
+                Advanced process control techiniques and Digital Control Systems (DCS, PLC).
+
+                I also love to play around with other technologies, so I'm always working on something
+                using Python, SQL, Data analysis, Vizzes and web apps.
+
+              </p> <!-- CARD TEXT -->
+
+            </div>
+            <div class="card-body">
+              <div class="btn-group">
+                <a href="https://www.linkedin.com/in/garciamarcio/" class="btn btn-primary">LinkedIn</a>
+                <a href="https://github.com/psychopresley/COVID-19" class="btn btn-success">Github</a>
+              </div>  <!-- button group -->
+            </div> <!-- card body -->
+          </div> <!-- card -->
+        </div> <!-- col sidebar -->
+
+
+      <!-- CONTENT -->
+
+      <div class="col-lg-9 col-md-8 col-sm-8">
+        <ul class="nav nav-tabs" role="tablist">
+
+          <!-- NAV TAB WORLD DATA -->
+
+          <li class="nav-item" role="presentation">
+            <a class="nav-link text-dark {{nav_index}}" role="tab" data-bs-toggle="tooltip" data-bs-placement="top" title="Home" aria-controls="home" aria-selected="false" href="{% url 'index' %}"><i class="fa fa-lg fa-home"></i>  Home</a>
+          </li>
+
+          <!-- NAV TAB CONFIRMED CASES -->
+
+          <li class="nav-item" role="presentation">
+            <a class="nav-link text-primary {{nav_confirmed}}" role="tab" data-bs-toggle="tab" aria-controls="confirmed-cases" aria-selected="false" href="{% url 'report:confirmedpage' %}">Confirmed</a>
+          </li>
+
+
+          <!-- NAV TAB ACTIVE CASES -->
+
+          <li class="nav-item" role="presentation">
+            <a class="nav-link text-success {{nav_active}}" role="tab" data-bs-toggle="tab" aria-controls="active-cases" aria-selected="false" href="{% url 'report:activepage' %}">Active</a>
+          </li>
+
+          <!-- NAV TAB DEATH CASES -->
+
+          <li class="nav-item" role="presentation">
+            <a class="nav-link text-danger {{nav_deaths}}" role="tab" data-bs-toggle="tab" aria-controls="deaths-page" aria-selected="false" href="{% url 'report:deathspage' %}">Deaths</a>
+          </li>
+
+          <!-- NAV TAB COUNTRY ASSESSMENT -->
+
+          <li class="nav-item" role="presentation">
+            <a class="nav-link text-dark {{nav_countries}}" role="tab" data-bs-toggle="tab" aria-controls="countries-page" aria-selected="false" href="{% url 'report:countriespage' %}">Countries</a>
+          </li>
+
+          <!-- NAV TAB ABOUT READ ME PAGE -->
+
+          <li class="nav-item" role="presentation">
+            <a class="nav-link text-warning {{nav_readme}}" role="tab" data-bs-toggle="tab" aria-controls="read-me" aria-selected="false" href="{% url 'report:readpage' %}">Read me, please!</a>
+          </li>
+
+        </ul> <!-- NAV TABS -->
+        <br>
+
+        {% block content %}{% endblock content %}
+
+        <!-- JAVASCRIPT FOR THE BASE TEMPLATE -->
+        <!-- <script src="{% static 'report/scripts/index.js' %}">
+
+        </script> -->
+
+       </div> <!-- end CONTENT col-->
+     </div> <!-- end row-->
+   </div> <!-- end container-->
+
+  </body>
+</html>

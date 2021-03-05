@@ -35,11 +35,11 @@
       width="48"
       height="36"
       alt={{country_name}}>
-      {{country_name}}
+      {{name}}
   </h1>
   <p class="country-title-footer">{{region}}, <span class="coordinates">{{country_coord}}</span></p>
   <br> <!-- END OF COUNTRY TITLE AND FOOTER -->
-  
+
   <!-- COUNTRY INFO TABLE COLUMN -->
 
   <div class="row">
@@ -95,8 +95,13 @@
                   <li><span class="number">{{deaths|style:'us'}}</span> pacients lost the battle against the coronavirus. It ranks
                     <span class="number number-rank">#{{deaths_rank_region}}</span> in the region and
                     <span class="number number-rank">#{{deaths_rank_world}}</span> in the world;</li>
-                  <li><span class="number number-new">{{deaths_new|style:'us'}}</span> new cases in the last 24h;</li>
-                  <li>Mortality: <span class="number number-rate">{{mortality|pct}}</span></li>
+                  <li><span class="number number-new">{{deaths_new|style:'us'}}</span> new cases in the last 24h. It ranks
+                      <span class="number number-rank">#{{deaths_new_rank_region}}</span> in the region and
+                      <span class="number number-rank">#{{deaths_new_rank_world}}</span> in the world;
+                  </li>
+                  <li>Mortality: <span class="number number-rate">{{mortality|pct}}</span> (<span class="number number-rank">#{{mortality_rank_region}}</span> in
+                      the region, <span class="number number-rank">#{{mortality_rank_world}}</span> in the world).
+                  </li>
                 </ul>
 
             </td>

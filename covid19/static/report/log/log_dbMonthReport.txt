@@ -1,0 +1,11 @@
+
+----------dbMonthReport.py SCRIPT EXECUTION REPORT-----------
+
+Local time: Thu Mar  4 20:32:01 2021
+
+
+ Most recent date on report: 2021-03 
+
+ Script executed succesfully! 
+
+ End of execution of the dbMonthReport.py script 
