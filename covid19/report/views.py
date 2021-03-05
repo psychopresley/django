@@ -41,17 +41,6 @@ class ConfirmedView(TemplateView):
         return context
 
 
-# class CountriesDetailView(DetailView):
-#     model = StatusReport
-#     template_name = 'report/countries.html'
-#
-#     def get_context_data(self,**kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['nav_countries'] = 'active'
-#
-#         return context
-
-
 def countriespage(request): # This is a FORM PAGE
     form = forms.SelectCountry()
     selected_country = form['country'].initial
