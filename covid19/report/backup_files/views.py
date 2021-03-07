@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View,TemplateView
-from calendar import monthrange
 from . import forms
 from report.models import StatusReport, MonthReport
 
@@ -52,12 +51,9 @@ def countriespage(request): # This is a FORM PAGE
         if form.is_valid():
             selected_country = form.cleaned_data['country'];
 
-    status = StatusReport.objects.get(country=selected_country)
-    month_report = MonthReport.objects.filter(country=selected_country).order_by('-month')
-
     # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
+    status = StatusReport.objects.get(country=selected_country)
     status_dict = {'country_coord':status.country._coordinates_(),
-                   'report_date': status.date,
                    **status.country.__dict__,
                   }
 
@@ -66,6 +62,14 @@ def countriespage(request): # This is a FORM PAGE
 
 
     # PASSING MONTHREPORT MODEL VARIABLES AS TEMPLATE TAGS
+    def build_month_dict(obj,dict):
+        return_dict={}
+        for key in dict.keys():
+            return_dict[key]=obj.__dict__[key.replace('_month','')]
+
+        return return_dict
+
+    month_report = MonthReport.objects.filter(country=selected_country).order_by('-month')
     month_report_dict = {
                          'month':[],
                          'confirmed_month':[],'confirmed_pct_change_month':[],
@@ -75,38 +79,17 @@ def countriespage(request): # This is a FORM PAGE
                         }
 
     rows=[]
-    idx=0
+    # for obj in month_report:
+    #     dict = build_month_dict(obj,month_report_dict)
+    #     rows.append(dict)
+
     for obj in month_report:
         dict={}
         for key in month_report_dict.keys():
             dict[key]=obj.__dict__[key.replace('_month','')]
-        dict = {**dict,**{'idx':idx,}}
-        idx += 1
-
         rows.append(dict)
 
-    days_in_month = monthrange(status.date.year,status.date.month)[1]
-
-    deaths_prediction = int(month_report[0].deaths*(days_in_month)/status.date.day)
-    confirmed_prediction = int(month_report[0].confirmed*(days_in_month)/status.date.day)
-
-    if month_report[1].confirmed > 0:
-        confirmed_prediction_pct = (confirmed_prediction - month_report[1].confirmed)/month_report[1].confirmed
-    else:
-        confirmed_prediction_pct = 0
-
-    if month_report[1].deaths > 0:
-        deaths_prediction_pct = (deaths_prediction - month_report[1].deaths)/month_report[1].deaths
-    else:
-        deaths_prediction_pct = 0
-
-    month_dict = {'month_rows':rows,
-                  'month_header':['','Confirmed','Rank (Region - World)','Deaths','Rank (Region - World)'],
-                  'confirmed_prediction':confirmed_prediction,
-                  'deaths_prediction':deaths_prediction,
-                  'confirmed_prediction_pct':confirmed_prediction_pct,
-                  'deaths_prediction_pct':deaths_prediction_pct,
-                  }
+    month_dict = {'month_rows':rows,'month_header':['','Confirmed','Rank (Region - World)','Deaths','Rank (Region - World)']}
 
     return render(request,'report/countries.html',
                   {'form':form,'nav_countries':'active',**status_dict,**month_dict})

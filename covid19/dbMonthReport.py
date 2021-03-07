@@ -71,6 +71,9 @@ def main():
                 df_aux[column] = df[column + '_new_cases']
 
             df_aux = df_aux.groupby(['Country/Region','month']).sum().reset_index()
+            for column in column_names:
+                df_aux[column] = df_aux[column].transform(lambda x:max(x,0))
+
             df_aux['region'] = df_aux['Country/Region'].transform(lambda x: region_dict[x] if x in region_dict.keys() else x)
 
             for column in column_names:
