@@ -40,8 +40,28 @@ a.header-link:hover {
 
 /* TABLES */
 
-td, tr, th {
+table, td, tr, th {
   vertical-align: center;
+}
+
+.table-records{
+  text-align: center;
+  font-size: 14px;
+  font-family: "Times New Roman", Times, Georgia, serif;
+}
+
+.table-records thead th {
+  border-bottom: 1px solid #000;
+}
+
+.table-records>tbody>tr:nth-child(even)>td,
+.table-records>tbody>tr:nth-child(even)>th {
+   background-color: #bdffc1;opacity:0.4;
+ }
+
+.table-record>tbody>tr:nth-child(odd)>td,
+.table-records>tbody>tr:nth-child(odd)>th {
+   background-color: #ffffff;
 }
 
 

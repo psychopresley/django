@@ -18,3 +18,11 @@ def percentage(value,precision=2):
     put some string here.
     """
     return "%.{}f%%".format(precision) % (value*100)
+
+
+@register.filter(name='pct_conv')
+def percentage(value,precision=2):
+    """
+    put some string here.
+    """
+    return "%.{}f%%".format(precision) % (value)

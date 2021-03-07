@@ -127,6 +127,67 @@
 
   </div>  <!-- END OF COUNTRY MAP IMAGE COLUMN -->
 
+</div>   <!-- END OF STATUS REPORT TABLE -->
+
+<div>  <!-- START OF THE MONTH/WEEK REPORT AREA -->
+  <br><h3> Month-by-Month:</h3>
+
+  <br><p>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </p><br>
+
+  <div class="container">
+
+    <table class="table table-borderless table-sm table-records">
+      <caption style="font-style: italic; font-size:12px;">Current numbers up to {{report_date}}</caption>
+      <thead>
+          <tr>
+            {% for k in month_header %}
+              <th>
+                {{k}}
+              </th>
+            {% endfor %}
+          </tr>
+      </thead>
+      <tbody>
+          {% for r in month_rows %}
+              <tr>
+                  <th scope="row">{{r.month}}</th>
+                  <td data-bs-toggle="tooltip" data-bs-placement="top" title="Prediction for the current month: {{confirmed_prediction|style:'us'}} ({{confirmed_prediction_pct|pct:1}})">
+                    {{r.confirmed_month|style:'us'}} ({{r.confirmed_pct_change_month|pct_conv:1}})
+                  </td>
+                  <td>
+                    <span class="number number-rank">
+                      {{r.confirmed_rank_region_month}}°
+                    </span> -
+                    <span class="number number-rank">
+                      {{r.confirmed_rank_world_month}}°
+                    </span>
+                  </td>
+                  <td data-bs-toggle="tooltip" data-bs-placement="top" title="Prediction for the current month: {{deaths_prediction|style:'us'}} ({{deaths_prediction_pct|pct:1}})">
+                    {{r.deaths_month|style:'us'}} ({{r.deaths_pct_change_month|pct_conv}})
+                  </td>
+                  <td>
+                    <span class="number number-rank">
+                      {{r.deaths_rank_region_month}}°
+                    </span> -
+                    <span class="number number-rank">
+                      {{r.deaths_rank_world_month}}°
+                    </span>
+                  </td>
+              </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  </p>
+
 </div>
 
 {% endblock content %}

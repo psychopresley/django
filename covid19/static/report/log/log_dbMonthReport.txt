@@ -1,7 +1,7 @@
 
 ----------dbMonthReport.py SCRIPT EXECUTION REPORT-----------
 
-Local time: Thu Mar  4 20:32:01 2021
+Local time: Sat Mar  6 17:22:09 2021
 
 
  Most recent date on report: 2021-03 
