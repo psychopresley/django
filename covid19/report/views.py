@@ -75,10 +75,14 @@ def countriespage(request): # This is a FORM PAGE
                         }
 
     rows=[]
+    idx=0
     for obj in month_report:
         dict={}
         for key in month_report_dict.keys():
             dict[key]=obj.__dict__[key.replace('_month','')]
+        dict = {**dict,**{'idx':idx,}}
+        idx += 1
+
         rows.append(dict)
 
     days_in_month = monthrange(status.date.year,status.date.month)[1]
@@ -86,8 +90,15 @@ def countriespage(request): # This is a FORM PAGE
     deaths_prediction = int(month_report[0].deaths*(days_in_month)/status.date.day)
     confirmed_prediction = int(month_report[0].confirmed*(days_in_month)/status.date.day)
 
-    deaths_prediction_pct = (deaths_prediction - month_report[1].deaths)/month_report[1].deaths
-    confirmed_prediction_pct = (confirmed_prediction - month_report[1].confirmed)/month_report[1].confirmed
+    if month_report[1].confirmed > 0:
+        confirmed_prediction_pct = (confirmed_prediction - month_report[1].confirmed)/month_report[1].confirmed
+    else:
+        confirmed_prediction_pct = 0
+
+    if month_report[1].deaths > 0:
+        deaths_prediction_pct = (deaths_prediction - month_report[1].deaths)/month_report[1].deaths
+    else:
+        deaths_prediction_pct = 0
 
     month_dict = {'month_rows':rows,
                   'month_header':['','Confirmed','Rank (Region - World)','Deaths','Rank (Region - World)'],
