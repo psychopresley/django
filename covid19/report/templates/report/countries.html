@@ -131,19 +131,22 @@
 
 <div>  <!-- START OF THE MONTH/WEEK REPORT AREA -->
   <br><h3> Month-by-Month:</h3>
-  {% get_value month_rows key='confirmed_month' as confirmed_month %}
+  {% get_value month_rows as confirmed_month %}
   {% get_value month_rows key='deaths_month' as deaths_month %}
 
   <br><p>
+    {% with report_date|date:'j' as current_day %}
+
     The table below sums up the reported confirmed and death cases related to the coronavirus for each month. For the
     present month, {{report_date|date:'M/y'}}, the numbers are up to day {{report_date|date:'j'}}. A total of
     {{confirmed_month|style:'us'}} new infections and {{deaths_month|style:'us'}} deaths were reported so far, which
-    gives a daily average of {% math confirmed_month arg=report_date|date:'j' op='div' %} new infections and {% math deaths_month arg=report_date|date:'j' op='div' %}
+    gives a daily average of {{confirmed_month|div:current_day|integer|style:'us'}} new infections and {{deaths_month|div:current_day|integer|style:'us'}}
     deaths. If we take these averages as predictors, {{report_date|date:'M/y'}} will end with a total of {{confirmed_prediction|style:'us'}}
     newly infected habitants, {% if confirmed_prediction_pct >= 0 %}an increase of{% else %} a decrease of {% endif %}
-    {% pct confirmed_prediction_pct absolute=True %} when compared to the previous month and {{deaths_prediction|style:'us'}} lives lost to the coronavirus,
-    {% if deaths_prediction_pct >= 0 %}an increase of{% else %} a decrease of {% endif %} {% pct deaths_prediction_pct absolute=True %}.
+    {{confirmed_prediction_pct|mod|pct}} when compared to the previous month and {{deaths_prediction|style:'us'}} lives lost to the coronavirus,
+    {% if deaths_prediction_pct >= 0 %}an increase of{% else %} a decrease of {% endif %} {{deaths_prediction_pct|mod|pct}}.
 
+    {% endwith %}
   </p><br>
 
   <div class="container">
