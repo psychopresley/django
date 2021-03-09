@@ -5,10 +5,10 @@
 
 /* VARIABLE DEFINITIONS */
 :root{
-  --number-absolut: black;
-  --number-rank: green;
-  --number-rate: red;
-  --number-new-cases: #bd8100;
+  --number-absolut: #000000;
+  --number-rank: #1e8a47;
+  --number-rate: #8c1f1f;
+  --number-new-cases: #eb5736;
 
   --link-hover: purple;
   --country-display-name: #8ea9ad;
