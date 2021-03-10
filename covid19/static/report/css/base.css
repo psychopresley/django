@@ -7,10 +7,10 @@
 :root{
   --number-absolut: #000000;
   --number-rank: #1e8a47;
-  --number-rate: #8c1f1f;
+  --number-rate: #4287f5;
   --number-new-cases: #eb5736;
 
-  --link-hover: purple;
+  --link-hover: #8435b5;
   --country-display-name: #8ea9ad;
 }
 

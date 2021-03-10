@@ -1,11 +1,8 @@
 
 ----------dbMonthReport.py SCRIPT EXECUTION REPORT-----------
 
-Local time: Tue Mar  9 21:15:54 2021
+Local time: Wed Mar 10 20:51:47 2021
 
 
- Most recent date on report: 2021-03 
-
- Script executed succesfully! 
-
- End of execution of the dbMonthReport.py script 
+ --> current file has not been modified. Nothing to do here.
+ Script execution time: 0.02sec 

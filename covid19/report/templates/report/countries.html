@@ -2,6 +2,7 @@
 
 {% block content %}
 {% load static %}
+{% load bootstrap5 %}
 {% load report_tagfilters %}
 
 <div class="display_page" id="countries_page">
@@ -15,12 +16,12 @@
   </div>
   <div class="col-sm-4">
     <form method="POST">
-      {{form.as_p}}
-      <input type="submit" class="btn btn-success" value="Generate report" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">
       {% csrf_token %}
+      {% bootstrap_form form layout='inline' %}
+      <input type="submit" class="btn btn-success" value="Generate report" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">
     </form>
-</div>
-</div>
+  </div>
+  </div>
 
   <!-- COUNTRY TITLE AND FOOTER -->
 
@@ -37,8 +38,9 @@
       alt={{country_name}}>
       {{name}}
   </h1>
+
   <p class="country-title-footer">{{region}}, <span class="coordinates">{{country_coord}}</span></p>
-  <br> <!-- END OF COUNTRY TITLE AND FOOTER -->
+  <!-- END OF COUNTRY TITLE AND FOOTER -->
 
   <!-- COUNTRY INFO TABLE COLUMN -->
 
