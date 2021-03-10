@@ -133,20 +133,20 @@
   <br><h3> Month-by-Month:</h3>
   {% get_value month_rows as confirmed_month %}
   {% get_value month_rows key='deaths_month' as deaths_month %}
+  {% get_value month_rows key='last_update' as last_update %}
 
   <br><p>
-    {% with report_date|date:'j' as current_day %}
+    {% with this_month=report_date|date:'M/y' last_day=last_update|date:'j' %}
 
     The table below sums up the reported confirmed and death cases related to the coronavirus for each month. For the
-    present month, {{report_date|date:'M/y'}}, the numbers are up to day {{report_date|date:'j'}}. A total of
+    present month, {{this_month}}, the numbers are up to day {{last_day}}. A total of
     <span class="number number-new">{{confirmed_month|style:'us'}}</span> new infections and <span class="number number-new">{{deaths_month|style:'us'}}</span> deaths were reported so far, which
-    gives a daily average of <span class="number number-new">{{confirmed_month|div:current_day|integer|style:'us'}}</span> new infections and <span class="number number-new">{{deaths_month|div:current_day|integer|style:'us'}}</span>
-    deaths. If we take these averages as predictors, {{report_date|date:'M/y'}} will end with a total of <span class="number number-new">{{confirmed_prediction|style:'us'}}</span>
+    gives a daily average of <span class="number number-new">{{confirmed_month|div:last_day|integer|style:'us'}}</span> new infections and <span class="number number-new">{{deaths_month|div:last_day|integer|style:'us'}}</span>
+    deaths. If we take these averages as predictors, {{this_month}} will end with a total of <span class="number number-new">{{confirmed_prediction|style:'us'}}</span>
     newly infected habitants, {% if confirmed_prediction_pct >= 0 %}an increase of{% else %} a decrease of {% endif %}
     <span class="number number-rate">{{confirmed_prediction_pct|mod|pct}}</span> when compared to the previous month and <span class="number number-new">{{deaths_prediction|style:'us'}}</span> lives lost to the coronavirus,
     {% if deaths_prediction_pct >= 0 %}an increase of{% else %} a decrease of {% endif %} <span class="number number-rate">{{deaths_prediction_pct|mod|pct}}</span>.
 
-    {% endwith %}
   </p><br>
 
   <div class="container">
@@ -164,10 +164,9 @@
           {% for r in month_rows %}
               <tr>
                   <th scope="row" style="text-align:left;">{{r.month|monthname}}</th>
-                  <td {% if r.idx == 0 %}
-                        style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="top" title="Prediction for {{report_date|date:'M/y'}}: {{confirmed_prediction|style:'us'}} ({{confirmed_prediction_pct|pct}})"
-                      {% endif %}>
-                        {{r.confirmed_month|style:'us'}} ({{r.confirmed_pct_change_month|pct:False}})
+                  <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="top"
+                      title="Daily average: {% if r.idx == 0 %}{{r.confirmed_month|div:last_day|integer|style:'us'}}{% else %}{{r.confirmed_month|div:r.days_in_month|integer|style:'us'}}{% endif %}">
+                      {{r.confirmed_month|style:'us'}} ({{r.confirmed_pct_change_month|pct:False}})
                   </td>
                   <td>
                     <span class="number number-rank">
@@ -177,10 +176,9 @@
                       {{r.confirmed_rank_world_month}}°
                     </span>
                   </td>
-                  <td {% if r.idx == 0 %}
-                        style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="top" title="Prediction for {{report_date|date:'M/y'}}: {{deaths_prediction|style:'us'}} ({{deaths_prediction_pct|pct}})
-                      {% endif %}">
-                        {{r.deaths_month|style:'us'}} ({{r.deaths_pct_change_month|pct:False}})
+                  <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="top"
+                      title="Daily average: {% if r.idx == 0 %}{{r.deaths_month|div:last_day|integer|style:'us'}}{% else %}{{r.deaths_month|div:r.days_in_month|integer|style:'us'}}{% endif %}">
+                      {{r.deaths_month|style:'us'}} ({{r.deaths_pct_change_month|pct:False}})
                   </td>
                   <td>
                     <span class="number number-rank">
@@ -195,6 +193,8 @@
       </tbody>
     </table>
   </div>
+
+  {% endwith %} <!-- variables this_month and last_day declaration -->
 
 </div>
 
