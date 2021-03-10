@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View,TemplateView
-from calendar import monthrange
 from . import forms
 from report.models import StatusReport, MonthReport
 
@@ -67,7 +66,7 @@ def countriespage(request): # This is a FORM PAGE
 
     # PASSING MONTHREPORT MODEL VARIABLES AS TEMPLATE TAGS
     month_report_dict = {
-                         'month':[],
+                         'month':[],'last_update':[],
                          'confirmed_month':[],'confirmed_pct_change_month':[],
                          'confirmed_rank_region_month':[],'confirmed_rank_world_month':[],
                          'deaths_month':[],'deaths_pct_change_month':[],
@@ -80,15 +79,13 @@ def countriespage(request): # This is a FORM PAGE
         dict={}
         for key in month_report_dict.keys():
             dict[key]=obj.__dict__[key.replace('_month','')]
-        dict = {**dict,**{'idx':idx,}}
+        dict = {**dict,**{'idx':idx,'days_in_month':obj.__dict__['days_in_month']}}
         idx += 1
 
         rows.append(dict)
 
-    days_in_month = monthrange(status.date.year,status.date.month)[1]
-
-    deaths_prediction = int(month_report[0].deaths*(days_in_month)/status.date.day)
-    confirmed_prediction = int(month_report[0].confirmed*(days_in_month)/status.date.day)
+    deaths_prediction = int(month_report[0].deaths*(month_report[0].days_in_month)/status.date.day)
+    confirmed_prediction = int(month_report[0].confirmed*(month_report[0].days_in_month)/status.date.day)
 
     if month_report[1].confirmed > 0:
         confirmed_prediction_pct = (confirmed_prediction - month_report[1].confirmed)/month_report[1].confirmed

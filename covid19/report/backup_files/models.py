@@ -85,9 +85,6 @@ class MonthReport(models.Model):
     deaths_pct_change = models.FloatField(default=0)
     deaths_rank_region = models.IntegerField(default=0)
     deaths_rank_world = models.IntegerField(default=0)
-    days_in_month = models.IntegerField(default=30)
-    last_update = models.DateField(default=date.today)
-
 
     def __str__(self):
         return self.country.name

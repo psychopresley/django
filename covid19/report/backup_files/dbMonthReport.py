@@ -8,7 +8,6 @@ from pandas import read_json, read_csv
 from datetime import date
 from numpy import inf, nan
 from time import ctime
-from calendar import monthrange
 from report.models import Country, MonthReport
 
 def main():
@@ -55,22 +54,16 @@ def main():
             country_table_file = os.path.join(config.loc['countryinfo_file'].file_path,
                                               config.loc['countryinfo_file'].file_name)
 
-            label_map_file = os.path.join(config.loc['labelmap_file'].file_path,
-                                              config.loc['labelmap_file'].file_name)
-
             countries_table = read_csv(country_table_file,index_col='Country')
 
             # reading region dictionary:
             region_dict = countries_table['Region'].to_dict()
-            label_dict = read_csv(label_map_file,header=None,index_col=0).to_dict()[1]
 
             print("Reading 'country_report.json' file")
             df = read_json(country_report)
 
-            print("Creating month report table")
+            print("Generating month report table")
             df_aux = df.copy()[['Country/Region','Date']]
-
-            df_aux['Country/Region'] = df_aux['Country/Region'].transform(lambda x: label_dict[x] if x in label_dict.keys() else x)
             df_aux['month'] = df_aux['Date'].transform(lambda x:date(x.year, x.month, x.day).strftime('%Y-%m'))
 
             column_names = ['Confirmed','Deaths']
@@ -91,10 +84,6 @@ def main():
                 df_aux[column + '_rank_world'] = df_aux.groupby('month')[column].rank(method='min',ascending=False)
                 df_aux[column + '_rank_region'] = df_aux.groupby(['month','region'])[column].rank(method='min',ascending=False)
 
-            df_aux['days_in_month'] = df_aux['month'].transform(lambda x:monthrange(int(x[:4]),int(x[-2:]))[1])
-            df_aux['last_update'] = df['Date'].max()
-            df_aux['last_update'] = df_aux['last_update'].transform(lambda x:date(x.year,x.month,x.day))
-
             month_report = df_aux.copy()
             print("month_report table generated succesfully!")
 
@@ -104,27 +93,22 @@ def main():
                 print('updating all entries in models.MonthReport')
 
                 for item in countries_list:
-                    df_info = month_report.loc[month_report['Country/Region']==item]
-                    country = MonthReport.objects.filter(country=item)
+                    info = month_report.loc[month_report['Country/Region']==item]
+                    country = MonthReport.objects.get(country__name=item)
 
-                    for obj in country:
-                        param = df_info.loc[df_info.month == obj.__dict__['month']]
+                    country.month=info.Date.values[0]
+                    country.confirmed=int(info.Confirmed.values[0])
+                    country.confirmed_pct_change=float(info['Confirmed_daily_%inc_by_country'].values[0])
+                    country.confirmed_rank_region=int(info.Confirmed_rank_in_region.values[0])
+                    country.confirmed_rank_world=int(info.Confirmed_rank_in_world.values[0])
+                    country.deaths=int(info.Deaths.values[0])
+                    country.deaths_pct_change=float(info['Deaths_daily_%inc_by_country'].values[0])
+                    country.deaths_rank_region=int(info.Deaths_rank_in_region.values[0])
+                    country.deaths_rank_world=int(info.Deaths_rank_in_world.values[0])
 
-                        obj.month=param.month.values[0]
-                        obj.confirmed=int(param.Confirmed.values[0])
-                        obj.confirmed_pct_change=float(param.Confirmed_pct_change.values[0])
-                        obj.confirmed_rank_region=int(param.Confirmed_rank_region.values[0])
-                        obj.confirmed_rank_world=int(param.Confirmed_rank_world.values[0])
-                        obj.deaths=int(param.Deaths.values[0])
-                        obj.deaths_pct_change=float(param.Deaths_pct_change.values[0])
-                        obj.deaths_rank_region=int(param.Deaths_rank_region.values[0])
-                        obj.deaths_rank_world=int(param.Deaths_rank_world.values[0])
-                        obj.days_in_month=int(param.days_in_month.values[0])
-                        obj.last_update=param.last_update.values[0]
-
-                        obj.save()
+                    country.save()
                     print('{} updated in models.MonthReport'.format(item))
-                # log_dbMonthReport.append('\n models.MonthReport updated succesfully \n')
+                log_dbMonthReport.append('\n models.MonthReport updated succesfully \n')
             else:
                 db_del(MonthReport,confirm_before=confirm_value)
 
@@ -146,14 +130,12 @@ def main():
                                                                       deaths=param.Deaths,
                                                                       deaths_pct_change=param.Deaths_pct_change,
                                                                       deaths_rank_region=int(param.Deaths_rank_region),
-                                                                      deaths_rank_world=int(param.Deaths_rank_world),
-                                                                      days_in_month=param.days_in_month,
-                                                                      last_update=param.last_update)[0]
+                                                                      deaths_rank_world=int(param.Deaths_rank_world))[0]
 
                             entry.save()
                         print('{} inserted into models.MonthReport'.format(item))
                     else:
-                        print(item + ' is not on Country.models')
+                        print(item + ' is not on MonthReport.models')
 
         message = 'Script executed succesfully!'
         print(message)
