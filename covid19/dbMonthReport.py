@@ -169,21 +169,32 @@ def main():
             print("month_report table generated succesfully!")
 
             # =================================================================
-            # Now, let's compare the latest year/month in table with the latest
-            # year/month in database. If they are the same, update is enabled:
+            # Now, let's compare the latest month in table with the latest month
+            # in database. If they are the same, update is enabled. Otherwise, a
+            # database insert query is called:
 
-            latest_year_in_report = month_report.last_update.max().year
-            latest_month_in_report = month_report.last_update.max().month
+            db_last_month = MonthReport.objects.order_by('-month')[0].month
 
-            year_month = MonthReport.objects.order_by('-month')[0].month
-            latest_year_in_db = int(year_month[:4])
-            latest_month_in_db = int(year_month[-2:])
+            x = month_report.last_update.max()
+            report_last_month = date(x.year, x.month, x.day).strftime('%Y-%m')
 
-            flag_same_year = latest_year_in_report == latest_year_in_db
-            flag_same_month = latest_month_in_report == latest_month_in_db
+            if db_last_month == report_last_month:
+                flag_update = 'update'
+            else:
+                year_in_report = int(report_last_month[:4])
+                year_in_db = int(db_last_month[:4])
 
-            flag_different_year = latest_year_in_report > latest_year_in_db
-            flag_different_month = latest_month_in_report > latest_month_in_db
+                month_in_report = int(report_last_month[-2:])
+                month_in_db = int(db_last_month[-2:])
+
+                if year_in_report < year_in_db:
+                    flag_update = 'ahead'
+                else:
+                    if month_in_report > month_in_db:
+                        flag_update = 'insert'
+                    else:
+                        flag_update = 'ahead'
+
             # =================================================================
 
             if update:
@@ -193,26 +204,27 @@ def main():
                 # Once update is enabled, the month_report dataframe will be filtered
                 # to the last 'year-month' and the objects in database will be filtered
                 # to those in the same year-month in order to save memory resources:
-                if flag_same_year and flag_same_month:
-                    df = month_report.loc[month_report['month']==year_month]
-                    modeldb = MonthReport.objects.filter(month=year_month)
+                if flag_update == 'update':
+                    df = month_report.loc[month_report['month']==db_last_month]
+                    modeldb = MonthReport.objects.filter(month=db_last_month)
 
                     update_db(df,modeldb)
-                elif flag_different_year or flag_different_month:
+                elif flag_update == 'insert':
                     # In case there's a difference between months or years between
                     # the report and the database, first we update the last month
                     # in the database and then we insert the other months new objects
 
                     # 1 - Update last month in database:
-                    df = month_report.loc[month_report['month']==year_month]
-                    modeldb = MonthReport.objects.filter(month=year_month)
+                    df = month_report.loc[month_report['month']==db_last_month]
+                    modeldb = MonthReport.objects.filter(month=db_last_month)
 
                     update_db(df,modeldb)
 
                     # 2 - Insert new month(s) in database:
-                    df = month_report.loc[month_report['month'] > year_month]
+                    df = month_report.loc[month_report['month'] > db_last_month]
                     insert_db(df,countries_list)
                 else:
+                    log_dbMonthReport.append('\n models.MonthReport is ahead of report. No action taken. \n')
                     pass
 
                 log_dbMonthReport.append('\n models.MonthReport updated succesfully \n')

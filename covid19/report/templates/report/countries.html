@@ -12,36 +12,36 @@
 
 <div class="row">
   <div class="col-sm-8">
-
+  <!-- COUNTRY TITLE AND FOOTER -->
+  <div class="container" id="country-title" style="cursor:default;">
+    <!-- country flags embeded from https://flagpedia.net/download/api -->
+      <h1 class="country-title">
+        <img
+          class="flag"
+          src="https://flagcdn.com/48x36/{{internet_code}}.png"
+          srcset="https://flagcdn.com/96x72/{{internet_code}}.png 2x,
+            https://flagcdn.com/144x108/{{internet_code}}.png 3x"
+          width="48"
+          height="36"
+          alt={{country_name}}>
+          {{name}}
+      </h1>
+      <p class="country-title-footer">{{region}}, <span class="coordinates">{{country_coord}}</span></p>
+      <!-- END OF COUNTRY TITLE AND FOOTER -->
+  </div> <!-- END OF DIV CLASS CONTAINER ID=COUNTRY-NAME -->
   </div>
   <div class="col-sm-4">
-    <form method="POST">
-      {% csrf_token %}
-      {% bootstrap_form form layout='inline' %}
-      <input type="submit" class="btn btn-success" value="Generate report" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">
-    </form>
+    <div class="form-select">
+      <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form layout='inline' %}
+        <input type="submit" class="btn btn-success" value="Generate report" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">
+      </form>
+    </div>
   </div>
-  </div>
+</div>
 
-  <!-- COUNTRY TITLE AND FOOTER -->
-
-<!-- country flags embeded from https://flagpedia.net/download/api -->
-  <br><br>
-  <h1 class="country-title">
-    <img
-      class="flag"
-      src="https://flagcdn.com/48x36/{{internet_code}}.png"
-      srcset="https://flagcdn.com/96x72/{{internet_code}}.png 2x,
-        https://flagcdn.com/144x108/{{internet_code}}.png 3x"
-      width="48"
-      height="36"
-      alt={{country_name}}>
-      {{name}}
-  </h1>
-
-  <p class="country-title-footer">{{region}}, <span class="coordinates">{{country_coord}}</span></p>
-  <!-- END OF COUNTRY TITLE AND FOOTER -->
-
+  <br>
   <!-- COUNTRY INFO TABLE COLUMN -->
 
   <div class="row">
@@ -144,7 +144,7 @@
     present month, {{this_month}}, the numbers are up to day {{last_day}}. A total of
     <span class="number number-new">{{confirmed_month|style:'us'}}</span> new infections and <span class="number number-new">{{deaths_month|style:'us'}}</span> deaths were reported so far, which
     gives a daily average of <span class="number number-new">{{confirmed_month|div:last_day|integer|style:'us'}}</span> new infections and <span class="number number-new">{{deaths_month|div:last_day|integer|style:'us'}}</span>
-    deaths. If we take these averages as predictors, {{this_month}} will end with a total of <span class="number number-new">{{confirmed_prediction|style:'us'}}</span>
+    deaths. If we take these averages as predictors, {{this_month}} will end with a total of <span class="number number-new" >{{confirmed_prediction|style:'us'}}</span>
     newly infected habitants, {% if confirmed_prediction_pct >= 0 %}an increase of{% else %} a decrease of {% endif %}
     <span class="number number-rate">{{confirmed_prediction_pct|mod|pct}}</span> when compared to the previous month and <span class="number number-new">{{deaths_prediction|style:'us'}}</span> lives lost to the coronavirus,
     {% if deaths_prediction_pct >= 0 %}an increase of{% else %} a decrease of {% endif %} <span class="number number-rate">{{deaths_prediction_pct|mod|pct}}</span>.
