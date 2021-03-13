@@ -1,0 +1,52 @@
+{% extends "report/base.html" %}
+
+{% block content %}
+
+  <div class="display_page" id="active_cases_page">
+
+    <br><h3>I. Top countries by active cases</h3>
+
+    <p><br>
+
+      The key indicator of the coronavirus outbreak is the number of daily active cases. This is the total number of
+      confirmed cases, minus the reported number of deaths, minus the total recovered people in a given day. In other
+      words it is the current number of people  with the coronavirus disease. The chart below shows the top 10 countries
+      by active cases through time.
+
+    </p>
+
+    <div class="flourish-embed flourish-bar-chart-race" data-src="visualisation/4983302">
+      <script src="https://public.flourish.studio/resources/embed.js"></script>
+    </div>
+
+
+    <p><br>
+
+      You can also check the 'static' chart below for the active cases by country where you can select the number of
+      elements to display and see the evolution of the pandemics through time.
+
+    </p>
+
+
+    <div class="flourish-embed" data-src="visualisation/5081617">
+      <script src="https://public.flourish.studio/resources/embed.js"></script>
+    </div>
+
+
+    <br><h3>II. Visualizing the waves</h3>
+
+    <p><br>
+
+      As we did for the confirmed cases below is a graphic where the wave behaviour of the pandemics can be better
+      visualized for a given country. The darker areas with more concentrated dark strips means a peak in time for
+      the rate of infections in the country
+
+    </p>
+
+    <div class="flourish-embed flourish-heatmap" data-src="visualisation/5077322">
+      <script src="https://public.flourish.studio/resources/embed.js"></script>
+    </div>
+
+  </div> <!-- div id -->
+
+{% endblock content %}

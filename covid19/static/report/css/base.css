@@ -14,12 +14,33 @@
   --country-display-name: #8ea9ad;
 }
 
+ /* Requires javascript command to enable page visibility after load. Place the
+ following commands anywhere on your javascript file:
+
+    $(document).ready(function(){
+        const x = $('.display_page').attr('id');
+        if (x === 'countries_page') {
+          $('.form-select').css('visibility','visible')
+        }
+        else {
+          $('.form-select').css('visibility','hidden')
+        }
+        $('html').css('visibility','visible')
+    });
+
+ */
+
+html {visibility:hidden;}
+
 
 /* COMPONENTS CSS */
 
 body{
   text-align: justify;
 }
+
+
+/* TEXT ELEMENTS AND TYPOGRAPHY */
 
 h1.country-title{
   font-size: 42px;

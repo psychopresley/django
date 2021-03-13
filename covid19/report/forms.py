@@ -7,7 +7,7 @@ COUNTRIES_LIST = list([(x.name,x.name) for x in COUNTRIES]);
 COUNTRIES_LIST.sort()
 
 class SelectCountry(forms.Form):
-    country= forms.CharField(label='Select country', label_suffix=': ',
+    country= forms.CharField(label='', label_suffix=': ',
                              widget=forms.Select(choices=COUNTRIES_LIST),
                              initial='Brazil');
 

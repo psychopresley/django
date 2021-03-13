@@ -84,8 +84,8 @@ def countriespage(request): # This is a FORM PAGE
 
         rows.append(dict)
 
-    deaths_prediction = int(month_report[0].deaths*(month_report[0].days_in_month)/status.date.day)
-    confirmed_prediction = int(month_report[0].confirmed*(month_report[0].days_in_month)/status.date.day)
+    deaths_prediction = int(month_report[0].deaths*(month_report[0].days_in_month)/month_report[0].last_update.day)
+    confirmed_prediction = int(month_report[0].confirmed*(month_report[0].days_in_month)/month_report[0].last_update.day)
 
     if month_report[1].confirmed > 0:
         confirmed_prediction_pct = (confirmed_prediction - month_report[1].confirmed)/month_report[1].confirmed

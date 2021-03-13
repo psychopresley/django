@@ -31,7 +31,7 @@
   </div> <!-- END OF DIV CLASS CONTAINER ID=COUNTRY-NAME -->
 
   </div>
-  <!-- <div class="col-auto">
+  <div class="col-auto">
     <div class="form-select">
       <form method="POST">
         {% csrf_token %}
@@ -40,7 +40,7 @@
       </form>
     </div>
   </div>
-</div> -->
+</div>
 
   <br>
   <!-- COUNTRY INFO TABLE COLUMN -->
@@ -51,7 +51,7 @@
       <table class="table table-borderless table-hover">
         <tbody>
           <tr>
-            <th scope="row" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Confirmed cases">
+            <th scope="row" data-bs-toggle="tooltip" title="Confirmed cases">
               <i class="bi bi-file-earmark-medical" style="font-size: 5rem; color: cornflowerblue;"></i>
             </th>
             <td>
@@ -69,7 +69,7 @@
             </td>
           </tr>
           <tr>
-            <th scope="row" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Active cases">
+            <th scope="row" data-bs-toggle="tooltip" title="Active cases">
                 <i class="bi bi-people" style="font-size: 5rem; color: green;"></i>
             </th>
             <td>
@@ -86,7 +86,7 @@
             </td>
           </tr>
           <tr>
-            <th scope="row" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Deaths">
+            <th scope="row" data-bs-toggle="tooltip" title="Deaths">
               <i class="bi bi-emoji-frown" style="font-size: 5rem; color: red;"></i>
             </th>
             <td>
@@ -163,7 +163,7 @@
           {% for r in month_rows %}
               <tr>
                   <th scope="row" style="text-align:left;">{{r.month|monthname}}</th>
-                  <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
+                  <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="top"
                       title="Daily average: {% if r.idx == 0 %}{{r.confirmed_month|div:last_day|integer|style:'us'}}{% else %}{{r.confirmed_month|div:r.days_in_month|integer|style:'us'}}{% endif %}">
                       {{r.confirmed_month|style:'us'}} ({{r.confirmed_pct_change_month|pct:False}})
                   </td>
@@ -175,7 +175,7 @@
                       {{r.confirmed_rank_world_month}}°
                     </span>
                   </td>
-                  <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
+                  <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="top"
                       title="Daily average: {% if r.idx == 0 %}{{r.deaths_month|div:last_day|integer|style:'us'}}{% else %}{{r.deaths_month|div:r.days_in_month|integer|style:'us'}}{% endif %}">
                       {{r.deaths_month|style:'us'}} ({{r.deaths_pct_change_month|pct:False}})
                   </td>
