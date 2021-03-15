@@ -4,6 +4,12 @@ from django.views.generic import View,TemplateView
 from . import forms
 from report.models import StatusReport, MonthReport
 
+# Importing plotly modules:
+import plotly.graph_objs as go
+import plotly.express as px
+from plotly.offline import plot
+from plotly.subplots import make_subplots
+
 # Create your views here.
 
 # THIS IS THE HOME (INDEX) PAGE:
@@ -14,8 +20,12 @@ class IndexView(TemplateView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
 
+        form = forms.SelectCountry()
+        selected_country = form['country'].initial
+
         context['nav_index'] = 'active'
         context['report_date'] = StatusReport.objects.order_by('-date')[0].date
+        context['form'] = form
 
         return context
 
@@ -28,6 +38,10 @@ class ActiveView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['nav_active'] = 'active'
 
+        form = forms.SelectCountry()
+        selected_country = form['country'].initial
+        context['form'] = form
+
         return context
 
 
@@ -37,6 +51,10 @@ class ConfirmedView(TemplateView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context['nav_confirmed'] = 'active'
+
+        form = forms.SelectCountry()
+        selected_country = form['country'].initial
+        context['form'] = form
 
         return context
 
@@ -74,14 +92,22 @@ def countriespage(request): # This is a FORM PAGE
                         }
 
     rows=[]
+    x_month=[]
+    y_confirmed=[]
+    y_deaths=[]
     idx=0
+
     for obj in month_report:
         dict={}
         for key in month_report_dict.keys():
             dict[key]=obj.__dict__[key.replace('_month','')]
         dict = {**dict,**{'idx':idx,'days_in_month':obj.__dict__['days_in_month']}}
-        idx += 1
 
+        x_month.append(obj.__dict__['month'])
+        y_deaths.append(obj.__dict__['deaths'])
+        y_confirmed.append(obj.__dict__['confirmed'])
+
+        idx += 1
         rows.append(dict)
 
     deaths_prediction = int(month_report[0].deaths*(month_report[0].days_in_month)/month_report[0].last_update.day)
@@ -105,8 +131,42 @@ def countriespage(request): # This is a FORM PAGE
                   'deaths_prediction_pct':deaths_prediction_pct,
                   }
 
+    # ADDING SOME CHARTS:
+    # Here's a nice page if you wish to know more about plotly + django:
+    # https://www.codingwithricky.com/2019/08/28/easy-django-plotly/
+    # colorscales code: https://plotly.com/python/builtin-colorscales/
+
+    fig = make_subplots(
+    rows=2, cols=1,
+    row_heights=[0.5, 0.5],
+    subplot_titles=("Confirmed","Deaths"),
+    shared_xaxes=True,
+    specs=[[{"type": "bar"}],
+           [{"type": "bar"}]])
+
+    fig.add_trace(
+    go.Bar(x=x_month, y=y_confirmed, name='Confirmed', opacity=0.5, marker={"color":y_confirmed,"colorscale":'algae'},showlegend=False,),
+    row=1, col=1
+    )
+
+    fig.add_trace(
+    go.Bar(x=x_month, y=y_deaths, name='Deaths', opacity=0.5, marker={"color":y_deaths,"colorscale":'Teal'},showlegend=False,),
+    row=2, col=1
+    )
+
+    fig.update_layout(
+    template="seaborn",
+    margin={'l':20,'r':10,'t':30,'b':10},
+    plot_bgcolor='white',
+    )
+
+    # Update xaxis properties
+    fig.update_xaxes(title_text="Month", row=2, col=1)
+
+    plot_month = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
     return render(request,'report/countries.html',
-                  {'form':form,'nav_countries':'active',**status_dict,**month_dict})
+                  {'form':form,'nav_countries':'active','plot_month':plot_month,**status_dict,**month_dict})
 
 
 class DeathsView(TemplateView):
@@ -115,6 +175,10 @@ class DeathsView(TemplateView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context['nav_deaths'] = 'active'
+
+        form = forms.SelectCountry()
+        selected_country = form['country'].initial
+        context['form'] = form
 
         return context
 
@@ -125,6 +189,10 @@ class ReadMeView(TemplateView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context['nav_readme'] = 'active'
+
+        form = forms.SelectCountry()
+        selected_country = form['country'].initial
+        context['form'] = form
 
         return context
 

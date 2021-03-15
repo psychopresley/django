@@ -6,9 +6,15 @@ $(document).ready(function(){
 
 
 // Toggles visibility of select form by clicking on the country-title container:
-$("#country-title").click(function(){
-  $(".form-select").toggle();
-});
+// $("#country-title").click(function(){
+//   const x = $(".form-select-country").css('visibility')
+//   if (x==='hidden') {
+//     $('.form-select-country').css('visibility','visible')
+//   }
+//   else {
+//     $('.form-select-country').css('visibility','hidden')
+//   }
+// });
 
 
 // Toggles page and components visibility and then enables page visibility. This
@@ -16,10 +22,10 @@ $("#country-title").click(function(){
 $(document).ready(function(){
     const x = $('.display_page').attr('id');
     if (x === 'countries_page') {
-      $('.form-select').css('visibility','visible')
+      $('.form-select-country').css('visibility','visible')
     }
     else {
-      $('.form-select').css('visibility','hidden')
+      $('.form-select-country').css('visibility','hidden')
     }
     $('html').css('visibility','visible')
 });
