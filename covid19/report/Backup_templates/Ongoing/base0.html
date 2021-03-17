@@ -6,17 +6,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Marcio Garcia">
-    <title class="main-headings">THE COVID-19 REPORT</title>
+    <title>THE COVID-19 REPORT</title>
 
     <!-- Include own expanded styling configuration -->
     <link rel="stylesheet" href="{% static 'report/css/base.css' %}">
-    <link rel="icon" href="{% static 'report/images/tabicon.svg' %}" type="image/gif">
-
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 
   </head>
 
@@ -24,9 +21,9 @@
 
     <!-- Page header with subtitles -->
     <div class="container">
-     <div class="page-header main-headings">
+     <div class="page-header">
          <h1 style="font-size:60px;"><a class="header-link" href="{% url 'admin:index' %}">THE COVID-19 REPORT</a></h1>
-          <p style="font-size:18px;">Infos and vizzes you won't see around</p>
+          <p><em>Infos and vizzes you won't see around</em></p>
       </div>
     </div>
      <style>
@@ -51,32 +48,43 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}"><span class="{{nav_index}}"><i class="fa fa-lg fa-home"></i>Home</a></span>
+                <a class="nav-link" href="{% url 'index' %}"><i class="fa fa-lg fa-home"></i>Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'report:confirmedpage' %}"><span class="{{nav_confirmed}}">Confirmed</span></a>
+                <a class="nav-link" href="{% url 'report:confirmedpage' %}">Confirmed</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'report:activepage' %}"><span class="{{nav_active}}">Active</span></a>
+                <a class="nav-link" href="{% url 'report:activepage' %}">Active</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{nav_deaths}}" href="{% url 'report:deathspage' %}"><span class="{{nav_deaths}}">Deaths</span></a>
+                <a class="nav-link" href="{% url 'report:deathspage' %}">Deaths</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {{nav_countries}}" href="{% url 'report:countriespage' %}"><span class="{{nav_countries}}">Countries</span></a>
+                <a class="nav-link" href="{% url 'report:countriespage' %}">Countries</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'report:readpage' %}"><span class="{{nav_readme}}">Read me, please!</span></a>
+                <a class="nav-link" href="{% url 'report:readpage' %}">Read me, please!</a>
               </li>
-            </ul>
-            <img
-              class="flag"
-              src="https://flagcdn.com/36x27/{{internet_code}}.png"
-              srcset="https://flagcdn.com/72x54/{{internet_code}}.png 2x,
-                https://flagcdn.com/108x81/{{internet_code}}.png 3x"
-              width="36"
-              height="27"
-              alt={{country_name}}> <!-- country flags embeded from https://flagpedia.net/download/api -->
+              <li class="nav-item" style="visibility:hidden;">
+                <a class="nav-link" href="{% url 'report:readpage' %}">space for visual styling</a>
+              </li>
+              <li class="nav-item">
+                <div class="container" style="padding:0px;">
+                  <div class="form-select-country">
+                    <form method="POST">
+                      <div class="row">
+                        <div class="col-auto">
+                          {% csrf_token %}
+                          {% bootstrap_form form layout='grid' %}
+                        </div>
+                        <div class="col-auto">
+                          <input type="submit" class="btn btn-success" value="Go!">
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
           </div>
         </div>
       </nav><br>

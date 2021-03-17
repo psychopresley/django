@@ -1,0 +1,20 @@
+Color Theory:
+
+- https://www.tigercolor.com/color-lab/color-theory/color-theory-intro.htm#Color_Wheel
+- https://www.viget.com/articles/color-contrast/
+- https://www.vandelaydesign.com/ultimate-guide-color-theory-designers/
+
+Palette app:
+
+- https://paletton.com/#uid=53i0u0kmAoUd5--iqsLqfkNuZfN
+- https://jxnblk.github.io/colorable/
+- https://color.adobe.com/explore/?page=2
+
+Design inspiration:
+
+- https://www.siteinspire.com/
+- https://www.webdesign-inspiration.com/
+
+Web Content Accessibility Guidelines:
+
+- https://www.w3.org/TR/WCAG20/#visual-audio-contrast
