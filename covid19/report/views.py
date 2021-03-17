@@ -23,7 +23,7 @@ class IndexView(TemplateView):
         form = forms.SelectCountry()
         selected_country = form['country'].initial
 
-        context['nav_index'] = 'active'
+        context['nav_index'] = 'navbar-item-active'
         context['report_date'] = StatusReport.objects.order_by('-date')[0].date
         context['form'] = form
 
@@ -36,7 +36,7 @@ class ActiveView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['nav_active'] = 'active'
+        context['nav_active'] = 'navbar-item-active'
 
         form = forms.SelectCountry()
         selected_country = form['country'].initial
@@ -50,7 +50,7 @@ class ConfirmedView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['nav_confirmed'] = 'active'
+        context['nav_confirmed'] = 'navbar-item-active'
 
         form = forms.SelectCountry()
         selected_country = form['country'].initial
@@ -166,7 +166,7 @@ def countriespage(request): # This is a FORM PAGE
     plot_month = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
 
     return render(request,'report/countries.html',
-                  {'form':form,'nav_countries':'active','plot_month':plot_month,**status_dict,**month_dict})
+                  {'form':form,'nav_countries':'navbar-item-active','plot_month':plot_month,**status_dict,**month_dict})
 
 
 class DeathsView(TemplateView):
@@ -174,7 +174,7 @@ class DeathsView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['nav_deaths'] = 'active'
+        context['nav_deaths'] = 'navbar-item-active'
 
         form = forms.SelectCountry()
         selected_country = form['country'].initial
@@ -188,7 +188,7 @@ class ReadMeView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['nav_readme'] = 'active'
+        context['nav_readme'] = 'navbar-item-active'
 
         form = forms.SelectCountry()
         selected_country = form['country'].initial

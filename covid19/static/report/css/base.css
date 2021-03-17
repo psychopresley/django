@@ -1,29 +1,91 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css");       /* Latest compiled and minified CSS */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");         /* Include Bootstrap icons */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");  /* Include FontAwesome icons for the Nav bar */
-
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Baumans&family=Lobster&family=Pacifico&family=Quicksand&family=Rochester&display=swap');
 
 /* VARIABLE DEFINITIONS */
 :root{
-  --number-absolut: #000000;
+  --number: #000000;
   --number-rank: #1e8a47;
   --number-rate: #4287f5;
   --number-new-cases: #eb5736;
 
   --link-hover: #8435b5;
-  --country-display-name: #8ea9ad;
+  --country-display-name: #1e8a47;
+
+  --headings-font-family: 'Baumans', cursive;
+  --body-font-family: 'Quicksand', sans-serif;
 }
 
+/* =============================================================================
+/*                                 COLOR PALETTE
+/* =============================================================================
+
+
+/* CSS - Cascading Style Sheet */
+/* Palette color codes */
+/* Palette URL: http://paletton.com/#uid=3280a0kp2hvebsnjPmIuacnEa7x */
+
+/* Feel free to copy&paste color codes to your application */
+
+
+/* As hex codes */
+
+.color-primary-0 { color: #73861D }	/* Main Primary color */
+.color-primary-1 { color: #C8DA79 }
+.color-primary-2 { color: #9BAE42 }
+.color-primary-3 { color: #4F5F05 }
+.color-primary-4 { color: #2F3A00 }
+
+.color-secondary-1-0 { color: #6C174E }	/* Main Secondary color (1) */
+.color-secondary-1-1 { color: #AF6194 }
+.color-secondary-1-2 { color: #8C356E }
+.color-secondary-1-3 { color: #4C0433 }
+.color-secondary-1-4 { color: #2E001E }
+
+.color-secondary-2-0 { color: #4B175C }	/* Main Secondary color (2) */
+.color-secondary-2-1 { color: #865696 }
+.color-secondary-2-2 { color: #673078 }
+.color-secondary-2-3 { color: #330641 }
+.color-secondary-2-4 { color: #1E0128 }
+
+/* =============================================================================
+/*                            FONT FAMILY AND PAIRINGS
+/* =============================================================================
+
+/* CSS - Cascading Style Sheet */
+/* Font families */
+/* Fonts URL: https://fonts.google.com/specimen/Baumans?preview.text_type=custom#pairings */
+/* Secondary font sources: https://www.1001fonts.com/ */
+
+/*
+CSS rules to specify families
+
+font-family: 'Alex Brush', cursive;
+font-family: 'Baumans', cursive;
+font-family: 'Lobster', cursive;
+font-family: 'Pacifico', cursive;
+font-family: 'Quicksand', sans-serif;
+font-family: 'Rochester', cursive;
+*/
+
+
+
+/* =============================================================================
+/*                            GENERAL SETTINGS
+/* =============================================================================
+
  /* Requires javascript command to enable page visibility after load. Place the
- following commands anywhere on your javascript file:
+ following commands anywhere on your javascript file. The flag class is set to
+ the image banner that appears on the navbar menu (top left of the page):
 
     $(document).ready(function(){
         const x = $('.display_page').attr('id');
         if (x === 'countries_page') {
-          $('.form-select').css('visibility','visible')
+          $('.flag').css('visibility','visible')
         }
         else {
-          $('.form-select').css('visibility','hidden')
+          $('.flag').css('visibility','hidden')
         }
         $('html').css('visibility','visible')
     });
@@ -31,19 +93,66 @@
  */
 
 html {visibility:hidden;}
-/* .form-select-country{visibility:hidden;} */
+
 
 /* COMPONENTS CSS */
 
 body{
   text-align: justify;
+  font-family: var(--body-font-family)
 }
+
+/* ==================================================================================
+/* THE FOLLOWING SESSION IS A COPY OF THE CAROUSEL CSS FILE @ BOOTSTRAP OFFICIAL PAGE
+/* ==================================================================================
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  border-right-style:solid;
+  border-width: thin;
+}
+
+.marketing h2 {
+  font-weight: 400;
+}
+/* rtl:begin:ignore */
+.marketing .col-lg-4 p {
+  margin-right: .75rem;
+  margin-left: .75rem;
+}
+/* rtl:end:ignore */
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 2rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  font-family: var(--headings-font-family);
+  /* rtl:remove */
+  letter-spacing: -.05rem;
+}
+
+/* ==================================================================================
+/* END OF THE CAROUSEL CSS CLASS @ BOOTSTRAP OFFICIAL PAGE
+/* ==================================================================================
 
 
 /* TEXT ELEMENTS AND TYPOGRAPHY */
 
-h1.country-title{
-  font-size: 42px;
+.main-headings{
+  font-family: var(--headings-font-family);
   color: var(--country-display-name);
 }
 
@@ -55,35 +164,38 @@ h1.country-title{
 /* LINKS */
 
 a.header-link:hover {
-    color: var(--link-hover);
+    color: white;
     text-decoration: none;
 }
 
+.navbar-item-active{
+  color:#330641;
+}
 /* TABLES */
 
 table, td, tr, th {
   vertical-align: center;
+  /* color:black; */
 }
 
 .table-records{
   text-align: center;
   font-size: 14px;
-  font-family: "Times New Roman", Times, Georgia, serif;
 }
 
 .table-records thead th {
   border-bottom: 1px solid #000;
 }
 
-.table-records>tbody>tr:nth-child(even)>td,
+/* .table-records>tbody>tr:nth-child(even)>td,
 .table-records>tbody>tr:nth-child(even)>th {
-   background-color: #bdffc1;opacity:0.4;
- }
+   background-color: yellow;opacity:0.2;
+ } */
 
-.table-record>tbody>tr:nth-child(odd)>td,
+/* .table-record>tbody>tr:nth-child(odd)>td,
 .table-records>tbody>tr:nth-child(odd)>th {
    background-color: #ffffff;
-}
+} */
 
 
 /* LISTS */
@@ -101,9 +213,8 @@ ul.report{
 }
 
 .number{
-  font-family: "Times New Roman", Times, serif;;
   font-weight: bold;
-  color: var(--number-absolut);
+  color: var(--number);
 }
 
 .number.number-rank{
