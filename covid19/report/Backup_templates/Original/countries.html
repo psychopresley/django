@@ -1,0 +1,200 @@
+{% extends 'report/base.html' %}
+
+{% block content %}
+{% load static %}
+{% load bootstrap5 %}
+{% load report_tagfilters %}
+
+<div class="display_page" id="countries_page">
+
+
+<!-- FORM LAYOUT -->
+
+<div class="row">
+  <div class="col-auto">
+  <!-- COUNTRY TITLE AND FOOTER -->
+  <div class="container" id="country-title" style="cursor:default;">
+    <!-- country flags embeded from https://flagpedia.net/download/api -->
+      <h1 class="country-title">
+        <img
+          class="flag"
+          src="https://flagcdn.com/48x36/{{internet_code}}.png"
+          srcset="https://flagcdn.com/96x72/{{internet_code}}.png 2x,
+            https://flagcdn.com/144x108/{{internet_code}}.png 3x"
+          width="48"
+          height="36"
+          alt={{country_name}}>
+          {{name}}
+      </h1>
+      <p class="country-title-footer">{{region}}, <span class="coordinates">{{country_coord}}</span></p>
+      <!-- END OF COUNTRY TITLE AND FOOTER -->
+  </div> <!-- END OF DIV CLASS CONTAINER ID=COUNTRY-NAME -->
+
+  </div>
+  <div class="col-auto">
+    <div class="form-select">
+      <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form layout='inline' %}
+        <input type="submit" class="btn btn-success" value="Generate report">
+      </form>
+    </div>
+  </div>
+</div>
+
+  <br>
+  <!-- COUNTRY INFO TABLE COLUMN -->
+
+  <div class="row">
+
+    <div class="col-sm-8">
+      <table class="table table-borderless table-hover">
+        <tbody>
+          <tr>
+            <th scope="row" data-bs-toggle="tooltip" title="Confirmed cases">
+              <i class="bi bi-file-earmark-medical" style="font-size: 5rem; color: cornflowerblue;"></i>
+            </th>
+            <td>
+              <p>
+                <ul class="report">
+                  <li>Confirmed infections: <span class="number">{{confirmed|style:'us'}}</span>. It ranks
+                    <span class="number number-rank">#{{confirmed_rank_region}}</span> in the region and
+                    <span class="number number-rank">#{{confirmed_rank_world}}</span> in the world;
+                  </li>
+                  <li>Last 24h: <span class="number number-new">{{confirmed_new|style:'us'}}</span> new cases
+                     (<span class="number number-rank">#{{confirmed_new_rank_region}}</span> in the region,
+                     <span class="number number-rank">#{{confirmed_new_rank_world}}</span> in the world);<br></li>
+                </ul>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" data-bs-toggle="tooltip" title="Active cases">
+                <i class="bi bi-people" style="font-size: 5rem; color: green;"></i>
+            </th>
+            <td>
+              <p>
+                <ul>
+                  <li>Still active: <span class="number">{{active|style:'us'}}</span> cases. This is
+                    <span class="number number-rate">{{active_pct|pct}}</span> of the total reported;</li>
+                    <li><span class="number number-rank">#{{active_rank_region}}</span> in the region and
+                    <span class="number number-rank">#{{active_rank_world}}</span> in the world;</li>
+                  <li>In the last 24h: <span class="number number-new">{{active_new|style:'us'}}</span> cases;</li>
+                </ul>
+
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" data-bs-toggle="tooltip" title="Deaths">
+              <i class="bi bi-emoji-frown" style="font-size: 5rem; color: red;"></i>
+            </th>
+            <td>
+                <ul>
+                  <li><span class="number">{{deaths|style:'us'}}</span> pacients lost the battle against the coronavirus. It ranks
+                    <span class="number number-rank">#{{deaths_rank_region}}</span> in the region and
+                    <span class="number number-rank">#{{deaths_rank_world}}</span> in the world;</li>
+                  <li><span class="number number-new">{{deaths_new|style:'us'}}</span> new cases in the last 24h. It ranks
+                      <span class="number number-rank">#{{deaths_new_rank_region}}</span> in the region and
+                      <span class="number number-rank">#{{deaths_new_rank_world}}</span> in the world;
+                  </li>
+                  <li>Mortality: <span class="number number-rate">{{mortality|pct}}</span> (<span class="number number-rank">#{{mortality_rank_region}}</span> in
+                      the region, <span class="number number-rank">#{{mortality_rank_world}}</span> in the world).
+                  </li>
+                </ul>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div> <!-- END OF COUNTRY INFO TABLE COLUMN -->
+
+
+  <!-- COUNTRY MAP IMAGE COLUMN -->
+
+    <div class="col-sm-4">
+      <figure class="figure">
+        <img src={{map_image}} class="figure-img img-fluid rounded" alt="{{country_name}}">
+        <figcaption class="figure-caption">
+          <p class="country-title-footer">
+            Region: {{region}}; Coord.: <span class="coordinates">{{country_coord}}</span>
+          </p>
+        </figcaption>
+      </figure>
+
+    </div>
+
+  </div>  <!-- END OF COUNTRY MAP IMAGE COLUMN -->
+
+</div>   <!-- END OF STATUS REPORT TABLE -->
+
+<div>  <!-- START OF THE MONTH/WEEK REPORT AREA -->
+  <br><h3> Month-by-Month:</h3>
+  {% get_value month_rows as confirmed_month %}
+  {% get_value month_rows key='deaths_month' as deaths_month %}
+  {% get_value month_rows key='last_update' as last_update %}
+
+  <br><p>
+    {% with this_month=report_date|date:'M/y' last_day=last_update|date:'j' %}
+
+    The table below sums up the reported confirmed and death cases related to the coronavirus for each month. For the
+    present month, {{this_month}}, the numbers are up to day {{last_day}}. A total of
+    <span class="number number-new">{{confirmed_month|style:'us'}}</span> new infections and <span class="number number-new">{{deaths_month|style:'us'}}</span> deaths were reported so far, which
+    gives a daily average of <span class="number number-new">{{confirmed_month|div:last_day|integer|style:'us'}}</span> new infections and <span class="number number-new">{{deaths_month|div:last_day|integer|style:'us'}}</span>
+    deaths. If we take these averages as predictors, {{this_month}} will end with a total of <span class="number number-new" >{{confirmed_prediction|style:'us'}}</span>
+    newly infected habitants, {% if confirmed_prediction_pct >= 0 %}an increase of{% else %} a decrease of {% endif %}
+    <span class="number number-rate">{{confirmed_prediction_pct|mod|pct}}</span> when compared to the previous month and <span class="number number-new">{{deaths_prediction|style:'us'}}</span> lives lost to the coronavirus,
+    {% if deaths_prediction_pct >= 0 %}an increase of{% else %} a decrease of {% endif %} <span class="number number-rate">{{deaths_prediction_pct|mod|pct}}</span>.
+
+  </p><br>
+
+  <div class="container">
+    <table class="table table-borderless table-sm table-records">
+      <thead>
+          <tr>
+            {% for k in month_header %}
+              <th>
+                {{k}}
+              </th>
+            {% endfor %}
+          </tr>
+      </thead>
+      <tbody>
+          {% for r in month_rows %}
+              <tr>
+                  <th scope="row" style="text-align:left;">{{r.month|monthname}}</th>
+                  <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="top"
+                      title="Daily average: {% if r.idx == 0 %}{{r.confirmed_month|div:last_day|integer|style:'us'}}{% else %}{{r.confirmed_month|div:r.days_in_month|integer|style:'us'}}{% endif %}">
+                      {{r.confirmed_month|style:'us'}} ({{r.confirmed_pct_change_month|pct:False}})
+                  </td>
+                  <td>
+                    <span class="number number-rank">
+                      {{r.confirmed_rank_region_month}}°
+                    </span> -
+                    <span class="number number-rank">
+                      {{r.confirmed_rank_world_month}}°
+                    </span>
+                  </td>
+                  <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="top"
+                      title="Daily average: {% if r.idx == 0 %}{{r.deaths_month|div:last_day|integer|style:'us'}}{% else %}{{r.deaths_month|div:r.days_in_month|integer|style:'us'}}{% endif %}">
+                      {{r.deaths_month|style:'us'}} ({{r.deaths_pct_change_month|pct:False}})
+                  </td>
+                  <td>
+                    <span class="number number-rank">
+                      {{r.deaths_rank_region_month}}°
+                    </span> -
+                    <span class="number number-rank">
+                      {{r.deaths_rank_world_month}}°
+                    </span>
+                  </td>
+              </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% endwith %} <!-- variables this_month and last_day declaration -->
+
+</div>
+
+{% endblock content %}

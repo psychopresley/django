@@ -1,0 +1,60 @@
+{% extends "report/base.html" %}
+
+{% block content %}
+{% load static %}
+
+  <div class="display_page" id="read_me_page">
+
+    <p><br><em>Last update: 04/02/2021</em></p>
+
+    <p>
+
+      Hi, there! This page is supposed to be just a cool way to visualize some aspects of the coronavirus outbreak, so you
+      won't find here any deep analysis, modelling or advanced machine learning estimation of the near future. I will
+      acknowledge here most of the tools that made possible to build this page and also provide some links if you're interested
+      in a more deep analysis of the pandemics.
+
+    </p>
+
+    <p>
+
+      All graphics on this page were build with <a href="https://flourish.studio/">Flourish Studio</a>.
+      It's a very interesting web based visualization app with the option of creating storytellers, which is a cool way to
+      present your data. As an example you can check my own storytelling for this project <a href="https://public.flourish.studio/story/516016/">here</a>.
+      So, if you are interested in dive deep in the numbers here it is a few pages I recommend you to visit:
+
+      <ul style="text-align: justify">
+        <li>Original data source:  All rights reserved to <a href="https://systems.jhu.edu/research/public-health/ncov/">Johns Hopkins University</a></li>
+        <li>JHU visual dashboard. That's the most confident page to get real time data: <a href=" https://www.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">JHU CSSE</a></li>
+        <li>If you're interested in checking my work just visit my project repository at github: <a href="https://github.com/psychopresley/COVID-19"> project repository</a></li>
+        <li>Also, my own visual dashboard, build with Tableau public. There you will find a deeper analysis of the pandemics
+          with much more visualization options. It's worth to take a look: <a href="https://public.tableau.com/profile/psychopresley#!/vizhome/Covid19_15951776377290/Dashboard">The Covid-19 Dashboard</a></li>
+        <li>I also made available a dataset with the compiled numbers. It has some saved queries that can be run and provide you with
+          cool information about the pandemics. Feel free to explore it! <a href="https://data.world/psychopresley/covid19tracking/workspace">Tracking the covid-19</a></li>
+
+      </ul>
+
+    </p><br>
+
+    <hr>
+    <div class="row">
+      <div class="col-sm-3">
+        <figure class="figure">
+          <img src="{% static 'report/images/powered_by.png' %}" class="figure-img img-fluid rounded" alt="powered_by">
+
+        </figure>
+      </div>
+
+      <div class="col-sm-9">
+        <p>
+          This page is powered by Django 3.5 and Python 3.9. I use Booststrap 5 for styling. The available data is collected
+          from the original github repository and cleaned to build the dataset that provides all the information presented here.
+          The dataset is updated daily.
+
+        </p>
+      </div>
+    </div>
+
+  </div> <!-- div id -->
+
+{% endblock content %}

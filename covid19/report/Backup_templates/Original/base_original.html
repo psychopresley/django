@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 {% load static %}
+{% load bootstrap5 %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>The Covid-19 Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>THE COVID-19 REPORT</title>
 
     <!-- Include own expanded styling configuration -->
     <link rel="stylesheet" href="{% static 'report/css/base.css' %}">
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
   </head>
 
@@ -18,9 +21,9 @@
     <!-- Page header with subtitles -->
    <div class="container">
     <div class="page-header">
-        <h1><a class="header-link" href="{% url 'admin:index' %}">The Covid-19 Report</a></h1>
+        <h1><a class="header-link" href="{% url 'admin:index' %}">THE COVID-19 REPORT</a></h1>
          <p><em>Infos and vizzes you won't see around</em></p>
-         <hr>
+        <hr>
 
     </div>
     <style>
@@ -79,32 +82,32 @@
           <!-- NAV TAB CONFIRMED CASES -->
 
           <li class="nav-item" role="presentation">
-            <a class="nav-link text-primary {{nav_confirmed}}" role="tab" data-bs-toggle="tab" aria-controls="confirmed-cases" aria-selected="false" href="{% url 'report:confirmedpage' %}">Confirmed</a>
+            <a class="nav-link text-primary {{nav_confirmed}}" role="tab" aria-controls="confirmed-cases" aria-selected="false" href="{% url 'report:confirmedpage' %}">Confirmed</a>
           </li>
 
 
           <!-- NAV TAB ACTIVE CASES -->
 
           <li class="nav-item" role="presentation">
-            <a class="nav-link text-success {{nav_active}}" role="tab" data-bs-toggle="tab" aria-controls="active-cases" aria-selected="false" href="{% url 'report:activepage' %}">Active</a>
+            <a class="nav-link text-success {{nav_active}}" role="tab" aria-controls="active-cases" aria-selected="false" href="{% url 'report:activepage' %}">Active</a>
           </li>
 
           <!-- NAV TAB DEATH CASES -->
 
           <li class="nav-item" role="presentation">
-            <a class="nav-link text-danger {{nav_deaths}}" role="tab" data-bs-toggle="tab" aria-controls="deaths-page" aria-selected="false" href="{% url 'report:deathspage' %}">Deaths</a>
+            <a class="nav-link text-danger {{nav_deaths}}" role="tab" aria-controls="deaths-page" aria-selected="false" href="{% url 'report:deathspage' %}">Deaths</a>
           </li>
 
           <!-- NAV TAB COUNTRY ASSESSMENT -->
 
           <li class="nav-item" role="presentation">
-            <a class="nav-link text-dark {{nav_countries}}" role="tab" data-bs-toggle="tab" aria-controls="countries-page" aria-selected="false" href="{% url 'report:countriespage' %}">Countries</a>
+            <a class="nav-link text-dark {{nav_countries}}" role="tab" aria-controls="countries-page" aria-selected="false" href="{% url 'report:countriespage' %}">Countries</a>
           </li>
 
           <!-- NAV TAB ABOUT READ ME PAGE -->
 
           <li class="nav-item" role="presentation">
-            <a class="nav-link text-warning {{nav_readme}}" role="tab" data-bs-toggle="tab" aria-controls="read-me" aria-selected="false" href="{% url 'report:readpage' %}">Read me, please!</a>
+            <a class="nav-link text-warning {{nav_readme}}" role="tab" aria-controls="read-me" aria-selected="false" href="{% url 'report:readpage' %}">Read me, please!</a>
           </li>
 
         </ul> <!-- NAV TABS -->
@@ -113,9 +116,9 @@
         {% block content %}{% endblock content %}
 
         <!-- JAVASCRIPT FOR THE BASE TEMPLATE -->
-        <!-- <script src="{% static 'report/scripts/index.js' %}">
+        <script src="{% static 'report/scripts/index.js' %}">
 
-        </script> -->
+        </script>
 
        </div> <!-- end CONTENT col-->
      </div> <!-- end row-->
