@@ -17,3 +17,21 @@ $(document).ready(function(){
     }
     $('html').css('visibility','visible')
 });
+
+$('#btnshowweektable').click(function(){
+  if ($(this).text()==="Show table") {
+    $(this).text('Hide table');
+  }
+  else {
+    $(this).text('Show table');
+  }
+})
+
+$('#btnshowmonthtable').click(function(){
+  if ($(this).text()==="Show table") {
+    $(this).text('Hide table');
+  }
+  else {
+    $(this).text('Show table');
+  }
+})
