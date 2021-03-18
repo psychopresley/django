@@ -93,17 +93,22 @@ class MonthReport(models.Model):
         return self.country.name
 
 
-# class WeekReport(models.Model):
-#     country = models.ManyToManyField(Country)
-#     week = models.CharField(max_length=2)
-#     year = models.CharField(max_length=4)
-#     confirmed = models.IntegerField()
-#     deaths = models.IntegerField()
-#     recovered = models.IntegerField(default=0)
-#     active = models.IntegerField(default=0)
-#
-#     def __str__(self):
-#         return '%s %s - %s' % (self.country, self.week, self.year)
+class WeekReport(models.Model):
+    country = models.ForeignKey(Country,on_delete=models.CASCADE,default='undefined')
+    week = models.CharField(max_length=7,default='2000-01')
+    confirmed = models.IntegerField(default=0)
+    confirmed_pct_change = models.FloatField(default=0)
+    confirmed_rank_region = models.IntegerField(default=0)
+    confirmed_rank_world = models.IntegerField(default=0)
+    deaths = models.IntegerField(default=0)
+    deaths_pct_change = models.FloatField(default=0)
+    deaths_rank_region = models.IntegerField(default=0)
+    deaths_rank_world = models.IntegerField(default=0)
+    last_update = models.DateField(default=date.today)
+
+
+    def __str__(self):
+        return self.country.name
 #
 #
 # class DateReport(models.Model):

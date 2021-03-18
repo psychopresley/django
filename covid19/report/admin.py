@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Country,StatusReport, MonthReport
+from .models import Country,StatusReport,MonthReport,WeekReport
 from django.utils.translation import gettext_lazy as _
 
 admin.site.disable_action('delete_selected')
@@ -208,4 +208,21 @@ class MonthReportAdmin(admin.ModelAdmin):
 
     list_display = ['__str__','region','month',]
     list_filter =[MonthListFilter,YearListFilter,]
+    search_fields = ['country__name','country__region']
+
+
+@admin.register(WeekReport)
+class WeekReportAdmin(admin.ModelAdmin):
+    ordering = ['-week','country']   # ordering = ['-country'] for descending order
+
+    def region(self, obj):
+        return obj.country.region
+
+    fields = ('country', 'week', ('confirmed', 'confirmed_rank_region', 'confirmed_rank_world'),
+             ('deaths', 'deaths_rank_region', 'deaths_rank_world'))
+
+    region.short_description = 'region'
+
+    list_display = ['__str__','region','week',]
+    # list_filter =[MonthListFilter,YearListFilter,]
     search_fields = ['country__name','country__region']
