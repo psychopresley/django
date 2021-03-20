@@ -5,6 +5,7 @@ $(document).ready(function(){
 });
 
 
+
 // Toggles page and components visibility and then enables page visibility. This
 // will allow visual comfortability during page load
 $(document).ready(function(){
@@ -33,5 +34,15 @@ $('#btnshowmonthtable').click(function(){
   }
   else {
     $(this).text('Show table');
+  }
+})
+
+
+$('#showweektable').click(function(){
+  if ($('#weektable').text()==="Hide table") {
+    $('#weektable').html("Show table");
+  }
+  else {
+    $('#weektable').html("Hide table");
   }
 })

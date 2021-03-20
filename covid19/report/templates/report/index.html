@@ -9,32 +9,75 @@
     <hr class="featurette-divider">
 
     <div class="row featurette">
-      <div class="col-md-7">
+      <div class="col-md-5">
         <h2 class="featurette-heading">The world in numbers</h2>
         <p class="lead"><br>
-
           One way to visualize the impact of the Sars-Cov-2 outbreak in the world is to divide it
           into geopolitical regions. It is natural to assume that the numbers are higher in the regions
           with higher economic activity and trade level with China, where the first cases of infection
-          were reported. Below you will find the numbers by geopolitical region as defined by the WHO.
-          <!-- <br>
-          It's important to notice in advance that the number presented here are collected from several oficial
-          reports emitted by the governments and not all data is confident. Some countries, counties or
-          provinces, for example, don't report the recovered cases. The US, Sweden and Belgium are just a few examples.
-          Also, totalitarian regimes tend to cover their real numbers. Still, this is the best approximation we have
-          from the real state of the world. -->
+          were reported. Here are the <span class="span-popover" style="cursor:default; text-decoration:underline dotted;"
+           data-bs-toggle="popover" data-bs-content="
+           It's important to notice in advance that the number presented here are collected from several oficial
+           reports emitted by the governments and not all data is confident. Some countries, counties or
+           provinces, for example, don't report the recovered cases. The US, Sweden and Belgium are just a few examples.
+           Also, totalitarian regimes tend to cover their real numbers. Still, this is the best approximation we have
+           from the real state of the world.">
+           numbers</span> by geopolitical region as defined by the WHO.
+      </p>
+      </div>
+      <div class="col-md-7">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#cardplot" type="button" role="tab" aria-controls="cardplot" aria-selected="true">World status</button>
+            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#parliamentchart" type="button" role="tab" aria-controls="parliamentchart" aria-selected="false">Countries</button>
+          </div>
+        </nav>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="cardplot" role="tabpanel" aria-labelledby="cardplot-tab">
+            <div class="flourish-embed flourish-cards" data-src="visualisation/5547496">
+              <script src="https://public.flourish.studio/resources/embed.js"></script>
+            </div>
+          </div>
+          <div class="tab-pane" id="parliamentchart" role="tabpanel" aria-labelledby="parliamentchart-tab">
+            <div class="flourish-embed flourish-table" data-src="visualisation/5027605">
+              <script src="https://public.flourish.studio/resources/embed.js"></script>
+            </div>
+          </div>
+        </div> <!-- TAB CONTENT -->
+      </div> <!-- SECOND COLUMN -->
+      <style>
+        .nav-link {background-color:inherit;}
+        .nav-link::after {outline-color:inherit;}
+        .nav.nav-tabs {color:#8C356E;}
+      </style>
+    </div> <!-- END FEATURETTE -->
 
-        </p>
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <div class="flourish-embed flourish-map" data-src="visualisation/5017674">
+          <script src="https://public.flourish.studio/resources/embed.js"></script>
+        </div>
       </div>
       <div class="col-md-5">
-        <div class="flourish-embed flourish-cards" data-src="visualisation/5547496"><script src="https://public.flourish.studio/resources/embed.js"></script></div>
+        <h2 class="featurette-heading">I. Daily cases</h2>
+        <p class="lead"><br>
+
+          In the map below each pulse represents the confirmed cases in the country. The larger the pulse is
+          the higher is the number of infections confirmed that day. This gives us the idea of how fast
+          the virus has spread and also the intensity of the wave in each country. The counter sums up the
+          total confirmed cases per day. The map is interactive so you can change the period for the counter
+          and also if you're interested in the rate of spread or the aggregated numbers.
+
+        </p>
       </div>
     </div>
 
     <hr class="featurette-divider">
 
     <div class="row featurette">
-      <div class="col-md-7 order-md-2">
+      <div class="col-md-5">
         <h2 class="featurette-heading">II. Scaling down<span class="text-muted"> to a thousand people</span></h2>
         <p class="lead">Now imagine that the total number of people infected by the Sars-cov-2 virus since the beginning of the
                 outbreak is scaled down to a group of 1000 people gathered together in a room. This would be the distribution
@@ -42,7 +85,7 @@
                 in and hover the mouse over the map below to visualize the numbers by region.
         </p>
       </div>
-      <div class="col-md-5 order-md-1">
+      <div class="col-md-7">
         <div class="flourish-embed flourish-parliament" data-src="visualisation/5006160">
           <script src="https://public.flourish.studio/resources/embed.js"></script>
         </div>
@@ -53,7 +96,92 @@
 
     <div class="row featurette">
       <div class="col-md-7">
-        <h2 class="featurette-heading">III. Tops and bottoms <span class="text-muted"> ...and the in betweens</span></h2>
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#deaths" type="button" role="tab" aria-controls="deaths" aria-selected="true">Deaths</button>
+            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#deathrate" type="button" role="tab" aria-controls="deathrate" aria-selected="false">Death rate</button>
+          </div>
+        </nav>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="deaths" role="tabpanel" aria-labelledby="deaths-tab">
+            <div class="flourish-embed flourish-hierarchy" data-src="visualisation/4984097">
+              <script src="https://public.flourish.studio/resources/embed.js"></script>
+            </div>
+          </div>
+          <div class="tab-pane" id="deathrate" role="tabpanel" aria-labelledby="deathrate-tab">
+            <div class="flourish-embed flourish-scatter" data-src="visualisation/3533436">
+              <script src="https://public.flourish.studio/resources/embed.js"></script>
+            </div>
+          </div>
+        </div> <!-- TAB CONTENT -->
+      </div> <!-- SECOND COLUMN -->
+      <div class="col-md-5">
+        <h2 class="featurette-heading">III. Deaths</h2>
+        <p class="lead"><br>
+          The graphic below shows the mortality rate of the covid-19 by each country as a deaths/confirmed ratio. The
+          graphic is interactive so hover over the dots, select a specific label for zooming and explore the infos.
+          The numbers of Iemen, with an ongoing civil war are devastating. More than a quarter of the infected dies.
+          The top 5 is composed by the poorest countries of the eastern mediterranean and latin america
+        </p>
+      </div>
+      <style>
+        .nav-link {background-color:inherit;}
+        .nav-link::after {outline-color:inherit;}
+        .nav.nav-tabs {font-color:#8C356E;}
+      </style>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-5">
+        <h2 class="featurette-heading">IV. Top countries <span class="text-muted"> by active cases </span></h2>
+        <p class="lead"><br>
+          The key indicator of the coronavirus outbreak is the number of daily active cases. This is the total number of
+          confirmed cases, minus the reported number of deaths, minus the total recovered people in a given day. In other
+          words it is the current number of people  with the coronavirus disease. The chart below shows the top 10 countries
+          by active cases through time.
+        </p>
+      </div>
+      <div class="col-md-7">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#racingbar" type="button" role="tab" aria-controls="racingbar" aria-selected="true">Top active cases</button>
+            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#staticracingbar" type="button" role="tab" aria-controls="staticracingbar" aria-selected="false">Active in time</button>
+          </div>
+        </nav>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="racingbar" role="tabpanel" aria-labelledby="racingbar-tab">
+            <div class="flourish-embed flourish-bar-chart-race" data-src="visualisation/4983302">
+              <script src="https://public.flourish.studio/resources/embed.js"></script>
+            </div>
+          </div>
+          <div class="tab-pane" id="staticracingbar" role="tabpanel" aria-labelledby="staticracingbar-tab">
+            <div class="flourish-embed" data-src="visualisation/5081617">
+              <script src="https://public.flourish.studio/resources/embed.js"></script>
+            </div>
+          </div>
+        </div> <!-- TAB CONTENT -->
+      </div> <!-- SECOND COLUMN -->
+      <style>
+        .nav-link {background-color:inherit;}
+        .nav-link::after {outline-color:inherit;}
+        .nav.nav-tabs {color:#8C356E;}
+      </style>
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+
+    <div class="row featurette">
+      <div class="col-md-5">
+        <div class="flourish-embed flourish-survey" data-src="visualisation/5006166">
+          <script src="https://public.flourish.studio/resources/embed.js"></script>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <h2 class="featurette-heading">V. Tops and bottoms <span class="text-muted"> ...and the in betweens</span></h2>
           <p class="lead">Each country has performed differently in the fight against the coronavirus, depending on several factors
           such as political decisions, climate, war, HDI and social behaviour. The chart below
           separates all countries according to the chosen aspect. For example, in the 'shade by' menu select the
@@ -61,30 +189,6 @@
           The 'median with quartiles' method is used here to define the "high/few" cases and all cases are taken as a
           percentage of the total of confirmed infections. You can also group countries and compare them using any criteria
           at your disposal, so feel free to explore it!
-          </p>
-      </div>
-      <div class="col-md-5">
-        <div class="flourish-embed flourish-survey" data-src="visualisation/5006166">
-          <script src="https://public.flourish.studio/resources/embed.js"></script>
-        </div>
-      </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-      <div class="col-md-5">
-        <div class="flourish-embed flourish-table" data-src="visualisation/5027605">
-          <script src="https://public.flourish.studio/resources/embed.js"></script>
-        </div>
-      </div>
-      <div class="col-md-7">
-        <h2 class="featurette-heading">IV. Country report</h2>
-          <p class="lead">The table below shows the absolut numbers by case for each country. You may query for your country or region
-          of interest to check the numbers as well as order the table by case in ascending or descending order. The bar
-          chart gives a good idea of how much of the total confirmed cases are actually active. As stated in the first
-          item of this section, not all countries report the recovered cases so you may also check here which ones fall
-          in this category.
           </p>
       </div>
     </div>

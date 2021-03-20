@@ -102,6 +102,11 @@ body{
   font-family: var(--body-font-family)
 }
 
+.popover {
+  text-align: justify;
+}
+
+
 /* ==================================================================================
 /* THE FOLLOWING SESSION IS A COPY OF THE CAROUSEL CSS FILE @ BOOTSTRAP OFFICIAL PAGE
 /* ==================================================================================
