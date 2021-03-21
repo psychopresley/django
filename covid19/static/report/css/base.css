@@ -102,6 +102,11 @@ body{
   font-family: var(--body-font-family)
 }
 
+.popover {
+  text-align: justify;
+}
+
+
 /* ==================================================================================
 /* THE FOLLOWING SESSION IS A COPY OF THE CAROUSEL CSS FILE @ BOOTSTRAP OFFICIAL PAGE
 /* ==================================================================================
@@ -133,6 +138,10 @@ body{
 
 .featurette-divider {
   margin: 2rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+.featurette-divider-simple {
+  margin: 0 0 2rem; /* Space out the Bootstrap <hr> more */
 }
 
 /* Thin out the marketing headings */

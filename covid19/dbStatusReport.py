@@ -123,6 +123,7 @@ def main():
                     country = StatusReport.objects.get(country__name=item)
 
                     country.date=info.Date.values[0]
+                    country.db_update=date.today()
                     country.confirmed=int(info.Confirmed.values[0])
                     country.confirmed_new=int(info.Confirmed_new_cases.values[0])
                     country.confirmed_pct_change=float(info['Confirmed_daily_%inc_by_country'].values[0])
@@ -171,6 +172,7 @@ def main():
 
                         entry = StatusReport.objects.get_or_create(country=country[0],
                                                                    date=info.Date.values[0],
+                                                                   db_update=date.today(),
                                                                    confirmed=int(info.Confirmed.values[0]),
                                                                    confirmed_new=int(info.Confirmed_new_cases.values[0]),
                                                                    confirmed_pct_change=float(info['Confirmed_daily_%inc_by_country'].values[0]),
@@ -246,7 +248,7 @@ if __name__ == '__main__':
     last_modified = config.loc['status_report'].aux4
     current_date = ctime(os.path.getmtime(country_report))
 
-    if current_date == last_modified:
+    if current_date == last_modified and False:
         log_dbStatusReport=[]
         log_dbStatusReport.append('\n----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------\n')
         log_dbStatusReport.append('\n'+ 'Local time: ' + ctime() + '\n\n')

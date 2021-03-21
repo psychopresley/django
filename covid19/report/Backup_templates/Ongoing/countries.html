@@ -27,9 +27,8 @@
     </div> <!-- END OF DIV CLASS CONTAINER ID=COUNTRY-NAME -->
   </div> <!-- END OF COL-AUTO -->
 
-  <div class="container" style="padding:0; text-align:right;">
-    <em>Updated on {{db_update}}</em>
-    <hr class="featurette-divider-simple">
+  <div class="container" style="padding:0;">
+    <hr class="featurette-divider">
   </div>
 
 
@@ -171,9 +170,9 @@
         an estimated <span class="color-primary-2" style="font-weight:bold;">{% if deaths_prediction_pct >= 0 %}increase of{% else %}decrease of {% endif %} {{deaths_prediction_pct|mod|pct}}</span>.
       </p>
       <br>
-      <div class="container" style="text-align:center;">
-        <button class="btn btn-outline-primary" id="btnshowmonthtable" type="button" style="color:#865696; border:none; font-size:20px;" data-bs-toggle="collapse" data-bs-target="#collapseTableMonthData" aria-expanded="false" aria-controls="collapseTableMonthData">Show table</button>
-      </div>
+    <div class="container" style="text-align:center;">
+      <button class="btn btn-outline-primary" id="btnshowmonthtable" type="button" style="color:#865696; border:none; font-size:20px;" data-bs-toggle="collapse" data-bs-target="#collapseTableMonthData" aria-expanded="false" aria-controls="collapseTableMonthData">Show table</button>
+    </div>
     <style>
       .btn, .btn-outline-primary:active {border:none; border-color:white; background-color:white; outline:none;}
       .btn, .btn-outline-primary:hover{border:none; border-color:white; background-color:white;}
@@ -256,13 +255,18 @@
         a daily average of <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|div:week_day_number|integer|style:'us'}}</span> new infections/day and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|div:week_day_number|integer|style:'us'}}</span>
         deaths/day. If we take these averages as predictors, the current week will end with approximately <span class="color-secondary-1-2" style="font-weight:bold;">{{confirmed_prediction|style:'us'}}</span>
         newly infected habitants, <span class="color-primary-2" style="font-weight:bold;">{% if confirmed_prediction_pct >= 0 %}an increase of{% else %}a decrease of {% endif %}
-        {{confirmed_prediction_pct|mod|pct:False}}</span> when compared to the previous week and <span class="color-secondary-1-2" style="font-weight:bold;">{{deaths_prediction|style:'us'}}</span> lives lost to the coronavirus,
-        <span class="color-primary-2" style="font-weight:bold;">{% if deaths_prediction_pct >= 0 %}an increase of{% else %}a decrease of {% endif %} {{deaths_prediction_pct|mod|pct:False}}</span>.
+        {{confirmed_prediction_pct|mod|pct:False}}</span> when compared to the previous week and <span class="color-secondary-1-2" style="font-weight:bold;">{{deaths_prediction|style:'us'}}</span> lives lost to the coronavirus, an
+        <span class="color-primary-2" style="font-weight:bold;">{% if deaths_prediction_pct >= 0 %}increase of{% else %}decrease of {% endif %} {{deaths_prediction_pct|mod|pct:False}}</span>.
       </p>
       <br>
       <div class="container" style="text-align:center;">
         <button class="btn btn-outline-primary" id="btnshowweektable" type="button" style="color:#865696; border:none; font-size:20px;" data-bs-toggle="collapse" data-bs-target="#collapseTableWeekData" aria-expanded="false" aria-controls="collapseTableWeekData">Show table</button>
       </div>
+      <style>
+        .btn, .btn-outline-primary:active{border:none; border-color:white; background-color:white;}
+        .btn, .btn-outline-primary:hover{border:none; border-color:white; background-color:white;}
+        .btn, .btn-outline-primary:focus{border:none; border-color:white; background-color:white;}
+      </style>
     </div>
     <div class="col-md-7" style="padding-left:15px;">
       {% autoescape off %}
