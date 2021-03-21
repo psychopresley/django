@@ -40,26 +40,13 @@ class IndexView(TemplateView):
 
 
 # THESE ARE THE OTHER PAGES:
-class ActiveView(TemplateView):
-    template_name = 'report/active.html'
+
+class ReadMeView(TemplateView):
+    template_name = 'report/read_me.html'
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['nav_active'] = 'navbar-item-active'
-
-        form = forms.SelectCountry()
-        selected_country = form['country'].initial
-        context['form'] = form
-
-        return context
-
-
-class ConfirmedView(TemplateView):
-    template_name = 'report/confirmed.html'
-
-    def get_context_data(self,**kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nav_confirmed'] = 'navbar-item-active'
+        context['nav_readme'] = 'navbar-item-active'
 
         form = forms.SelectCountry()
         selected_country = form['country'].initial
@@ -279,34 +266,6 @@ def countriespage(request): # This is a FORM PAGE
                   **status_dict,
                   **month_dict,
                   **week_dict,})
-
-
-class DeathsView(TemplateView):
-    template_name = 'report/deaths.html'
-
-    def get_context_data(self,**kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nav_deaths'] = 'navbar-item-active'
-
-        form = forms.SelectCountry()
-        selected_country = form['country'].initial
-        context['form'] = form
-
-        return context
-
-
-class ReadMeView(TemplateView):
-    template_name = 'report/read_me.html'
-
-    def get_context_data(self,**kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nav_readme'] = 'navbar-item-active'
-
-        form = forms.SelectCountry()
-        selected_country = form['country'].initial
-        context['form'] = form
-
-        return context
 
 
 # ==============================================================================

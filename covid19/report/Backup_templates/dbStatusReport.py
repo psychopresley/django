@@ -180,28 +180,14 @@ def main():
 
                 for item in countries_list:
                     country = Country.objects.filter(name=item)
-
                     if country.exists():
                         info = status_report.loc[status_report['Country/Region']==item]
-                        previous_info = previous_report.loc[previous_report['Country/Region']==item]
-
-                        if previous_info.Confirmed_new_cases.values[0] == 0:
-                            confirmed_new_pct_change = 0
-                        else:
-                            confirmed_new_pct_change = (info.Confirmed_new_cases.values[0] - previous_info.Confirmed_new_cases.values[0])*100/previous_info.Confirmed_new_cases.values[0]
-
-                        if previous_info.Deaths_new_cases.values[0] == 0:
-                            deaths_new_pct_change = 0
-                        else:
-                            deaths_new_pct_change = (info.Deaths_new_cases.values[0] - previous_info.Deaths_new_cases.values[0])*100/previous_info.Deaths_new_cases.values[0]
-
 
                         entry = StatusReport.objects.get_or_create(country=country[0],
                                                                    date=info.Date.values[0],
                                                                    db_update=date.today(),
                                                                    confirmed=int(info.Confirmed.values[0]),
                                                                    confirmed_new=int(info.Confirmed_new_cases.values[0]),
-                                                                   confirmed_new_pct_change=float(confirmed_new_pct_change),
                                                                    confirmed_pct_change=float(info['Confirmed_daily_%inc_by_country'].values[0]),
                                                                    confirmed_rank_region=int(info.Confirmed_rank_in_region.values[0]),
                                                                    confirmed_rank_world=int(info.Confirmed_rank_in_world.values[0]),
@@ -209,7 +195,6 @@ def main():
                                                                    confirmed_new_rank_world=int(info.Confirmed_new_cases_rank_in_world.values[0]),
                                                                    deaths=int(info.Deaths.values[0]),
                                                                    deaths_new=int(info.Deaths_new_cases.values[0]),
-                                                                   deaths_new_pct_change=float(deaths_new_pct_change),
                                                                    deaths_pct_change=float(info['Deaths_daily_%inc_by_country'].values[0]),
                                                                    deaths_rank_region=int(info.Deaths_rank_in_region.values[0]),
                                                                    deaths_rank_world=int(info.Deaths_rank_in_world.values[0]),
