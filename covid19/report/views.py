@@ -33,7 +33,7 @@ class IndexView(TemplateView):
         selected_country = form['country'].initial
 
         context['nav_index'] = 'navbar-item-active'
-        context['report_date'] = StatusReport.objects.order_by('-date')[0].date
+        context['db_update'] = StatusReport.objects.order_by('-db_update')[0].db_update
         context['form'] = form
 
         return context
@@ -84,7 +84,8 @@ def countriespage(request): # This is a FORM PAGE
 
     # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
     status_dict = {'country_coord':status.country._coordinates_(),
-                   'report_date': status.date,
+                   'report_date':status.date,
+                   'db_update':status.db_update,
                    **status.country.__dict__,
                   }
 

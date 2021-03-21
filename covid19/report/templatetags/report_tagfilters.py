@@ -63,7 +63,10 @@ def pct_diff(value,arg):
     """
     put some string here.
     """
-    return (value - arg)/arg*100
+    if arg == 0:
+        return 0
+    else:
+        return (value - arg)/arg*100
 
 @register.filter(name='style')
 def format_integer(value,style=None):
