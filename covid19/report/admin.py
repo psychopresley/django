@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Country,StatusReport,MonthReport,WeekReport
+from .models import Country,StatusReport,MonthReport,WeekReport,ConfigReport
 from django.utils.translation import gettext_lazy as _
 
 admin.site.disable_action('delete_selected')
@@ -226,3 +226,14 @@ class WeekReportAdmin(admin.ModelAdmin):
     list_display = ['__str__','region','week',]
     # list_filter =[MonthListFilter,YearListFilter,]
     search_fields = ['country__name','country__region']
+
+
+@admin.register(ConfigReport)
+class ConfigReportAdmin(admin.ModelAdmin):
+    ordering = ['var_name']   # ordering = ['-country'] for descending order
+
+    fields = ('var_name', ('file_path', 'file_name'))
+
+    #list_display = ['__str__','region','week',]
+    # list_filter =[MonthListFilter,YearListFilter,]
+    # search_fields = ['country__name','country__region']

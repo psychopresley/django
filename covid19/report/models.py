@@ -1,7 +1,19 @@
 from django.db import models
 import datetime
+import os
 
 # Create your models here.
+
+class ConfigReport(models.Model):
+    var_name = models.CharField(max_length=20,primary_key=True,default='undefined')
+    file_path = models.FilePathField(path=os.getcwd)
+    file_name = models.CharField(max_length=20)
+    date = models. DateField(default=datetime.date.today)
+    db_delete = models.BooleanField(default=False)
+    db_reload = models.BooleanField(default=False)
+    db_update = models.BooleanField(default=True)
+    confirm_delete = models.BooleanField(default=True)
+
 
 class Country(models.Model):
     name = models.CharField(max_length=60,primary_key=True,default='undefined')
