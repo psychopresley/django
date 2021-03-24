@@ -70,12 +70,19 @@ def countriespage(request): # This is a FORM PAGE
     week_report = WeekReport.objects.filter(country=selected_country).order_by('-week')
 
     # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
+    quartile_list=[]
+    for quartile in ['1st','2nd','3rd','4th']:
+        lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
+        quartile_list.append(lower_bound*100)
+
     status_dict = {'country_coord':status.country._coordinates_(),
                    'report_date':status.date,
                    'db_update':status.db_update,
+                   'quartile_list':quartile_list,
                    **status.country.__dict__,
                   }
 
+    print(quartile_list)
     for k,v in status.__dict__.items():
         status_dict = {**status_dict,**{k:status.__dict__[k]}}
 
@@ -258,11 +265,53 @@ def countriespage(request): # This is a FORM PAGE
 
     plot_week = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
 
+
+    # Heatmaps
+    fig = make_subplots(
+    rows=2, cols=1,
+    row_heights=[0.5, 0.5],
+    shared_xaxes=True,
+    specs=[[{"type": "heatmap"}],
+           [{"type": "heatmap"}]])
+
+    fig.update_layout(
+    template="seaborn",
+    margin={'l':20,'r':10,'t':30,'b':10},
+    plot_bgcolor='white',
+    font_family="Quicksand",
+    )
+
+    fig.append_trace(
+    go.Heatmap(
+        z=[y_deaths_week[::-1]],
+        x=x_week[::-1],
+        y=['Deaths'],
+        colorscale='Blues',
+        showscale=False,
+        ),row=2, col=1)
+
+    fig.append_trace(
+    go.Heatmap(
+        z=[y_confirmed_week[::-1]],
+        x=x_week[::-1],
+        y=['Confirmed'],
+        colorscale='Greens',
+        showscale=False,
+        ),row=1, col=1)
+
+
+    # Update X-axis properties
+    fig.update_xaxes(title_text="Week", row=2, col=1, type='category')
+    fig.update_xaxes(row=1, col=1, type='category')
+
+    plot_heatmap_week = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
     return render(request,'report/countries.html',
                   {'form':form,
                   'nav_countries':'navbar-item-active',
                   'plot_month':plot_month,
                   'plot_week':plot_week,
+                  'plot_heatmap_week':plot_heatmap_week,
                   **status_dict,
                   **month_dict,
                   **week_dict,})

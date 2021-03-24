@@ -232,7 +232,8 @@ class WeekReportAdmin(admin.ModelAdmin):
 class ConfigReportAdmin(admin.ModelAdmin):
     ordering = ['var_name']   # ordering = ['-country'] for descending order
 
-    fields = ('var_name', ('file_path', 'file_name'))
+    fields = ('var_name', ('file_path', 'file_name'),
+             ('db_delete', 'db_update', 'db_reload'))
 
     #list_display = ['__str__','region','week',]
     # list_filter =[MonthListFilter,YearListFilter,]

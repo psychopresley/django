@@ -41,6 +41,18 @@ def main():
         else:
             return 'th'
 
+    # creating quartiles map function:
+    def quart_func(x,q,case):
+        if x < q[0]:
+            return '1st (very low {})'.format(case.lower())
+        elif q[0] <= x < q[1]:
+            return '2nd (medium-low {})'.format(case.lower())
+        elif q[1] <= x < q[2]:
+            return '3rd (medium-high {})'.format(case.lower())
+        else:
+            return '4th (very high {})'.format(case.lower())
+
+
     try:
         # In the config.csv file, on 'countryinfo_file' row of columns 'var':
         #  - aux1: Set 0, for delete all entries in database or 1 for add/update entries;
@@ -110,6 +122,11 @@ def main():
             df_aux = df_aux.loc[df_aux['Date']==max(df_aux['Date'])]
             df_aux.Date = df_aux.Date.transform(lambda x:date(x.year, x.month, x.day))
 
+
+            # Defining quartile intervals for the mortality:
+            quantile=df_aux['mortality'].quantile(q=[0.1,0.5,0.9])
+            df_aux['mortality_quartile']=df_aux['mortality'].apply(lambda x:quart_func(x,quantile.values,'mortality'))
+
             status_report = df_aux.copy()
 
             print("Status_report table generated succesfully!")
@@ -167,6 +184,7 @@ def main():
                     country.active_new_rank_region=int(info.Active_new_cases_rank_in_region.values[0])
                     country.active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0])
                     country.mortality=float(info.mortality.values[0])
+                    country.mortality_quartile=info.mortality_quartile.values[0]
                     country.mortality_rank_region=int(info.mortality_rank_region.values[0])
                     country.mortality_rank_world=int(info.mortality_rank_world.values[0])
 
@@ -232,7 +250,8 @@ def main():
                                                                    active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0]),
                                                                    mortality_rank_region=int(info.mortality_rank_region.values[0]),
                                                                    mortality_rank_world=int(info.mortality_rank_world.values[0]),
-                                                                   mortality=float(info.mortality.values[0]))[0]
+                                                                   mortality=float(info.mortality.values[0]),
+                                                                   mortality_quartile=info.mortality_quartile.values[0])[0]
 
                         entry.save()
                         print('{} inserted into models.StatusReport'.format(item))
