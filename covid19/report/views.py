@@ -40,26 +40,13 @@ class IndexView(TemplateView):
 
 
 # THESE ARE THE OTHER PAGES:
-class ActiveView(TemplateView):
-    template_name = 'report/active.html'
+
+class ReadMeView(TemplateView):
+    template_name = 'report/read_me.html'
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['nav_active'] = 'navbar-item-active'
-
-        form = forms.SelectCountry()
-        selected_country = form['country'].initial
-        context['form'] = form
-
-        return context
-
-
-class ConfirmedView(TemplateView):
-    template_name = 'report/confirmed.html'
-
-    def get_context_data(self,**kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nav_confirmed'] = 'navbar-item-active'
+        context['nav_readme'] = 'navbar-item-active'
 
         form = forms.SelectCountry()
         selected_country = form['country'].initial
@@ -83,9 +70,15 @@ def countriespage(request): # This is a FORM PAGE
     week_report = WeekReport.objects.filter(country=selected_country).order_by('-week')
 
     # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
+    quartile_list=[]
+    for quartile in ['1st','2nd','3rd','4th']:
+        lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
+        quartile_list.append(lower_bound)
+
     status_dict = {'country_coord':status.country._coordinates_(),
                    'report_date':status.date,
                    'db_update':status.db_update,
+                   'quartile_list':quartile_list,
                    **status.country.__dict__,
                   }
 
@@ -214,9 +207,12 @@ def countriespage(request): # This is a FORM PAGE
         week = obj.__dict__['week']
         dict = {**dict,**{'idx':idx,'week_range':start_end_week(week[:4], week[-2:])}}
 
-        x_week.append(week)
-        y_deaths_week.append(obj.__dict__['deaths'])
-        y_confirmed_week.append(obj.__dict__['confirmed'])
+        if week.endswith('00'):
+            pass
+        else:
+            x_week.append(week)
+            y_deaths_week.append(obj.__dict__['deaths'])
+            y_confirmed_week.append(obj.__dict__['confirmed'])
 
         idx += 1
         rows_week.append(dict)
@@ -271,42 +267,80 @@ def countriespage(request): # This is a FORM PAGE
 
     plot_week = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
 
+
+    # Heatmaps
+    fig = make_subplots(
+    rows=2, cols=1,
+    row_heights=[0.5, 0.5],
+    shared_xaxes=True,
+    specs=[[{"type": "heatmap"}],
+           [{"type": "heatmap"}]])
+
+    fig.update_layout(
+    template="seaborn",
+    margin={'l':20,'r':10,'t':30,'b':10},
+    plot_bgcolor='white',
+    font_family="Quicksand",
+    )
+
+    fig.append_trace(
+    go.Heatmap(
+        z=[y_deaths_week[::-1]],
+        x=x_week[::-1],
+        y=['Deaths'],
+        colorscale='RdBu_r',
+        showscale=False,
+        ),row=2, col=1)
+
+    fig.append_trace(
+    go.Heatmap(
+        z=[y_confirmed_week[::-1]],
+        x=x_week[::-1],
+        y=['Confirmed'],
+        colorscale='RdBu_r',
+        showscale=False,
+        ),row=1, col=1)
+
+
+    # Update X-axis properties
+    fig.update_xaxes(title_text="Week", row=2, col=1, type='category')
+    fig.update_xaxes(row=1, col=1, type='category')
+
+    plot_heatmap_week = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
+
+    # CONTOUR MAPS:
+    fig = go.Figure(go.Histogram2dContour(
+        x=y_deaths_week[::-1],
+        y=y_confirmed_week[::-1],
+        colorscale='RdBu_r',
+        histnorm="percent",
+        xbins={'end':max(y_deaths_week)},
+        ybins={'end':max(y_confirmed_week)},
+        showscale=False,
+        ncontours=20,
+        contours={'showlines':False}
+    ))
+
+    fig.update_layout(
+    template="seaborn",
+    plot_bgcolor='white',
+    title={'text':"Density levels",'font':{'family':'Quicksand','size':30}},
+    )
+
+
+    plot_histogram = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
     return render(request,'report/countries.html',
                   {'form':form,
                   'nav_countries':'navbar-item-active',
                   'plot_month':plot_month,
                   'plot_week':plot_week,
+                  'plot_heatmap_week':plot_heatmap_week,
+                  'plot_histogram':plot_histogram,
                   **status_dict,
                   **month_dict,
                   **week_dict,})
-
-
-class DeathsView(TemplateView):
-    template_name = 'report/deaths.html'
-
-    def get_context_data(self,**kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nav_deaths'] = 'navbar-item-active'
-
-        form = forms.SelectCountry()
-        selected_country = form['country'].initial
-        context['form'] = form
-
-        return context
-
-
-class ReadMeView(TemplateView):
-    template_name = 'report/read_me.html'
-
-    def get_context_data(self,**kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nav_readme'] = 'navbar-item-active'
-
-        form = forms.SelectCountry()
-        selected_country = form['country'].initial
-        context['form'] = form
-
-        return context
 
 
 # ==============================================================================

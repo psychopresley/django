@@ -1,7 +1,19 @@
 from django.db import models
 import datetime
+import os
 
 # Create your models here.
+
+class ConfigReport(models.Model):
+    var_name = models.CharField(max_length=20,primary_key=True,default='undefined')
+    file_path = models.FilePathField(path=os.getcwd)
+    file_name = models.CharField(max_length=20)
+    date = models. DateField(default=datetime.date.today)
+    db_delete = models.BooleanField(default=False)
+    db_reload = models.BooleanField(default=False)
+    db_update = models.BooleanField(default=True)
+    confirm_delete = models.BooleanField(default=True)
+
 
 class Country(models.Model):
     name = models.CharField(max_length=60,primary_key=True,default='undefined')
@@ -40,6 +52,7 @@ class StatusReport(models.Model):
     db_update = models.DateField(default=datetime.date.today)
     confirmed = models.IntegerField()
     confirmed_new = models.IntegerField()
+    confirmed_new_pct_change = models.FloatField(default=100)
     confirmed_pct_change = models.FloatField()
     confirmed_rank_region = models.IntegerField()
     confirmed_rank_world = models.IntegerField()
@@ -47,6 +60,7 @@ class StatusReport(models.Model):
     confirmed_new_rank_world = models.IntegerField(default=0)
     deaths = models.IntegerField()
     deaths_new = models.IntegerField()
+    deaths_new_pct_change = models.FloatField(default=100)
     deaths_pct_change = models.FloatField()
     deaths_rank_region = models.IntegerField()
     deaths_rank_world = models.IntegerField()
@@ -68,6 +82,8 @@ class StatusReport(models.Model):
     active_new_rank_region = models.IntegerField(default=0)
     active_new_rank_world = models.IntegerField(default=0)
     mortality = models.FloatField(default=0)
+    mortality_quartile = models.CharField(max_length=35, default='4th quartile (very high mortality)')
+    mortality_quartile_position = models.FloatField(default=50.0)
     mortality_rank_region = models.IntegerField(default=1000)
     mortality_rank_world = models.IntegerField(default=1000)
 
