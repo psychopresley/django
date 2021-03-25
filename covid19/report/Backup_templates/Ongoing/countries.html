@@ -1,0 +1,334 @@
+{% extends 'report/base.html' %}
+
+{% block content %}
+{% load static %}
+{% load bootstrap5 %}
+{% load report_tagfilters %}
+
+<div class="display_page" id="countries_page">
+
+  <div class="container" id="country-title" style="cursor:default; padding=0;">
+    <div class="row">
+      <div class="col-auto"  data-bs-toggle="modal" data-bs-target="#SelectCountryModal" style="margin-left:0; margin-top:0.1rem;">
+        <h1 class="main-headings" style="font-size:64px;">
+          {{name}}
+        </h1>
+      </div>
+      <div class="col-1">
+        <img
+          class="contain"
+          id="country-image"
+          src={{map_image}}
+          width="80"
+          height="80"
+          alt={{country_name}}>
+      </div>
+
+    </div> <!-- END OF DIV CLASS CONTAINER ID=COUNTRY-NAME -->
+  </div> <!-- END OF COL-AUTO -->
+
+  <div class="container" style="padding:0;">
+    <hr class="featurette-divider">
+  </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="SelectCountryModal" tabindex="-1" aria-labelledby="SelectCountryModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color:#330641; color:white;">
+            <h5 class="modal-title" id="SelectCountryModalLabel">Select country</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="POST">
+            <div class="modal-body">
+              <div style="padding:0px;">
+                  <div class="form-select-country">
+                    <div class="row">
+                      <div class="col-auto">
+                        {% csrf_token %}
+                        {% bootstrap_form form layout='grid' %}
+                        <br>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Bring me back!</button>
+                        <input type="submit" class="btn btn-outline-success" value="Hit me!">
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <div class="col-lg-4">
+          <i class="bi bi-file-earmark-medical" style="font-size:7rem; color:#330641;"></i>
+          <h2><span class="number">{{confirmed|style:'us'}}</span></h2>
+          <h5><span class="color-primary-3"><strong>({{confirmed_new|style:'us'}} / 24h)</strong></span></h5>
+          <h4>confirmed cases</h4>
+
+          <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseConfirmed" aria-expanded="false" aria-controls="collapseConfirmed">what else?</a></p>
+          <div class="collapse" id="collapseConfirmed">
+            <div class="card card-body" style="border:none; text-align:left;">
+              <ul class="report">
+                <li>
+                  <span class="number number-rank">{{confirmed_rank_region}}°</span> in the region /
+                  <span class="number number-rank">{{confirmed_rank_world}}°</span> in the world
+                  considering the total numbers;
+                </li>
+                <li>
+                  <span class="number number-rank">{{confirmed_new_rank_region}}°</span> in the region /
+                  <span class="number number-rank">{{confirmed_new_rank_world}}°</span> in the world
+                  considering the numbers of the last 24h;
+                </li>
+              </ul>
+            </div><!-- div card body -->
+          </div><!-- div collapse -->
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <i class="bi bi-people color-primary-3" style="font-size: 7rem;"></i>
+
+          <h2><span class="number">{{active|style:'us'}}</span></h2>
+          <h5><span class="color-primary-3"><strong>({{active_new|style:'us'}} / 24h)</strong></span></h5>
+          <h4>still active</h4>
+          <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseActive" aria-expanded="false" aria-controls="collapseActive">what else?</a></p>
+          <div class="collapse" id="collapseActive">
+            <div class="card card-body" style="border:none; text-align:left;">
+              <ul>
+                <li><span class="color-secondary-2-3"><strong>{{active_pct|pct}}</strong></span> of the total reported;</li>
+                <li><span class="number number-rank">{{active_rank_region}}°</span> in the region /
+                <span class="number number-rank">{{active_rank_world}}°</span> in the world;</li>
+              </ul>
+            </div><!-- div card body -->
+          </div><!-- div collapse -->
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4"  style="border-right-style:none;">
+          <i class="bi bi-emoji-frown color-secondary-1-3" style="font-size: 7rem; color:#330641;"></i>
+
+          <h2><span class="number">{{deaths|style:'us'}}</span></h2>
+          <h5><span class="color-primary-3"><strong>({{deaths_new|style:'us'}} / 24h)</strong></span></h5>
+          <h4>deaths</h4>
+          <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseDeaths" aria-expanded="false" aria-controls="collapseDeaths">what else?</a></p>
+          <div class="collapse" id="collapseDeaths">
+            <div class="card card-body" style="border:none; text-align:left;">
+                <ul>
+                  <li><span class="number number-rank">{{deaths_rank_region}}°</span> in the region /
+                    <span class="number number-rank">#{{deaths_rank_world}}°</span> in the world considering
+                    the total numbers;
+                  </li>
+                  <li><span class="number number-rank">{{deaths_new_rank_region}}°</span> in the region /
+                      <span class="number number-rank">{{deaths_new_rank_world}}°</span> in the world considering
+                      the numbers of the last 24h;
+                  </li>
+                  <li>Mortality: <span class="number number-rate">{{mortality|pct}}</span> (<span class="number number-rank">#{{mortality_rank_region}}</span> in
+                      the region, <span class="number number-rank">#{{mortality_rank_world}}</span> in the world).
+                  </li>
+                </ul>
+            </div><!-- div card body -->
+          </div><!-- div collapse -->
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+    </div>
+
+</div>
+
+<div>  <!-- START OF THE MONTH REPORT AREA -->
+  <br><h3> Month-by-Month</h3>
+  {% get_value month_rows as confirmed_month %}
+  {% get_value month_rows key='deaths_month' as deaths_month %}
+  {% get_value month_rows key='last_update' as last_update %}
+
+  <hr class="featurette-divider">
+
+  <div class="row featurette">
+    <div class="col-md-7">
+      {% autoescape off %}
+        {{ plot_month }}
+      {% endautoescape %}
+    </div>
+    <div class="col-md-5">
+      <p class="lead">
+        {% with this_month=report_date|date:'M/y' last_day=last_update|date:'j' %}
+
+        On <span style="text-decoration:underline dotted;" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="With numbers up to {{report_date|date}}">{{this_month}}</span>, a total of
+        <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_month|style:'us'}}</span> new infections and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_month|style:'us'}}</span> deaths were reported so far,
+        a daily average of <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_month|div:last_day|integer|style:'us'}}</span> new infections/day and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_month|div:last_day|integer|style:'us'}}</span>
+        deaths/day. If we take these averages as predictors, {{this_month}} will end with an estimated <span class="color-secondary-1-2" style="font-weight:bold;">{{confirmed_prediction|style:'us'}}</span>
+        newly infected habitants, <span class="color-primary-2" style="font-weight:bold;">{% if confirmed_prediction_pct >= 0 %}an increase of{% else %}a decrease of {% endif %}
+        {{confirmed_prediction_pct|mod|pct}}</span> when compared to the previous month and <span class="color-secondary-1-2" style="font-weight:bold;">{{deaths_prediction|style:'us'}}</span> lives lost to the coronavirus,
+        an estimated <span class="color-primary-2" style="font-weight:bold;">{% if deaths_prediction_pct >= 0 %}increase of{% else %}decrease of {% endif %} {{deaths_prediction_pct|mod|pct}}</span>.
+      </p>
+      <br>
+    <div class="container" style="text-align:center;">
+      <button class="btn btn-outline-primary" id="btnshowmonthtable" type="button" style="color:#865696; border:none; font-size:20px;" data-bs-toggle="collapse" data-bs-target="#collapseTableMonthData" aria-expanded="false" aria-controls="collapseTableMonthData">Show table</button>
+    </div>
+    <style>
+      .btn, .btn-outline-primary:active {border:none; border-color:white; background-color:white; outline:none;}
+      .btn, .btn-outline-primary:hover{border:none; border-color:white; background-color:white;}
+      .btn, .btn-outline-primary:focus{border:none; border-color:white; background-color:white;}
+    </style>
+  </div>
+  <br>
+
+  <div class="collapse" id="collapseTableMonthData">
+    <div class="container" style="padding:5px;">
+      <table class="table table-borderless table-sm table-records">
+        <thead>
+            <tr>
+              {% for k in month_header %}
+                <th>
+                  {{k}}
+                </th>
+              {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in month_rows %}
+                <tr>
+                    <th scope="row" style="text-align:left;">{{r.month|monthname}}</th>
+                    <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
+                        title="Daily average: {% if r.idx == 0 %}{{r.confirmed_month|div:last_day|integer|style:'us'}}{% else %}{{r.confirmed_month|div:r.days_in_month|integer|style:'us'}}{% endif %}">
+                        {{r.confirmed_month|style:'us'}} ({{r.confirmed_pct_change_month|pct:False}})
+                    </td>
+                    <td>
+                      <span>
+                        {{r.confirmed_rank_region_month}}°
+                      </span> -
+                      <span>
+                        {{r.confirmed_rank_world_month}}°
+                      </span>
+                    </td>
+                    <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
+                        title="Daily average: {% if r.idx == 0 %}{{r.deaths_month|div:last_day|integer|style:'us'}}{% else %}{{r.deaths_month|div:r.days_in_month|integer|style:'us'}}{% endif %}">
+                        {{r.deaths_month|style:'us'}} ({{r.deaths_pct_change_month|pct:False}})
+                    </td>
+                    <td>
+                      <span>
+                        {{r.deaths_rank_region_month}}°
+                      </span> -
+                      <span>
+                        {{r.deaths_rank_world_month}}°
+                       </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div><!-- div collapse -->
+
+  {% endwith %} <!-- variables this_month and last_day declaration -->
+
+</div>  <!-- END OF THE MONTH REPORT AREA -->
+
+<div>  <!-- START OF THE WEEK REPORT AREA -->
+  <br><h3> Week-by-week</h3>
+  {% get_value week_rows key='confirmed_week' as confirmed_week %}
+  {% get_value week_rows key='deaths_week' as deaths_week %}
+  {% get_value week_rows idx=1 key='confirmed_week' as confirmed_previous_week %}
+  {% get_value week_rows idx=1 key='deaths_week' as deaths_previous_week %}
+
+  {% get_value week_rows key='last_update' as last_update %}
+
+  <hr class="featurette-divider">
+
+  <div class="row featurette">
+    <div class="col-md-5">
+      <p class="lead">
+        {% with this_month=report_date|date:'M/y' week_day_number=last_update|date:'w'|add:"1" %}
+          {% with confirmed_prediction=confirmed_week|div:week_day_number|mul:7|integer deaths_prediction=deaths_week|div:week_day_number|mul:7|integer %}
+            {% with confirmed_prediction_pct=confirmed_prediction|pct_diff:confirmed_previous_week deaths_prediction_pct=deaths_prediction|pct_diff:deaths_previous_week %}
+
+        <span style="text-decoration:underline dotted;" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="With numbers up to {{report_date|date}}">In the current week</span>, a total of
+        <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|style:'us'}}</span> new infections and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|style:'us'}}</span> deaths were reported so far,
+        a daily average of <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|div:week_day_number|integer|style:'us'}}</span> new infections/day and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|div:week_day_number|integer|style:'us'}}</span>
+        deaths/day. If we take these averages as predictors, the current week will end with approximately <span class="color-secondary-1-2" style="font-weight:bold;">{{confirmed_prediction|style:'us'}}</span>
+        newly infected habitants, <span class="color-primary-2" style="font-weight:bold;">{% if confirmed_prediction_pct >= 0 %}an increase of{% else %}a decrease of {% endif %}
+        {{confirmed_prediction_pct|mod|pct:False}}</span> when compared to the previous week and <span class="color-secondary-1-2" style="font-weight:bold;">{{deaths_prediction|style:'us'}}</span> lives lost to the coronavirus, an
+        <span class="color-primary-2" style="font-weight:bold;">{% if deaths_prediction_pct >= 0 %}increase of{% else %}decrease of {% endif %} {{deaths_prediction_pct|mod|pct:False}}</span>.
+      </p>
+      <br>
+      <div class="container" style="text-align:center;">
+        <button class="btn btn-outline-primary" id="btnshowweektable" type="button" style="color:#865696; border:none; font-size:20px;" data-bs-toggle="collapse" data-bs-target="#collapseTableWeekData" aria-expanded="false" aria-controls="collapseTableWeekData">Show table</button>
+      </div>
+      <style>
+        .btn, .btn-outline-primary:active{border:none; border-color:white; background-color:white;}
+        .btn, .btn-outline-primary:hover{border:none; border-color:white; background-color:white;}
+        .btn, .btn-outline-primary:focus{border:none; border-color:white; background-color:white;}
+      </style>
+    </div>
+    <div class="col-md-7" style="padding-left:15px;">
+      {% autoescape off %}
+        {{plot_week}}
+      {% endautoescape %}
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <div class="collapse" id="collapseTableWeekData">
+    <div class="container" style="padding:5px;">
+      <table class="table table-borderless table-sm table-records">
+        <thead>
+            <tr>
+              {% for k in week_header %}
+                <th>
+                  {{k}}
+                </th>
+              {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in week_rows %}
+                <tr>
+                    <th scope="row" style="text-align:left;">{{r.week}}</th>
+                    <td>{{r.week_range}}</td>
+                    <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
+                        title="Daily average: {% if r.idx == 0 %}{{r.confirmed_week|div:week_day_number|integer|style:'us'}}{% else %}{{r.confirmed_week|div:7|integer|style:'us'}}{% endif %}">
+                        {{r.confirmed_week|style:'us'}} ({{r.confirmed_pct_change_week|pct:False}})
+                    </td>
+                    <td>
+                      <span>
+                        {{r.confirmed_rank_region_week}}°
+                      </span> -
+                      <span>
+                        {{r.confirmed_rank_world_week}}°
+                      </span>
+                    </td>
+                    <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
+                        title="Daily average: {% if r.idx == 0 %}{{r.deaths_week|div:week_day_number|integer|style:'us'}}{% else %}{{r.deaths_week|div:7|integer|style:'us'}}{% endif %}">
+                        {{r.deaths_week|style:'us'}} ({{r.deaths_pct_change_week|pct:False}})
+                    </td>
+                    <td>
+                      <span>
+                        {{r.deaths_rank_region_week}}°
+                      </span> -
+                      <span>
+                        {{r.deaths_rank_world_week}}°
+                       </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div><!-- div collapse -->
+
+  {% endwith %} <!-- variables this_month and week_day_number declaration -->
+  {% endwith %} <!-- variables this_month and week_day_number declaration -->
+  {% endwith %} <!-- variables this_month and week_day_number declaration -->
+
+</div>  <!-- END OF THE WEEK REPORT AREA -->
+
+{% endblock content %}

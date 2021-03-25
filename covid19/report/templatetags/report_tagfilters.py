@@ -58,6 +58,16 @@ def pct(value,normalized=True):
 
     return "%.2f%%" % (value*k)
 
+@register.filter
+def pct_diff(value,arg):
+    """
+    put some string here.
+    """
+    if arg == 0:
+        return 0
+    else:
+        return (value - arg)/arg*100
+
 @register.filter(name='style')
 def format_integer(value,style=None):
     """

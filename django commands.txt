@@ -213,3 +213,27 @@ Creating a Class based view:
 
 
 3 - On urls.py -> path('',views.IndexView.as_view(), name='index')
+
+
+================================================================================
+
+Python anywhere: Creating a venv:
+
+Bash -> mkvirtualenv --python=python3.9 covid19Env
+2 - pip install -U django==3.1.5
+
+3 - which django-admin.py # Check if django is really installed
+
+4 - git clone #paste-your-clone-repository-link-here
+
+5 - ls (lista os arquivos do diretorio)
+
+6 - acessar o diretorio contendo manage.py, fazer migrações
+
+7 - ir para o tab Web e criar manualmente o app;
+
+8 - link para o virtualenv
+
+9 - Working directory: ls -> acessar o diretorio e digitar pwd;
+
+10 - configurar o WSGI
