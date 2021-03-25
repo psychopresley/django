@@ -4,6 +4,7 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','covid19.settings')
 django.setup()
 
+import numpy as np
 from pandas import read_json, read_csv
 from datetime import date, timedelta
 from time import ctime
@@ -43,14 +44,31 @@ def main():
 
     # creating quartiles map function:
     def quart_func(x,q,case):
-        if x < q[0]:
+        if x < q[1]:
             return '1st (very low {})'.format(case.lower())
-        elif q[0] <= x < q[1]:
-            return '2nd (medium-low {})'.format(case.lower())
         elif q[1] <= x < q[2]:
+            return '2nd (medium-low {})'.format(case.lower())
+        elif q[2] <= x < q[3]:
             return '3rd (medium-high {})'.format(case.lower())
         else:
             return '4th (very high {})'.format(case.lower())
+
+    # creating quartiles map function:
+    def quantiles_pos(mortality, model_coef):
+        return ([mortality**4,mortality**3,mortality**2,mortality,1]*model_coef).item()
+
+    # creating quartiles map function:
+    def quantiles_model(quantiles):
+        regressors = []
+        y=[]
+        for k,v in quantiles.items():
+            regressors.append([v**4,v**3,v**2,v,1])
+            y.append([k])
+
+        regressors = np.matrix(regressors)
+        model_coef = np.linalg.inv(regressors)*np.array(y)
+
+        return model_coef
 
 
     try:
@@ -124,8 +142,12 @@ def main():
 
 
             # Defining quartile intervals for the mortality:
-            quantile=df_aux['mortality'].quantile(q=[0.1,0.5,0.9])
+            quantile=df_aux['mortality'].quantile(q=[0,0.1,0.5,0.9,1])
             df_aux['mortality_quartile']=df_aux['mortality'].apply(lambda x:quart_func(x,quantile.values,'mortality'))
+
+            model_coef = quantiles_model(quantile.to_dict())
+            print(quantile.to_dict(),model_coef)
+            df_aux['mortality_quartile_position']=df_aux['mortality'].apply(lambda x:quantiles_pos(x,model_coef))
 
             status_report = df_aux.copy()
 
@@ -140,6 +162,7 @@ def main():
                     previous_info = previous_report.loc[previous_report['Country/Region']==item]
                     country = StatusReport.objects.get(country__name=item)
 
+                    print([info.mortality.values[0],info.mortality_quartile_position.values[0]])
                     if previous_info.Confirmed_new_cases.values[0] == 0:
                         confirmed_new_pct_change = 0
                     else:
@@ -185,6 +208,7 @@ def main():
                     country.active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0])
                     country.mortality=float(info.mortality.values[0])
                     country.mortality_quartile=info.mortality_quartile.values[0]
+                    country.mortality_quartile_position=info.mortality_quartile_position.values[0]
                     country.mortality_rank_region=int(info.mortality_rank_region.values[0])
                     country.mortality_rank_world=int(info.mortality_rank_world.values[0])
 
@@ -251,7 +275,8 @@ def main():
                                                                    mortality_rank_region=int(info.mortality_rank_region.values[0]),
                                                                    mortality_rank_world=int(info.mortality_rank_world.values[0]),
                                                                    mortality=float(info.mortality.values[0]),
-                                                                   mortality_quartile=info.mortality_quartile.values[0])[0]
+                                                                   mortality_quartile=info.mortality_quartile.values[0],
+                                                                   mortality_quartile_position=info.mortality_quartile_position.values[0],)[0]
 
                         entry.save()
                         print('{} inserted into models.StatusReport'.format(item))

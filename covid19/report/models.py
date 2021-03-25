@@ -83,6 +83,7 @@ class StatusReport(models.Model):
     active_new_rank_world = models.IntegerField(default=0)
     mortality = models.FloatField(default=0)
     mortality_quartile = models.CharField(max_length=35, default='4th quartile (very high mortality)')
+    mortality_quartile_position = models.FloatField(default=50.0)
     mortality_rank_region = models.IntegerField(default=1000)
     mortality_rank_world = models.IntegerField(default=1000)
 

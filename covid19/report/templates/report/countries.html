@@ -141,11 +141,6 @@
                       <span class="number number-rank">{{deaths_new_rank_world}}°</span> in the world considering
                       the numbers of the last 24h;
                   </li>
-                  <li>Mortality: <span class="number number-rate">{{mortality|pct}}</span> (<span class="number number-rank">#{{mortality_rank_region}}</span> in
-                      the region, <span class="number number-rank">#{{mortality_rank_world}}</span> in the world);
-                  </li>
-                  <li><span  data-bs-toggle="modal" data-bs-target="#QuartileModal" style="cursor:default;">Quartile*</span>: {{mortality_quartile}};
-                  </li>
                   <li>
                     {% if deaths_new_pct_change >= 0 %}
                     An increase of
@@ -155,7 +150,26 @@
                     <span class="number number-rank">{{deaths_new_pct_change|mod|pct:False}}</span> in new cases
                     compared to the previous day.
                   </li>
+                  <li>Mortality: <span class="number number-rate">{{mortality|pct}}</span> (<span class="number number-rank">#{{mortality_rank_region}}</span> in
+                      the region, <span class="number number-rank">#{{mortality_rank_world}}</span> in the world);
+                  </li>
+                  <li><span  data-bs-toggle="modal" data-bs-target="#QuartileModal" style="cursor:default;">Quartile*</span>: {{mortality_quartile}};
+                  </li>
                 </ul>
+
+                <div class="container">
+                  <div class="progress" style="height: 3px;">
+                    <div class="progress-bar progress-bar-stripped bg-success" role="progressbar" style="width:{{mortality_quartile_position|pct}};" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <br>
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">1st</div>
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">2nd</div>
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">3rd</div>
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">4th</div>
+                  </div><br>
+                </div>
+
             </div><!-- div card body -->
           </div><!-- div collapse -->
         </div><!-- /.col-lg-4 -->
@@ -164,14 +178,13 @@
 
     <!-- Modal -->
     <div class="modal fade" id="QuartileModal" tabindex="-1" aria-labelledby="QuartileModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header" style="background-color:#330641; color:white;">
             <h5 class="modal-title" id="QuartileModalLabel">About the quartiles</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="container">
-            {% with quartile_list|last as upper_bound %}
               <table class="table" style="text-align:center;">
                 <thead>
                   <tr>
@@ -187,51 +200,39 @@
                   <tr>
                     <th scope="row">1st</th>
                       <td>
-                        < 0.32%
+                        < {{quartile_list|slice:'2'|last|pct}}
                       </td>
                   </tr>
                   <tr>
                     <th scope="row">2nd</th>
                       <td>
-                        0.33% to 1.65%
+                        {{quartile_list|slice:'2'|last|pct}} to {{quartile_list|slice:'3'|last|pct}}
                       </td>
                   </tr>
                   <tr>
                     <th scope="row">3rd</th>
                       <td>
-                        1.66% to 3.56%
+                        {{quartile_list|slice:'3'|last|pct}} to {{quartile_list|slice:'4'|last|pct}}
                       </td>
                   </tr>
                   <tr>
                     <th scope="row">4th</th>
                       <td>
-                        > 3.57%
+                        > {{quartile_list|last|pct}}
                       </td>
                   </tr>
                 </tbody>
-              </table><br>
-
-            <h3 style="font-family:Quicksand, sans-serif, serif">{{name}}</h3>
-            <hr class="featurette-divider-simple">
-
-            <div class="progress" style="height: 3px;">
-              <div class="progress-bar progress-bar-stripped bg-success" role="progressbar" style="width:75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            <br>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">1st</div>
-              <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">2nd</div>
-              <div class="progress-bar bg-warning" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">3rd</div>
-              <div class="progress-bar bg-danger" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">4th</div>
-            </div><br>
-            {% endwith %}
+              </table>
 
             <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseQuartileText" aria-expanded="false" aria-controls="collapseQuartileText">what is a quartile?</a></p>
             <div class="collapse" id="collapseQuartileText">
-              <div class="card card-body" style="border:none; text-align:left;">
-                Quartiles are a statistical tool that will help us visualize how the selected country is dealing with the
-                pandemics when compared to the other countries in the dataset. The quartiles are defined by the ranges expressed
-                in the table above.
+              <div class="card card-body" style="border:none;">
+                <p>Quartiles are a statistical tool that help us visualize how a certain parameter of a member in a dataset
+                places itself when compared to the other members of the same set. In this case, we analyse how high is the
+                mortality rate of the selected country in comparison with the mortalities of the other countries.</p>
+
+                <p>As an example, the first quartile is defined by the 10% countries with the lowest death rates and the 4th quartile is defined
+                by the 10% countries with the highest rates. In the betweens you'll find the other countries.</p>
               </div><!-- div card body -->
             </div><!-- div collapse -->
           </div> <!-- DIV CONTAINER -->
@@ -349,8 +350,7 @@
           {% with confirmed_prediction=confirmed_week|div:week_day_number|mul:7|integer deaths_prediction=deaths_week|div:week_day_number|mul:7|integer %}
             {% with confirmed_prediction_pct=confirmed_prediction|pct_diff:confirmed_previous_week deaths_prediction_pct=deaths_prediction|pct_diff:deaths_previous_week %}
 
-        <span style="text-decoration:underline dotted;" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="With numbers up to {{report_date|date}}">In the current week</span>, a total of
-        <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|style:'us'}}</span> new infections and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|style:'us'}}</span> deaths were reported so far,
+        A total of <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|style:'us'}}</span> new infections and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|style:'us'}}</span> deaths were reported so far in the week,
         a daily average of <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|div:week_day_number|integer|style:'us'}}</span> new infections/day and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|div:week_day_number|integer|style:'us'}}</span>
         deaths/day. If we take these averages as predictors, the current week will end with approximately <span class="color-secondary-1-2" style="font-weight:bold;">{{confirmed_prediction|style:'us'}}</span>
         newly infected habitants, <span class="color-primary-2" style="font-weight:bold;">{% if confirmed_prediction_pct >= 0 %}an increase of{% else %}a decrease of {% endif %}
@@ -366,7 +366,8 @@
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#weekbarplot" type="button" role="tab" aria-controls="weekbarplot" aria-selected="true">Deaths/week</button>
-          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#weekheatmapplot" type="button" role="tab" aria-controls="weekheatmapplot" aria-selected="false">Heat waves</button>
+          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#weekheatmapplot" type="button" role="tab" aria-controls="weekheatmapplot" aria-selected="false">Waves</button>
+          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#histogramplot" type="button" role="tab" aria-controls="histogramplot" aria-selected="false">Histogram</button>
         </div>
       </nav>
       <div class="tab-content" id="myTabContent">
@@ -380,7 +381,18 @@
             {{plot_heatmap_week}}
           {% endautoescape %}
         </div>
+        <div class="tab-pane" id="histogramplot" role="tabpanel" aria-labelledby="histogramplot-tab">
+          {% autoescape off %}
+            {{plot_histogram}}
+          {% endautoescape %}
+        </div>
       </div> <!-- TAB CONTENT -->
+      <style>
+        .nav-link {background-color:inherit;}
+        .nav-link::after {outline-color:inherit;}
+        .nav.nav-tabs {color:#8C356E;}
+      </style>
+
       </div>
     </div>
 

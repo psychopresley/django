@@ -73,7 +73,7 @@ def countriespage(request): # This is a FORM PAGE
     quartile_list=[]
     for quartile in ['1st','2nd','3rd','4th']:
         lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
-        quartile_list.append(lower_bound*100)
+        quartile_list.append(lower_bound)
 
     status_dict = {'country_coord':status.country._coordinates_(),
                    'report_date':status.date,
@@ -82,7 +82,6 @@ def countriespage(request): # This is a FORM PAGE
                    **status.country.__dict__,
                   }
 
-    print(quartile_list)
     for k,v in status.__dict__.items():
         status_dict = {**status_dict,**{k:status.__dict__[k]}}
 
@@ -208,9 +207,12 @@ def countriespage(request): # This is a FORM PAGE
         week = obj.__dict__['week']
         dict = {**dict,**{'idx':idx,'week_range':start_end_week(week[:4], week[-2:])}}
 
-        x_week.append(week)
-        y_deaths_week.append(obj.__dict__['deaths'])
-        y_confirmed_week.append(obj.__dict__['confirmed'])
+        if week.endswith('00'):
+            pass
+        else:
+            x_week.append(week)
+            y_deaths_week.append(obj.__dict__['deaths'])
+            y_confirmed_week.append(obj.__dict__['confirmed'])
 
         idx += 1
         rows_week.append(dict)
@@ -286,7 +288,7 @@ def countriespage(request): # This is a FORM PAGE
         z=[y_deaths_week[::-1]],
         x=x_week[::-1],
         y=['Deaths'],
-        colorscale='Blues',
+        colorscale='RdBu_r',
         showscale=False,
         ),row=2, col=1)
 
@@ -295,7 +297,7 @@ def countriespage(request): # This is a FORM PAGE
         z=[y_confirmed_week[::-1]],
         x=x_week[::-1],
         y=['Confirmed'],
-        colorscale='Greens',
+        colorscale='RdBu_r',
         showscale=False,
         ),row=1, col=1)
 
@@ -306,12 +308,36 @@ def countriespage(request): # This is a FORM PAGE
 
     plot_heatmap_week = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
 
+
+    # CONTOUR MAPS:
+    fig = go.Figure(go.Histogram2dContour(
+        x=y_deaths_week[::-1],
+        y=y_confirmed_week[::-1],
+        colorscale='RdBu_r',
+        histnorm="percent",
+        xbins={'end':max(y_deaths_week)},
+        ybins={'end':max(y_confirmed_week)},
+        showscale=False,
+        ncontours=20,
+        contours={'showlines':False}
+    ))
+
+    fig.update_layout(
+    template="seaborn",
+    plot_bgcolor='white',
+    title={'text':"Density levels",'font':{'family':'Quicksand','size':30}},
+    )
+
+
+    plot_histogram = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
     return render(request,'report/countries.html',
                   {'form':form,
                   'nav_countries':'navbar-item-active',
                   'plot_month':plot_month,
                   'plot_week':plot_week,
                   'plot_heatmap_week':plot_heatmap_week,
+                  'plot_histogram':plot_histogram,
                   **status_dict,
                   **month_dict,
                   **week_dict,})
