@@ -82,6 +82,7 @@ def countriespage(request): # This is a FORM PAGE
                    **status.country.__dict__,
                   }
 
+    print(status.mortality_quartile_position)
     for k,v in status.__dict__.items():
         status_dict = {**status_dict,**{k:status.__dict__[k]}}
 
