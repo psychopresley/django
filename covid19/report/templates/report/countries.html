@@ -103,6 +103,31 @@
                   compared to the previous day;
                 </li>
               </ul>
+
+              <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseConfirmedNewCasesTable" aria-expanded="false" aria-controls="collapseConfirmedNewCasesTable">Top 10 countries by new cases</a></p>
+              <div class="collapse" id="collapseConfirmedNewCasesTable">
+                <div class="card card-body" style="border:none; text-align:left;">
+                  <table class="table" style="text-align:center;">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Last 24h</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for k,v in top_ten_confirmed.items %}
+                      <tr>
+                        <th scope="row" style="text-align:left;">{{k}}</th>
+                          <td>
+                            {{v|style:'us'}}
+                          </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
             </div><!-- div card body -->
           </div><!-- div collapse -->
         </div><!-- /.col-lg-4 -->
@@ -170,6 +195,30 @@
                   </div><br>
                 </div>
 
+                <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseDeathsNewCasesTable" aria-expanded="false" aria-controls="collapseDeathsNewCasesTable">Top 10 countries by new deaths</a></p>
+                <div class="collapse" id="collapseDeathsNewCasesTable">
+                  <div class="card card-body" style="border:none; text-align:left;">
+                    <table class="table" style="text-align:center;">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Last 24h</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for k,v in top_ten_deaths.items %}
+                        <tr>
+                          <th scope="row" style="text-align:left;">{{k}}</th>
+                            <td>
+                              {{v|style:'us'}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
             </div><!-- div card body -->
           </div><!-- div collapse -->
         </div><!-- /.col-lg-4 -->
@@ -188,10 +237,10 @@
               <table class="table" style="text-align:center;">
                 <thead>
                   <tr>
-                    <th scolpe="col" style="text-align:center;">
+                    <th scope="col" style="text-align:center;">
                       Quartile
                     </th>
-                    <th scolpe="col" style="text-align:center;">
+                    <th scope="col" style="text-align:center;">
                       Mortality
                     </th>
                   </tr>

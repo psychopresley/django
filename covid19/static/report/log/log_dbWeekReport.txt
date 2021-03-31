@@ -1,17 +1,17 @@
 
 ----------dbWeekReport.py SCRIPT EXECUTION REPORT-----------
 
-Local time: Sat Mar 27 06:52:06 2021
+Local time: Wed Mar 31 17:08:13 2021
 
 
  models.WeekReport updated succesfully 
 
- database update execution time: 32.20sec 
+ database update execution time: 9.27sec 
 
- Most recent week on report: 2021-12 
+ Most recent week on report: 2021-13 
 
  Script executed succesfully! 
 
  End of execution of the dbWeekReport.py script 
 
- Script execution time: 55.58sec 
+ Script execution time: 24.12sec 

@@ -36,6 +36,16 @@ class IndexView(TemplateView):
         context['db_update'] = StatusReport.objects.order_by('-db_update')[0].db_update
         context['form'] = form
 
+        for item in ['confirmed','deaths','recovered','active']:
+            total=0
+            total_new=0
+            for obj in StatusReport.objects.all():
+                total += obj.__dict__[item]
+                total_new += obj.__dict__[item+'_new']
+
+            context[item] = total
+            context[item+'_new'] = total_new
+
         return context
 
 
@@ -75,14 +85,26 @@ def countriespage(request): # This is a FORM PAGE
         lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
         quartile_list.append(lower_bound)
 
+    top_ten_new_confirmed = StatusReport.objects.all().order_by('confirmed_new_rank_world')[:10]
+    top_ten_new_deaths = StatusReport.objects.all().order_by('deaths_new_rank_world')[:10]
+
+    dict_confirmed={}
+    for obj in top_ten_new_confirmed:
+        dict_confirmed={**dict_confirmed,**{obj.__str__():obj.__dict__['confirmed_new']}}
+
+    dict_deaths={}
+    for obj in top_ten_new_deaths:
+        dict_deaths={**dict_deaths,**{obj.__str__():obj.__dict__['deaths_new']}}
+
     status_dict = {'country_coord':status.country._coordinates_(),
                    'report_date':status.date,
                    'db_update':status.db_update,
                    'quartile_list':quartile_list,
+                   'top_ten_confirmed':dict_confirmed,
+                   'top_ten_deaths':dict_deaths,
                    **status.country.__dict__,
                   }
 
-    print(status.mortality_quartile_position)
     for k,v in status.__dict__.items():
         status_dict = {**status_dict,**{k:status.__dict__[k]}}
 
