@@ -103,6 +103,31 @@
                   compared to the previous day;
                 </li>
               </ul>
+
+              <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseConfirmedNewCasesTable" aria-expanded="false" aria-controls="collapseConfirmedNewCasesTable">Top 10 countries by new cases</a></p>
+              <div class="collapse" id="collapseConfirmedNewCasesTable">
+                <div class="card card-body" style="border:none; text-align:left;">
+                  <table class="table" style="text-align:center;">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Last 24h</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for k,v in top_ten_confirmed.items %}
+                      <tr>
+                        <th scope="row" style="text-align:left;">{{k}}</th>
+                          <td>
+                            {{v|style:'us'}}
+                          </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
             </div><!-- div card body -->
           </div><!-- div collapse -->
         </div><!-- /.col-lg-4 -->
@@ -159,15 +184,39 @@
 
                 <div class="container">
                   <div class="progress" style="height: 3px;">
-                    <div class="progress-bar progress-bar-stripped bg-success" role="progressbar" style="width:{{mortality_quartile_position|pct}};" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar progress-bar-stripped {% if mortality_quartile_position >= 0.9 %}bg-danger{% elif mortality_quartile_position >= 0.5 %}bg-warning{% elif mortality_quartile_position >= 0.1 %}bg-primary{% else %}bg-success{% endif %}" role="progressbar" style="width:{{mortality_quartile_position|pct}};" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <br>
                   <div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">1st</div>
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">2nd</div>
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">1st</div>
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">2nd</div>
                     <div class="progress-bar bg-warning" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">3rd</div>
                     <div class="progress-bar bg-danger" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">4th</div>
                   </div><br>
+                </div>
+
+                <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseDeathsNewCasesTable" aria-expanded="false" aria-controls="collapseDeathsNewCasesTable">Top 10 countries by new deaths</a></p>
+                <div class="collapse" id="collapseDeathsNewCasesTable">
+                  <div class="card card-body" style="border:none; text-align:left;">
+                    <table class="table" style="text-align:center;">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Last 24h</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for k,v in top_ten_deaths.items %}
+                        <tr>
+                          <th scope="row" style="text-align:left;">{{k}}</th>
+                            <td>
+                              {{v|style:'us'}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
             </div><!-- div card body -->
@@ -188,10 +237,10 @@
               <table class="table" style="text-align:center;">
                 <thead>
                   <tr>
-                    <th scolpe="col" style="text-align:center;">
+                    <th scope="col" style="text-align:center;">
                       Quartile
                     </th>
-                    <th scolpe="col" style="text-align:center;">
+                    <th scope="col" style="text-align:center;">
                       Mortality
                     </th>
                   </tr>

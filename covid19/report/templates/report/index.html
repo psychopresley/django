@@ -1,43 +1,53 @@
 {% extends "report/base.html" %}
 {% block content %}
+{% load report_tagfilters %}
 
 
 <div class="display_page" id="world_data_page">
 
     <!-- START THE FEATURETTES -->
-    <div class="row">
-      <div class="col-9">
-      </div>
-      <div class="col-3">
-        <div class="container" data-bs-toggle="popover" data-bs-placement="bottom"
-         data-bs-content="All numbers presented here make reference to the consolidated
-         reports issued on the previous day."
-         style="cursor:default; padding:0; margin:0 0 2rem; text-align:right;">
-          <em>Updated on {{db_update}}*</em>
-        </div>
-      </div>
-
-    </div>
 
     <div class="row featurette">
       <div class="col-md-5">
-        <h2 class="featurette-heading">The world in numbers</h2>
-        <p class="lead"><br>
-          One way to visualize the impact of the Sars-Cov-2 outbreak in the world is to divide it
-          into geopolitical regions. It is natural to assume that the numbers are higher in the regions
-          with higher economic activity and trade level with China, where the first cases of infection
-          were reported. Here are the <span class="popover-html" style="cursor:default; text-decoration:underline dotted;"
-           data-bs-toggle="popover"
-           data-bs-content="
-           <p>
-             It's important to notice in advance that the number presented here are collected from several oficial
-             reports emitted by the <span style='text-decoration:underline solid 1px;'>governments</span> and not all data is confident. Some countries, counties or
-             provinces, for example, don't report the recovered cases.</p><br> <p>The US, Sweden and Belgium are just a few examples.
-             Also, totalitarian regimes tend to cover their real numbers. Still, this is the best approximation we have
-             from the real state of the world.</p>">
-           numbers</span> by geopolitical region as defined by the WHO.
-      </p>
-      </div>
+        <div class="container marketing" style="text-align:center; vertical-align:center; background-color:#4C0433; color:white; padding:0px; border:1px solid black">
+            <div class="row" style="padding:0.5rem 0 0 0.5rem;">
+              <h2>{{confirmed|style:'us'}}</h2>
+            </div>
+            <div class="row" style="padding:0.5rem 0 0 0.5rem; background-color:white; color:black;">
+              <div class="col-4">
+                <h4>{{deaths|style:'us'}}</h4>
+                deaths
+              </div>
+              <div class="col-4">
+                <h4>{{recovered|style:'us'}}</h4>
+                recovered
+              </div>
+              <div class="col-4">
+                <h4>{{active|style:'us'}}</h4>
+                active
+              </div>
+            </div>
+        </div><br><br><br>
+        <div class="container marketing" style="text-align:center; vertical-align:center; background-color:#4C0433; color:white; padding:0px; border:1px solid black">
+            <div class="row" style="padding:0.5rem 0 0 0.5rem;">
+              <h2>{{confirmed_new|style:'us'}} / 24h</h2>
+            </div>
+            <div class="row" style="padding:0.5rem 0 0 0.5rem; background-color:white; color:black;">
+              <div class="col-4">
+                <h4>{{deaths_new|style:'us'}}</h4>
+                deaths
+              </div>
+              <div class="col-4">
+                <h4>{{recovered_new|style:'us'}}</h4>
+                recovered
+              </div>
+              <div class="col-4">
+                <h4>{{active_new|style:'us'}}</h4>
+                active
+              </div>
+            </div>
+        </div>
+      </div> <!-- end div col-5 -->
       <div class="col-md-7">
         <nav>
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -113,6 +123,7 @@
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#deaths" type="button" role="tab" aria-controls="deaths" aria-selected="true">Deaths</button>
             <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#deathrate" type="button" role="tab" aria-controls="deathrate" aria-selected="false">Death rate</button>
+            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#deathsracingbars" type="button" role="tab" aria-controls="deathsracingbars" aria-selected="false">Racing bars</button>
           </div>
         </nav>
         <div class="tab-content" id="myTabContent">
@@ -123,6 +134,11 @@
           </div>
           <div class="tab-pane" id="deathrate" role="tabpanel" aria-labelledby="deathrate-tab">
             <div class="flourish-embed flourish-scatter" data-src="visualisation/3533436">
+              <script src="https://public.flourish.studio/resources/embed.js"></script>
+            </div>
+          </div>
+          <div class="tab-pane" id="deathsracingbars" role="tabpanel" aria-labelledby="deathsracingbars-tab">
+            <div class="flourish-embed flourish-bar-chart-race" data-src="visualisation/5683988">
               <script src="https://public.flourish.studio/resources/embed.js"></script>
             </div>
           </div>
