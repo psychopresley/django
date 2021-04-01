@@ -1,6 +1,8 @@
+# Importing django modules, forms and models:
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View,TemplateView
+from pathlib import Path
 from . import forms
 from report.models import StatusReport, MonthReport, WeekReport
 
@@ -10,14 +12,57 @@ import plotly.express as px
 from plotly.offline import plot
 from plotly.subplots import make_subplots
 
+# Importing geoip2 and correlated modules:
+from geoip2.database import Reader
+from socket import gethostbyname, getfqdn
+import requests
+
 # Importing python native modules:
 from calendar import week
 from datetime import datetime, timedelta
+import os
 
 # defining custom function to obtain first and last day of the week:
 def start_end_week(year, week):
     monday = datetime.strptime(f'{year}-{week}-1', "%Y-%W-%w").date()
     return '{} / {}'.format(monday.strftime('%b, %d'), (monday + timedelta(days=6.9)).strftime('%b, %d'))
+
+# defining custom function to obtain the public IP address of the request:
+def getIP():
+    '''
+    The code below was taken from:
+    https://stackoverflow.com/questions/2311510/getting-a-machines-external-ip-address-with-python/41432835
+
+    Please refer to the link for original code and credits.
+
+    geoip2 api documentation: https://geoip2.readthedocs.io/en/latest/
+    maxmind database: https://www.maxmind.com
+    '''
+    # local_ip = gethostbyname(getfqdn())
+    public_ip = requests.get('https://www.wikipedia.org').headers['X-Client-IP']
+    response = reader.country(public_ip)
+
+    return response.country
+
+# C:\Users\user\Documents\GitHub\django\covid19\report
+# Creating a Reader's object for request IP detection with the getIP function:
+
+curr_dir = os.path.dirname(__file__)
+geoip_dir = 'geoip_db'
+geoip_file = 'GeoLite2-Country.mmdb'
+
+if geoip_dir in os.listdir(curr_dir):
+    lookup_dir = os.path.join(curr_dir,geoip_dir)
+    if geoip_file in os.listdir(lookup_dir):
+        geoip_db = os.path.join(lookup_dir,geoip_file)
+    else:
+        raise FileNotFoundError('Not found GeoLite2-Country.mmdb file in geoip_db directory.')
+else:
+    raise FileNotFoundError('No directory "geoip_db" found.')
+
+reader = Reader(geoip_db)
+countries_in_db = [y.country.name for y in StatusReport.objects.all()]
+
 
 # Create your views here.
 
@@ -35,6 +80,16 @@ class IndexView(TemplateView):
         context['nav_index'] = 'navbar-item-active'
         context['db_update'] = StatusReport.objects.order_by('-db_update')[0].db_update
         context['form'] = form
+
+        for item in ['confirmed','deaths','recovered','active']:
+            total=0
+            total_new=0
+            for obj in StatusReport.objects.all():
+                total += obj.__dict__[item]
+                total_new += obj.__dict__[item+'_new']
+
+            context[item] = total
+            context[item+'_new'] = total_new
 
         return context
 
@@ -57,7 +112,12 @@ class ReadMeView(TemplateView):
 
 def countriespage(request): # This is a FORM PAGE
     form = forms.SelectCountry()
-    selected_country = form['country'].initial
+
+    x = getIP()
+    if x.name in countries_in_db:
+        selected_country = x.name
+    else:
+        selected_country = form['country'].initial
 
     if request.method == 'POST':
         form = forms.SelectCountry(request.POST);
@@ -75,10 +135,23 @@ def countriespage(request): # This is a FORM PAGE
         lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
         quartile_list.append(lower_bound)
 
+    top_ten_new_confirmed = StatusReport.objects.all().order_by('confirmed_new_rank_world')[:10]
+    top_ten_new_deaths = StatusReport.objects.all().order_by('deaths_new_rank_world')[:10]
+
+    dict_confirmed={}
+    for obj in top_ten_new_confirmed:
+        dict_confirmed={**dict_confirmed,**{obj.__str__():obj.__dict__['confirmed_new']}}
+
+    dict_deaths={}
+    for obj in top_ten_new_deaths:
+        dict_deaths={**dict_deaths,**{obj.__str__():obj.__dict__['deaths_new']}}
+
     status_dict = {'country_coord':status.country._coordinates_(),
                    'report_date':status.date,
                    'db_update':status.db_update,
                    'quartile_list':quartile_list,
+                   'top_ten_confirmed':dict_confirmed,
+                   'top_ten_deaths':dict_deaths,
                    **status.country.__dict__,
                   }
 
