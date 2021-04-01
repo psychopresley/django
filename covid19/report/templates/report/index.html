@@ -9,50 +9,45 @@
 
     <div class="row featurette">
       <div class="col-md-5">
-        <div class="container marketing" style="text-align:center; vertical-align:center;">
-            <div class="row">
+        <div class="container marketing" style="text-align:center; vertical-align:center; background-color:#4C0433; color:white; padding:0px; border:1px solid black">
+            <div class="row" style="padding:0.5rem 0 0 0.5rem;">
               <h2>{{confirmed|style:'us'}}</h2>
             </div>
+            <div class="row" style="padding:0.5rem 0 0 0.5rem; background-color:white; color:black;">
+              <div class="col-4">
+                <h4>{{deaths|style:'us'}}</h4>
+                deaths
+              </div>
+              <div class="col-4">
+                <h4>{{recovered|style:'us'}}</h4>
+                recovered
+              </div>
+              <div class="col-4">
+                <h4>{{active|style:'us'}}</h4>
+                active
+              </div>
+            </div>
+        </div><br><br><br>
+        <div class="container marketing" style="text-align:center; vertical-align:center; background-color:#4C0433; color:white; padding:0px; border:1px solid black">
+            <div class="row" style="padding:0.5rem 0 0 0.5rem;">
+              <h2>{{confirmed_new|style:'us'}} / 24h</h2>
+            </div>
+            <div class="row" style="padding:0.5rem 0 0 0.5rem; background-color:white; color:black;">
+              <div class="col-4">
+                <h4>{{deaths_new|style:'us'}}</h4>
+                deaths
+              </div>
+              <div class="col-4">
+                <h4>{{recovered_new|style:'us'}}</h4>
+                recovered
+              </div>
+              <div class="col-4">
+                <h4>{{active_new|style:'us'}}</h4>
+                active
+              </div>
+            </div>
         </div>
-        <div class="container" style="text-align:center;">
-          <hr class="featurette-divider-simple">
-          <div class="row">
-            <div class="col-4">
-              <h4>{{deaths|style:'us'}}</h4>
-              deaths
-            </div>
-            <div class="col-4">
-              <h4>{{recovered|style:'us'}}</h4>
-              recovered
-            </div>
-            <div class="col-4">
-              <h4>{{active|style:'us'}}</h4>
-              active
-            </div>
-          </div>
-          <hr class="featurette-divider"><br>
-
-          <div class="row">
-            <h2>{{confirmed_new|style:'us'}} / 24h</h2>
-          </div>
-          <hr class="featurette-divider-simple">
-          <div class="row">
-            <div class="col-4">
-              <h4>{{deaths_new|style:'us'}}</h4>
-              deaths
-            </div>
-            <div class="col-4">
-              <h4>{{recovered_new|style:'us'}}</h4>
-              recovered
-            </div>
-            <div class="col-4">
-              <h4>{{active_new|style:'us'}}</h4>
-              active
-            </div>
-          </div>
-          <hr class="featurette-divider">
-        </div>
-        </div> <!-- end div col-5 -->
+      </div> <!-- end div col-5 -->
       <div class="col-md-7">
         <nav>
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
