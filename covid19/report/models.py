@@ -15,6 +15,21 @@ class ConfigReport(models.Model):
     confirm_delete = models.BooleanField(default=True)
 
 
+class UNData(models.Model):
+    country = models.CharField(max_length=60,primary_key=True,default='undefined')
+    iso_code= models.CharField(max_length=3,default='AA')
+    year = models.CharField(max_length=4,default='2020')
+    population = models.FloatField(default=1e4)
+    density = models.FloatField(default=1.0)
+    population_male = models.FloatField(default=1e4)
+    population_female = models.FloatField(default=1e4)
+    sex_ratio = models.FloatField(default=1.0)
+    pct_minus_fourteen = models.FloatField(default=1)
+    pct_plus_sixty = models.FloatField(default=1)
+
+    def __str__(self):
+        return self.country
+
 class Country(models.Model):
     name = models.CharField(max_length=60,primary_key=True,default='undefined')
     latitude = models.FloatField(default=90)
