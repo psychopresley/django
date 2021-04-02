@@ -1,12 +1,12 @@
 
 ----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------
 
-Local time: Thu Apr  1 17:15:34 2021
+Local time: Fri Apr  2 07:05:44 2021
 
 
  models.StatusReport updated succesfully 
 
- Most recent date on report: 2021-03-31 
+ Most recent date on report: 2021-04-01 
 
  Script executed succesfully! 
 
