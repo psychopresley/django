@@ -84,6 +84,9 @@
             <div class="card card-body" style="border:none; text-align:left;">
               <ul class="report">
                 <li>
+                  <span class="number">{{confirmed_by_hundreds|integer|style:'us'}} cases/100k habitants</span>
+                </li>
+                <li>
                   <span class="number number-rank">{{confirmed_rank_region}}°</span> in the region /
                   <span class="number number-rank">{{confirmed_rank_world}}°</span> in the world
                   considering the total numbers;
@@ -92,6 +95,11 @@
                   <span class="number number-rank">{{confirmed_new_rank_region}}°</span> in the region /
                   <span class="number number-rank">{{confirmed_new_rank_world}}°</span> in the world
                   considering the numbers of the last 24h;
+                </li>
+                <li>
+                  <span class="number number-rank">{{confirmed_by_hundreds_rank_region}}°</span> in the region /
+                  <span class="number number-rank">{{confirmed_by_hundreds_rank_world}}°</span> in the world
+                  considering the cases/100k habitants;
                 </li>
                 <li>
                   {% if confirmed_new_pct_change >= 0 %}
@@ -158,13 +166,21 @@
           <div class="collapse" id="collapseDeaths">
             <div class="card card-body" style="border:none; text-align:left;">
                 <ul>
+                  <li>
+                    <span class="number">{{deaths_by_hundreds|integer|style:'us'}} cases/100k habitants</span>
+                  </li>
                   <li><span class="number number-rank">{{deaths_rank_region}}°</span> in the region /
-                    <span class="number number-rank">#{{deaths_rank_world}}°</span> in the world considering
+                    <span class="number number-rank">{{deaths_rank_world}}°</span> in the world considering
                     the total numbers;
                   </li>
                   <li><span class="number number-rank">{{deaths_new_rank_region}}°</span> in the region /
                       <span class="number number-rank">{{deaths_new_rank_world}}°</span> in the world considering
                       the numbers of the last 24h;
+                  </li>
+                  <li>
+                    <span class="number number-rank">{{deaths_by_hundreds_rank_region}}°</span> in the region /
+                    <span class="number number-rank">{{deaths_by_hundreds_rank_world}}°</span> in the world
+                    considering the cases/100k habitants;
                   </li>
                   <li>
                     {% if deaths_new_pct_change >= 0 %}
