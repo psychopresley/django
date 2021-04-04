@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Country,StatusReport,MonthReport,WeekReport,UNData,ConfigReport
+from .models import *
 from django.utils.translation import gettext_lazy as _
 
 admin.site.disable_action('delete_selected')
@@ -241,15 +241,15 @@ class UNDataAdmin(admin.ModelAdmin):
     search_fields = ['country','iso_code']
 
 
-# @admin.register(ISOCodeData)
-# class ISOCodeDataAdmin(admin.ModelAdmin):
-#     ordering = ['geoip_name']   # ordering = ['-country'] for descending order
-#
-#     fields = ('geoip_name', 'un_name', 'country_name')
-#
-#     list_display = ['__str__','un_name','country_name']
-#     # list_filter =[MonthListFilter,YearListFilter,]
-#     search_fields = ['geoip_name','un_name','country_name']
+@admin.register(ISOCodeData)
+class ISOCodeDataAdmin(admin.ModelAdmin):
+    ordering = ['geoip_name']   # ordering = ['-country'] for descending order
+
+    fields = ('geoip_name', 'iso_code', 'un_name', 'country_name', 'geoname_id')
+
+    list_display = ['__str__','iso_code','un_name','country_name']
+    # list_filter =[MonthListFilter,YearListFilter,]
+    search_fields = ['geoip_name','iso_code','un_name','country_name']
 
 
 @admin.register(ConfigReport)

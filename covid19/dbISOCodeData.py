@@ -35,27 +35,29 @@ def main():
 
         if file_name in os.listdir(config_filepath):
             print('Reading configuration file')
-            df_iso = pd.read_csv(os.path.join(config_filepath,file_name),header=0).dropna()
+            df_iso = pd.read_csv(os.path.join(config_filepath,file_name))
         else:
     	    raise FileNotFoundError('No configuration file {} found.'.format(file_name))
 
         db_del(ISOCodeData,confirm_before=False)
         print('Inserting all entries into models.ISOCodeData')
 
-        list_of_iso_codes = df_iso['country_iso_code'].values
-        print(list_of_iso_codes)
-
-        for item in list_of_iso_codes:
+        for item in df_iso['country_iso_code'].values:
             info = df_iso.loc[df_iso['country_iso_code']==item]
-            print(info)
 
-            # iso_code = info['country_iso_code'][0],
-            entry = ISOCodeData.objects.get_or_create(geoname_id = info['geoname_id'][0],
-                                                    iso_code = info['country_iso_code'][0],
-                                                    geoip_name = info['geoip_name'][0],
-                                                    un_name = info['un_name'][0],
-                                                    country_name = info['country_name'][0])[0]
+            geoname_id = int(info.geoname_id.values[0])
+            iso_code = str(info.country_iso_code.values[0])
+            geoip_name = str(info.geoip_name.values[0])
+            un_name = str(info.un_name.values[0])
+            country_name = str(info.country_name.values[0])
+
+            entry = ISOCodeData.objects.get_or_create(geoname_id = geoname_id,
+                                                    iso_code = iso_code,
+                                                    geoip_name = geoip_name,
+                                                    un_name = un_name,
+                                                    country_name = country_name,)[0]
             entry.save()
+            print('{} inserted into the models.ISOCodeData database'.format(item))
         print('Script executed succesfully!')
     except:
         print('Something went wrong! The script was not executed')
