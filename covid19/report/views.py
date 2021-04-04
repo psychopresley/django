@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.generic import View,TemplateView
 from pathlib import Path
 from . import forms
-from report.models import StatusReport, MonthReport, WeekReport
+from report.models import StatusReport, MonthReport, WeekReport, ISOCodeData, UNData
 
 # Importing plotly modules:
 import plotly.graph_objs as go
@@ -113,12 +113,19 @@ class ReadMeView(TemplateView):
 def countriespage(request):
     form = forms.SelectCountry()
 
-    x = getIP()
-    if x.name in countries_in_db:
-        selected_country = x.name
+    # Checking the request IP and redirect to display the country to which
+    # it belongs:
+    x = ISOCodeData.objects.get(iso_code=getIP().iso_code)
+    if x.country_name in countries_in_db:
+        selected_country = x.country_name
     else:
         selected_country = form['country'].initial
 
+    # x = UNData.objects.get(country=x.un_name)
+    # print(x.population)
+    # print(x.density)
+
+    # Checking if this is a user select request
     if request.method == 'POST':
         form = forms.SelectCountry(request.POST);
 
