@@ -236,9 +236,20 @@ class UNDataAdmin(admin.ModelAdmin):
              ('pct_minus_fourteen', 'pct_plus_sixty'),
              ('population_male', 'population_female', 'sex_ratio'))
 
-    list_display = ['__str__','iso_code','year',]
+    list_display = ['__str__','year',]
     # list_filter =[MonthListFilter,YearListFilter,]
     search_fields = ['country','iso_code']
+
+
+# @admin.register(ISOCodeData)
+# class ISOCodeDataAdmin(admin.ModelAdmin):
+#     ordering = ['geoip_name']   # ordering = ['-country'] for descending order
+#
+#     fields = ('geoip_name', 'un_name', 'country_name')
+#
+#     list_display = ['__str__','un_name','country_name']
+#     # list_filter =[MonthListFilter,YearListFilter,]
+#     search_fields = ['geoip_name','un_name','country_name']
 
 
 @admin.register(ConfigReport)

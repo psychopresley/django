@@ -15,9 +15,19 @@ class ConfigReport(models.Model):
     confirm_delete = models.BooleanField(default=True)
 
 
+class ISOCodeData(models.Model):
+    geoname_id = models.IntegerField(primary_key=True,default=0)
+    iso_code = models.CharField(max_length=2,default='00')
+    geoip_name = models.CharField(max_length=60,default='undefined')
+    un_name = models.CharField(max_length=60,default='undefined')
+    country_name = models.CharField(max_length=60,default='undefined')
+
+    def __str__(self):
+        return self.geoip_name
+
+
 class UNData(models.Model):
     country = models.CharField(max_length=60,primary_key=True,default='undefined')
-    iso_code= models.CharField(max_length=3,default='AA')
     year = models.CharField(max_length=4,default='2020')
     population = models.FloatField(default=1e4)
     density = models.FloatField(default=1.0)
@@ -29,6 +39,7 @@ class UNData(models.Model):
 
     def __str__(self):
         return self.country
+
 
 class Country(models.Model):
     name = models.CharField(max_length=60,primary_key=True,default='undefined')

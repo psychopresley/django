@@ -1,8 +1,17 @@
 
 ----------dbMonthReport.py SCRIPT EXECUTION REPORT-----------
 
-Local time: Fri Apr  2 17:16:49 2021
+Local time: Sun Apr  4 07:19:52 2021
 
 
- --> current file has not been modified. Nothing to do here.
- Script execution time: 0.33sec 
+ models.MonthReport updated succesfully 
+
+ database update execution time: 767.94sec 
+
+ Most recent month on report: 2021-04 
+
+ Script executed succesfully! 
+
+ End of execution of the dbMonthReport.py script 
+
+ Script execution time: 844.17sec 

@@ -56,3 +56,7 @@ $('#showweektable').click(function(){
     $('#weektable').html("Hide table");
   }
 })
+
+// $('#SelectCountry').change(funtion(){
+//   $('#BtnHitMe').click()
+// })

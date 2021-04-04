@@ -9,16 +9,10 @@ COUNTRIES_LIST.sort()
 class SelectCountry(forms.Form):
     country= forms.CharField(label='', label_suffix=': ',
                              widget=forms.Select(choices=COUNTRIES_LIST),
-                             initial='Brazil');
+                             initial='US');
 
-    country.widget.attrs.update({'class': 'form-select-country'})
+    country.widget.attrs.update({'class': 'form-select-country','id': 'SelectCountry'})
 
     botcatcher = forms.CharField(required=False,
                                  widget=forms.HiddenInput,
                                  validators=[validators.MaxLengthValidator(0)]);
-
-
-# class SelectCountryModel(forms.ModelForm):
-#     class Meta:
-#         model = Country
-#         fields='__all__'
