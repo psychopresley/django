@@ -4,13 +4,13 @@ geoname_id,country_iso_code,country_name,geoip_name,un_name
 69543,YE,Yemen,Yemen,Yemen
 99237,IQ,Iraq,Iraq,Iraq
 102358,SA,Saudi Arabia,Saudi Arabia,Saudi Arabia
-130758,IR,Iran,Iran,Iran
+130758,IR,Iran,Iran,Iran (Islamic Republic of)
 146669,CY,Cyprus,Cyprus,Cyprus
-149590,TZ,Tanzania,Tanzania,Tanzania
-163843,SY,Syria,Syria,Syria
+149590,TZ,Tanzania,Tanzania,United Rep. of Tanzania
+163843,SY,Syria,Syria,Syrian Arab Republic
 174982,AM,Armenia,Armenia,Armenia
 192950,KE,Kenya,Kenya,Kenya
-203312,CD,Democratic Republic of Congo,DR Congo,DR Congo
+203312,CD,Democratic Republic of Congo,DR Congo,Dem. Rep. of the Congo
 223816,DJ,Djibouti,Djibouti,Djibouti
 226074,UG,Uganda,Uganda,Uganda
 239880,CF,Central African Republic,Central African Republic,Central African Republic
@@ -36,7 +36,7 @@ geoname_id,country_iso_code,country_name,geoip_name,un_name
 597427,LT,Lithuania,Lithuania,Lithuania
 607072,SJ,Norway,Svalbard and Jan Mayen,Svalbard and Jan Mayen
 614540,GE,Georgia,Georgia,Georgia
-617790,MD,Moldova,Moldova,Moldova
+617790,MD,Moldova,Moldova,Republic of Moldova
 630336,BY,Belarus,Belarus,Belarus
 660013,FI,Finland,Finland,Finland
 661882,AX,Finland,Åland,Åland
@@ -79,26 +79,26 @@ geoname_id,country_iso_code,country_name,geoip_name,un_name
 1546748,TF,France,French Southern Territories,French Southern Territories
 1547314,HM,Australia,Heard Island and McDonald Islands,Heard Island and McDonald Islands
 1547376,CC,Australia,Cocos [Keeling] Islands,Cocos [Keeling] Islands
-1559582,PW,US,Palau,Palau
-1562822,VN,Vietnam,Vietnam,Vietnam
+1559582,PW,US,Palau,United States of America
+1562822,VN,Vietnam,Vietnam,Viet Nam
 1605651,TH,Thailand,Thailand,Thailand
 1643084,ID,Indonesia,Indonesia,Indonesia
-1655842,LA,Laos,Laos,Laos
+1655842,LA,Laos,Laos,Lao People's Dem. Rep.
 1668284,TW,Taiwan,Taiwan,Taiwan
 1694008,PH,Philippines,Philippines,Philippines
 1733045,MY,Malaysia,Malaysia,Malaysia
 1814991,CN,China,China,China
 1819730,HK,United Kingdom,Hong Kong,Hong Kong
-1820814,BN,Brunei,Brunei,Brunei
+1820814,BN,Brunei,Brunei,Brunei Darussalam
 1821275,MO,China,Macao,Macao
 1831722,KH,Cambodia,Cambodia,Cambodia
-1835841,KR,South Korea,South Korea,South Korea
+1835841,KR,South Korea,South Korea,Republic of Korea
 1861060,JP,Japan,Japan,Japan
 1873107,KP,North Korea,North Korea,North Korea
 1880251,SG,Singapore,Singapore,Singapore
 1899402,CK,United Kingdom,Cook Islands,Cook Islands
-1966436,TL,East Timor,East Timor,East Timor
-2017370,RU,Russia,Russia,Russia
+1966436,TL,East Timor,East Timor,Timor-Leste
+2017370,RU,Russia,Russia,Russian Federation
 2029969,MN,Mongolia,Mongolia,Mongolia
 2077456,AU,Australia,Australia,Australia
 2078138,CX,Australia,Christmas Island,Christmas Island
@@ -116,10 +116,10 @@ geoname_id,country_iso_code,country_name,geoip_name,un_name
 2215636,LY,Libya,Libya,Libya
 2233387,CM,Cameroon,Cameroon,Cameroon
 2245662,SN,Senegal,Senegal,Senegal
-2260494,CG,Congo-Brazzaville,Congo Republic,Congo Republic
+2260494,CG,Congo-Brazzaville,Congo Republic,Congo
 2264397,PT,Portugal,Portugal,Portugal
 2275384,LR,Liberia,Liberia,Liberia
-2287781,CI,Ivory Coast,Ivory Coast,Ivory Coast
+2287781,CI,Ivory Coast,Ivory Coast,Côte d’Ivoire
 2300660,GH,Ghana,Ghana,Ghana
 2309096,GQ,Equatorial Guinea,Equatorial Guinea,Equatorial Guinea
 2328926,NG,Nigeria,Nigeria,Nigeria
@@ -163,7 +163,7 @@ geoname_id,country_iso_code,country_name,geoip_name,un_name
 3042225,IM,United Kingdom,Isle of Man,United Kingdom
 3042362,GG,United Kingdom,Guernsey,Guernsey
 3057568,SK,Slovakia,Slovakia,Slovakia
-3077311,CZ,Czech Republic,Czechia,Czech Republic
+3077311,CZ,Czech Republic,Czechia,Czechia
 3144096,NO,Norway,Norway,Norway
 3164670,VA,Holy See,Vatican City,Vatican City
 3168068,SM,San Marino,San Marino,San Marino
@@ -177,7 +177,7 @@ geoname_id,country_iso_code,country_name,geoip_name,un_name
 3370751,SH,United Kingdom,Saint Helena,Saint Helena
 3371123,BV,Norway,Bouvet Island,Bouvet Island
 3374084,BB,Barbados,Barbados,Barbados
-3374766,CV,Cape Verde,Cabo Verde,Cape Verde
+3374766,CV,Cape Verde,Cabo Verde,Cabo Verde
 3378535,GY,Guyana,Guyana,Guyana
 3381670,GF,France,French Guiana,France
 3382998,SR,Suriname,Suriname,Suriname
@@ -203,7 +203,7 @@ geoname_id,country_iso_code,country_name,geoip_name,un_name
 3576916,TC,United Kingdom,Turks and Caicos Islands,Turks and Caicos Islands
 3577279,AW,Netherlands,Aruba,Netherlands
 3577718,VG,United Kingdom,British Virgin Islands,United Kingdom
-3577815,VC,Saint Vincent and the Grenadines,Saint Vincent and the Grenadines,Saint Vincent and the Grenadines
+3577815,VC,Saint Vincent and the Grenadines,Saint Vincent and the Grenadines,Saint Vincent & Grenadines
 3578097,MS,United Kingdom,Montserrat,United Kingdom
 3578421,MF,Netherlands,Saint Martin,Netherlands
 3578476,BL,France,Saint Barthélemy,Saint Barthélemy
@@ -216,14 +216,14 @@ geoname_id,country_iso_code,country_name,geoip_name,un_name
 3608932,HN,Honduras,Honduras,Honduras
 3617476,NI,Nicaragua,Nicaragua,Nicaragua
 3624060,CR,Costa Rica,Costa Rica,Costa Rica
-3625428,VE,Venezuela,Venezuela,Venezuela
+3625428,VE,Venezuela,Venezuela,Venezuela (Boliv. Rep. of)
 3658394,EC,Ecuador,Ecuador,Ecuador
 3686110,CO,Colombia,Colombia,Colombia
 3703430,PA,Panama,Panama,Panama
 3723988,HT,Haiti,Haiti,Haiti
 3865483,AR,Argentina,Argentina,Argentina
 3895114,CL,Chile,Chile,Chile
-3923057,BO,Bolivia,Bolivia,Bolivia
+3923057,BO,Bolivia,Bolivia,Bolivia (Plurin. State of)
 3932488,PE,Peru,Peru,Peru
 3996063,MX,Mexico,Mexico,Mexico
 4030656,PF,France,French Polynesia,France
@@ -234,15 +234,15 @@ geoname_id,country_iso_code,country_name,geoip_name,un_name
 4034749,WF,France,Wallis and Futuna,Wallis and Futuna
 4034894,WS,Samoa,Samoa,Samoa
 4036232,NU,New Zealand,Niue,Niue
-4041468,MP,US,Northern Mariana Islands,Northern Mariana Islands
-4043988,GU,US,Guam,US
-4566966,PR,US,Puerto Rico,Puerto Rico
-4796775,VI,US,U.S. Virgin Islands,U.S. Virgin Islands
-5854968,UM,US,U.S. Minor Outlying Islands,U.S. Minor Outlying Islands
-5880801,AS,US,American Samoa,American Samoa
+4041468,MP,US,Northern Mariana Islands,United States of America
+4043988,GU,US,Guam,United States of America
+4566966,PR,US,Puerto Rico,United States of America
+4796775,VI,US,U.S. Virgin Islands,United States of America
+5854968,UM,US,U.S. Minor Outlying Islands,United States of America
+5880801,AS,US,American Samoa,United States of America
 6251999,CA,Canada,Canada,Canada
-6252001,US,US,United States,United States
-6254930,PS,West Bank and Gaza,Palestine,Palestine
+6252001,US,US,United States,United States of America
+6254930,PS,West Bank and Gaza,Palestine,State of Palestine
 6290252,RS,Serbia,Serbia,Serbia
 6697173,AQ,Antarctica,Antarctica,Antarctica
 7609695,SX,Netherlands,Sint Maarten,Sint Maarten

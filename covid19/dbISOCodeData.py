@@ -35,7 +35,7 @@ def main():
 
         if file_name in os.listdir(config_filepath):
             print('Reading configuration file')
-            df_iso = pd.read_csv(os.path.join(config_filepath,file_name))
+            df_iso = pd.read_csv(os.path.join(config_filepath,file_name),na_filter=False)
         else:
     	    raise FileNotFoundError('No configuration file {} found.'.format(file_name))
 
