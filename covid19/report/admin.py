@@ -238,7 +238,7 @@ class UNDataAdmin(admin.ModelAdmin):
 
     list_display = ['__str__','year',]
     # list_filter =[MonthListFilter,YearListFilter,]
-    search_fields = ['country','iso_code']
+    search_fields = ['country']
 
 
 @admin.register(ISOCodeData)

@@ -91,10 +91,109 @@ class IndexView(TemplateView):
             context[item] = total
             context[item+'_new'] = total_new
 
+            top_ten_new_confirmed = StatusReport.objects.all().order_by('confirmed_new_rank_world')[:10]
+            top_ten_new_deaths = StatusReport.objects.all().order_by('deaths_new_rank_world')[:10]
+            top_ten_confirmed_by_hundreds = StatusReport.objects.all().order_by('-confirmed_by_hundreds')[:10]
+            top_ten_deaths_by_hundreds = StatusReport.objects.all().order_by('-deaths_by_hundreds')[:10]
+
+            dict_confirmed={}
+            for obj in top_ten_new_confirmed:
+                dict_confirmed={**dict_confirmed,**{obj.__str__():obj.__dict__['confirmed_new']}}
+
+            dict_deaths={}
+            for obj in top_ten_new_deaths:
+                dict_deaths={**dict_deaths,**{obj.__str__():obj.__dict__['deaths_new']}}
+
+            dict_confirmed_by_hundreds={}
+            for obj in top_ten_confirmed_by_hundreds:
+                dict_confirmed_by_hundreds={**dict_confirmed_by_hundreds,**{obj.__str__():obj.__dict__['confirmed_by_hundreds']}}
+
+            dict_deaths_by_hundreds={}
+            for obj in top_ten_deaths_by_hundreds:
+                dict_deaths_by_hundreds={**dict_deaths_by_hundreds,**{obj.__str__():obj.__dict__['deaths_by_hundreds']}}
+
+            context['top_ten_new_confirmed'] = dict_confirmed
+            context['top_ten_new_deaths'] = dict_deaths
+            context['top_ten_confirmed_by_hundreds'] = dict_confirmed_by_hundreds
+            context['top_ten_deaths_by_hundreds'] = dict_deaths_by_hundreds
+
         return context
 
 
-# THESE ARE THE OTHER PAGES:
+class StatisticsView(TemplateView):
+    template_name = 'report/statistics.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['nav_statistics'] = 'navbar-item-active'
+        context['db_update'] = StatusReport.objects.order_by('-db_update')[0].db_update
+
+        for item in ['confirmed','deaths']:
+            total=0
+            total_new=0
+            for obj in StatusReport.objects.all():
+                total += obj.__dict__[item]
+                total_new += obj.__dict__[item+'_new']
+
+            context[item] = total
+            context[item+'_new'] = total_new
+
+        top_ten_confirmed = StatusReport.objects.all().order_by('-confirmed')[:10]
+        top_ten_new_confirmed = StatusReport.objects.all().order_by('confirmed_new_rank_world')[:10]
+        top_ten_confirmed_by_hundreds = StatusReport.objects.all().order_by('-confirmed_by_hundreds')[:10]
+
+        top_ten_deaths = StatusReport.objects.all().order_by('-deaths')[:10]
+        top_ten_new_deaths = StatusReport.objects.all().order_by('deaths_new_rank_world')[:10]
+        top_ten_deaths_by_hundreds = StatusReport.objects.all().order_by('-deaths_by_hundreds')[:10]
+
+        dict_confirmed={}
+        total_confirmed_top_ten = 0
+        for obj in top_ten_confirmed:
+            dict_confirmed={**dict_confirmed,**{obj.__str__():obj.__dict__['confirmed']}}
+            total_confirmed_top_ten += obj.__dict__['confirmed']
+
+        dict_deaths={}
+        total_deaths_top_ten = 0
+        for obj in top_ten_deaths:
+            dict_deaths={**dict_deaths,**{obj.__str__():obj.__dict__['deaths']}}
+            total_deaths_top_ten += obj.__dict__['deaths']
+
+        dict_confirmed_new={}
+        total_new_confirmed_top_ten = 0
+        for obj in top_ten_new_confirmed:
+            dict_confirmed_new={**dict_confirmed_new,**{obj.__str__():obj.__dict__['confirmed_new']}}
+            total_new_confirmed_top_ten += obj.__dict__['confirmed_new']
+
+        dict_deaths_new={}
+        total_new_deaths_top_ten = 0
+        for obj in top_ten_new_deaths:
+            dict_deaths_new={**dict_deaths_new,**{obj.__str__():obj.__dict__['deaths_new']}}
+            total_new_deaths_top_ten += obj.__dict__['deaths_new']
+
+        dict_confirmed_by_hundreds={}
+        for obj in top_ten_confirmed_by_hundreds:
+            dict_confirmed_by_hundreds={**dict_confirmed_by_hundreds,**{obj.__str__():obj.__dict__['confirmed_by_hundreds']}}
+
+        dict_deaths_by_hundreds={}
+        for obj in top_ten_deaths_by_hundreds:
+            dict_deaths_by_hundreds={**dict_deaths_by_hundreds,**{obj.__str__():obj.__dict__['deaths_by_hundreds']}}
+
+
+        context['world_population'] = UNData.objects.get(country__startswith='Total').population
+        context['total_confirmed_top_ten'] = total_confirmed_top_ten
+        context['total_new_confirmed_top_ten'] = total_new_confirmed_top_ten
+        context['total_deaths_top_ten'] = total_deaths_top_ten
+        context['total_new_deaths_top_ten'] = total_new_deaths_top_ten
+        context['top_ten_confirmed'] = dict_confirmed
+        context['top_ten_deaths'] = dict_deaths
+        context['top_ten_new_confirmed'] = dict_confirmed_new
+        context['top_ten_new_deaths'] = dict_deaths_new
+        context['top_ten_confirmed_by_hundreds'] = dict_confirmed_by_hundreds
+        context['top_ten_deaths_by_hundreds'] = dict_deaths_by_hundreds
+
+        return context
+
 
 class ReadMeView(TemplateView):
     template_name = 'report/read_me.html'
@@ -118,12 +217,10 @@ def countriespage(request):
     x = ISOCodeData.objects.get(iso_code=getIP().iso_code)
     if x.country_name in countries_in_db:
         selected_country = x.country_name
+        form['country'].initial = selected_country
     else:
         selected_country = form['country'].initial
 
-    # x = UNData.objects.get(country=x.un_name)
-    # print(x.population)
-    # print(x.density)
 
     # Checking if this is a user select request
     if request.method == 'POST':
@@ -142,23 +239,11 @@ def countriespage(request):
         lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
         quartile_list.append(lower_bound)
 
-    top_ten_new_confirmed = StatusReport.objects.all().order_by('confirmed_new_rank_world')[:10]
-    top_ten_new_deaths = StatusReport.objects.all().order_by('deaths_new_rank_world')[:10]
-
-    dict_confirmed={}
-    for obj in top_ten_new_confirmed:
-        dict_confirmed={**dict_confirmed,**{obj.__str__():obj.__dict__['confirmed_new']}}
-
-    dict_deaths={}
-    for obj in top_ten_new_deaths:
-        dict_deaths={**dict_deaths,**{obj.__str__():obj.__dict__['deaths_new']}}
 
     status_dict = {'country_coord':status.country._coordinates_(),
                    'report_date':status.date,
                    'db_update':status.db_update,
                    'quartile_list':quartile_list,
-                   'top_ten_confirmed':dict_confirmed,
-                   'top_ten_deaths':dict_deaths,
                    **status.country.__dict__,
                   }
 
