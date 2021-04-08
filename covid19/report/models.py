@@ -15,6 +15,32 @@ class ConfigReport(models.Model):
     confirm_delete = models.BooleanField(default=True)
 
 
+class ISOCodeData(models.Model):
+    geoname_id = models.IntegerField(primary_key=True,default=0)
+    iso_code = models.CharField(max_length=2,default='00')
+    geoip_name = models.CharField(max_length=60,default='undefined')
+    un_name = models.CharField(max_length=60,default='undefined')
+    country_name = models.CharField(max_length=60,default='undefined')
+
+    def __str__(self):
+        return self.geoip_name
+
+
+class UNData(models.Model):
+    country = models.CharField(max_length=60,primary_key=True,default='undefined')
+    year = models.CharField(max_length=4,default='2020')
+    population = models.FloatField(default=1e4)
+    density = models.FloatField(default=1.0)
+    population_male = models.FloatField(default=1e4)
+    population_female = models.FloatField(default=1e4)
+    sex_ratio = models.FloatField(default=1.0)
+    pct_minus_fourteen = models.FloatField(default=1)
+    pct_plus_sixty = models.FloatField(default=1)
+
+    def __str__(self):
+        return self.country
+
+
 class Country(models.Model):
     name = models.CharField(max_length=60,primary_key=True,default='undefined')
     latitude = models.FloatField(default=90)
@@ -58,6 +84,9 @@ class StatusReport(models.Model):
     confirmed_rank_world = models.IntegerField()
     confirmed_new_rank_region = models.IntegerField(default=0)
     confirmed_new_rank_world = models.IntegerField(default=0)
+    confirmed_by_hundreds = models.FloatField(default=1)
+    confirmed_by_hundreds_rank_region = models.IntegerField(default=1)
+    confirmed_by_hundreds_rank_world = models.IntegerField(default=1)
     deaths = models.IntegerField()
     deaths_new = models.IntegerField()
     deaths_new_pct_change = models.FloatField(default=100)
@@ -66,6 +95,9 @@ class StatusReport(models.Model):
     deaths_rank_world = models.IntegerField()
     deaths_new_rank_region = models.IntegerField(default=0)
     deaths_new_rank_world = models.IntegerField(default=0)
+    deaths_by_hundreds = models.FloatField(default=1)
+    deaths_by_hundreds_rank_region = models.IntegerField(default=1)
+    deaths_by_hundreds_rank_world = models.IntegerField(default=1)
     recovered = models.IntegerField(default=0)
     recovered_new = models.IntegerField()
     recovered_pct_change = models.FloatField()
@@ -73,6 +105,9 @@ class StatusReport(models.Model):
     recovered_rank_world = models.IntegerField()
     recovered_new_rank_region = models.IntegerField(default=0)
     recovered_new_rank_world = models.IntegerField(default=0)
+    recovered_by_hundreds = models.FloatField(default=1)
+    recovered_by_hundreds_rank_region = models.IntegerField(default=1)
+    recovered_by_hundreds_rank_world = models.IntegerField(default=1)
     active = models.IntegerField(default=0)
     active_new = models.IntegerField()
     active_pct = models.FloatField(default=0)
@@ -81,6 +116,9 @@ class StatusReport(models.Model):
     active_rank_world = models.IntegerField()
     active_new_rank_region = models.IntegerField(default=0)
     active_new_rank_world = models.IntegerField(default=0)
+    active_by_hundreds = models.FloatField(default=1)
+    active_by_hundreds_rank_region = models.IntegerField(default=1)
+    active_by_hundreds_rank_world = models.IntegerField(default=1)
     mortality = models.FloatField(default=0)
     mortality_quartile = models.CharField(max_length=35, default='4th quartile (very high mortality)')
     mortality_quartile_position = models.FloatField(default=50.0)

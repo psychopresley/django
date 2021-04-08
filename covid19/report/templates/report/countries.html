@@ -53,16 +53,16 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Bring me back!</button>
-                        <input type="submit" class="btn btn-outline-success" value="Hit me!">
+                        <input type="submit" class="btn btn-outline-success" id="BtnHitMe" value="Hit me!">
                       </div>
                     </div>
                   </div>
               </div>
-            </div>
+            </div> <!-- div Modal body -->
           </form>
         </div>
       </div>
-    </div>
+    </div> <!-- End Modal -->
 
 
     <!-- Marketing messaging and featurettes
@@ -84,6 +84,9 @@
             <div class="card card-body" style="border:none; text-align:left;">
               <ul class="report">
                 <li>
+                  <span class="number">{{confirmed_by_hundreds|integer|style:'us'}} cases/100k habitants</span>
+                </li>
+                <li>
                   <span class="number number-rank">{{confirmed_rank_region}}°</span> in the region /
                   <span class="number number-rank">{{confirmed_rank_world}}°</span> in the world
                   considering the total numbers;
@@ -92,6 +95,11 @@
                   <span class="number number-rank">{{confirmed_new_rank_region}}°</span> in the region /
                   <span class="number number-rank">{{confirmed_new_rank_world}}°</span> in the world
                   considering the numbers of the last 24h;
+                </li>
+                <li>
+                  <span class="number number-rank">{{confirmed_by_hundreds_rank_region}}°</span> in the region /
+                  <span class="number number-rank">{{confirmed_by_hundreds_rank_world}}°</span> in the world
+                  considering the cases/100k habitants;
                 </li>
                 <li>
                   {% if confirmed_new_pct_change >= 0 %}
@@ -103,31 +111,6 @@
                   compared to the previous day;
                 </li>
               </ul>
-
-              <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseConfirmedNewCasesTable" aria-expanded="false" aria-controls="collapseConfirmedNewCasesTable">Top 10 countries by new cases</a></p>
-              <div class="collapse" id="collapseConfirmedNewCasesTable">
-                <div class="card card-body" style="border:none; text-align:left;">
-                  <table class="table" style="text-align:center;">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>Last 24h</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for k,v in top_ten_confirmed.items %}
-                      <tr>
-                        <th scope="row" style="text-align:left;">{{k}}</th>
-                          <td>
-                            {{v|style:'us'}}
-                          </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
             </div><!-- div card body -->
           </div><!-- div collapse -->
         </div><!-- /.col-lg-4 -->
@@ -157,69 +140,51 @@
           <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseDeaths" aria-expanded="false" aria-controls="collapseDeaths">what else?</a></p>
           <div class="collapse" id="collapseDeaths">
             <div class="card card-body" style="border:none; text-align:left;">
-                <ul>
-                  <li><span class="number number-rank">{{deaths_rank_region}}°</span> in the region /
-                    <span class="number number-rank">#{{deaths_rank_world}}°</span> in the world considering
-                    the total numbers;
-                  </li>
-                  <li><span class="number number-rank">{{deaths_new_rank_region}}°</span> in the region /
-                      <span class="number number-rank">{{deaths_new_rank_world}}°</span> in the world considering
-                      the numbers of the last 24h;
-                  </li>
-                  <li>
-                    {% if deaths_new_pct_change >= 0 %}
-                    An increase of
-                    {% else %}
-                    A decrease of
-                    {% endif %}
-                    <span class="number number-rank">{{deaths_new_pct_change|mod|pct:False}}</span> in new cases
-                    compared to the previous day.
-                  </li>
-                  <li>Mortality: <span class="number number-rate">{{mortality|pct}}</span> (<span class="number number-rank">#{{mortality_rank_region}}</span> in
-                      the region, <span class="number number-rank">#{{mortality_rank_world}}</span> in the world);
-                  </li>
-                  <li><span  data-bs-toggle="modal" data-bs-target="#QuartileModal" style="cursor:default;">Quartile*</span>: {{mortality_quartile}};
-                  </li>
-                </ul>
+              <ul>
+                <li>
+                  <span class="number">{{deaths_by_hundreds|integer|style:'us'}} cases/100k habitants</span>
+                </li>
+                <li><span class="number number-rank">{{deaths_rank_region}}°</span> in the region /
+                  <span class="number number-rank">{{deaths_rank_world}}°</span> in the world considering
+                  the total numbers;
+                </li>
+                <li><span class="number number-rank">{{deaths_new_rank_region}}°</span> in the region /
+                    <span class="number number-rank">{{deaths_new_rank_world}}°</span> in the world considering
+                    the numbers of the last 24h;
+                </li>
+                <li>
+                  <span class="number number-rank">{{deaths_by_hundreds_rank_region}}°</span> in the region /
+                  <span class="number number-rank">{{deaths_by_hundreds_rank_world}}°</span> in the world
+                  considering the cases/100k habitants;
+                </li>
+                <li>
+                  {% if deaths_new_pct_change >= 0 %}
+                  An increase of
+                  {% else %}
+                  A decrease of
+                  {% endif %}
+                  <span class="number number-rank">{{deaths_new_pct_change|mod|pct:False}}</span> in new cases
+                  compared to the previous day.
+                </li>
+                <li>Mortality: <span class="number number-rate">{{mortality|pct}}</span> (<span class="number number-rank">#{{mortality_rank_region}}</span> in
+                    the region, <span class="number number-rank">#{{mortality_rank_world}}</span> in the world);
+                </li>
+                <li><span  data-bs-toggle="modal" data-bs-target="#QuartileModal" style="cursor:default;">Quartile*</span>: {{mortality_quartile}};
+                </li>
+              </ul>
 
-                <div class="container">
-                  <div class="progress" style="height: 3px;">
-                    <div class="progress-bar progress-bar-stripped {% if mortality_quartile_position >= 0.9 %}bg-danger{% elif mortality_quartile_position >= 0.5 %}bg-warning{% elif mortality_quartile_position >= 0.1 %}bg-primary{% else %}bg-success{% endif %}" role="progressbar" style="width:{{mortality_quartile_position|pct}};" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <br>
-                  <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">1st</div>
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">2nd</div>
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">3rd</div>
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">4th</div>
-                  </div><br>
+              <div class="container">
+                <div class="progress" style="height: 3px;">
+                  <div class="progress-bar progress-bar-stripped {% if mortality_quartile_position >= 0.9 %}bg-danger{% elif mortality_quartile_position >= 0.5 %}bg-warning{% elif mortality_quartile_position >= 0.1 %}bg-primary{% else %}bg-success{% endif %}" role="progressbar" style="width:{{mortality_quartile_position|pct}};" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-
-                <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseDeathsNewCasesTable" aria-expanded="false" aria-controls="collapseDeathsNewCasesTable">Top 10 countries by new deaths</a></p>
-                <div class="collapse" id="collapseDeathsNewCasesTable">
-                  <div class="card card-body" style="border:none; text-align:left;">
-                    <table class="table" style="text-align:center;">
-                      <thead>
-                        <tr>
-                          <th></th>
-                          <th>Last 24h</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for k,v in top_ten_deaths.items %}
-                        <tr>
-                          <th scope="row" style="text-align:left;">{{k}}</th>
-                            <td>
-                              {{v|style:'us'}}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-            </div><!-- div card body -->
+                <br>
+                <div class="progress">
+                  <div class="progress-bar bg-success" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">1st</div>
+                  <div class="progress-bar bg-primary" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">2nd</div>
+                  <div class="progress-bar bg-warning" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">3rd</div>
+                  <div class="progress-bar bg-danger" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">4th</div>
+                </div><br>
+              </div>
           </div><!-- div collapse -->
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
