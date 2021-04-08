@@ -1,0 +1,222 @@
+{% extends "report/base.html" %}
+{% block content %}
+{% load report_tagfilters %}
+
+
+<div class="display_page" id="statisticspage">
+
+    <!-- START THE FEATURETTES -->
+
+    <br>
+    <div>  <!-- START OF THE TOP 10 COUNTRIES TABLE AREA -->
+      <h3>TOP 10 COUNTRIES</h3>
+      <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-4">
+        <div class="container marketing" style="text-align:left;">
+          <div class="d-flex align-items-start">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <button class="nav-link active" id="v-pills-confirmed-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed" type="button" role="tab" aria-controls="v-pills-confirmed" aria-selected="true">by total confirmed cases</button>
+              <button class="nav-link" id="v-pills-new-confirmed-tab" data-bs-toggle="pill" data-bs-target="#v-pills-new-confirmed" type="button" role="tab" aria-controls="v-pills-new-confirmed" aria-selected="false">by confirmed in the last 24h</button>
+              <button class="nav-link" id="v-pills-confirmed-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed-by-hundreds" type="button" role="tab" aria-controls="v-pills-confirmed-by-hundreds" aria-selected="false">by confirmed cases/100k hab.</button>
+              <button class="nav-link" id="v-pills-deaths-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths" type="button" role="tab" aria-controls="v-pills-deaths" aria-selected="true">by total deaths</button>
+              <button class="nav-link" id="v-pills-new-deaths-tab" data-bs-toggle="pill" data-bs-target="#v-pills-new-deaths" type="button" role="tab" aria-controls="v-pills-new-deaths" aria-selected="false">by deaths in the last 24h</button>
+              <button class="nav-link" id="v-pills-deaths-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths-by-hundreds" type="button" role="tab" aria-controls="v-pills-deaths-by-hundreds" aria-selected="false">by deaths/100k hab.</button>
+            </div>
+            <style>
+              .nav-link {background-color:inherit;color:#8C356E;border:none;}
+              .nav-link::after {outline-color:inherit;}
+            </style>
+          </div>
+        </div> <!-- End Container marketing -->
+      </div> <!-- end div col-5 -->
+      <div class="col-md-8">
+        <div class="tab-content" id="v-pills-tabContent">
+          <div class="tab-pane fade show active" id="v-pills-confirmed" role="tabpanel" aria-labelledby="v-pills-confirmed-tab">
+            <table class="table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Total cases</th>
+                  <th>% of World cases</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in top_ten_confirmed.items %}
+                <tr>
+                  <th scope="row" style="text-align:left;">{{k}}</th>
+                    <td>
+                      {{v|style:'us'}}
+                    </td>
+                    <td>
+                      {{v|div:confirmed|pct}}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot style="font-weight:bold; color:blue;">
+                <tr>
+                  <th scope="row" style="text-align:left;">Total</th>
+                    <td>{{total_confirmed_top_ten|style:'us'}}</td>
+                    <td>{{total_confirmed_top_ten|div:confirmed|pct}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div> <!-- End div tab-pane -->
+
+          <div class="tab-pane fade show" id="v-pills-new-confirmed" role="tabpanel" aria-labelledby="v-pills-new-confirmed-tab">
+            <table class="table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Last 24h</th>
+                  <th>% of total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in top_ten_new_confirmed.items %}
+                <tr>
+                  <th scope="row" style="text-align:left;">{{k}}</th>
+                    <td>
+                      {{v|style:'us'}}
+                    </td>
+                    <td>
+                      {{v|div:confirmed_new|pct}}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot style="font-weight:bold; color:blue;">
+                <tr>
+                  <th scope="row" style="text-align:left;">Total</th>
+                    <td>{{total_new_confirmed_top_ten|style:'us'}}</td>
+                    <td>{{total_new_confirmed_top_ten|div:confirmed_new|pct}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div> <!-- End div tab-pane -->
+
+          <div class="tab-pane fade show" id="v-pills-confirmed-by-hundreds" role="tabpanel" aria-labelledby="v-pills-confirmed-by-hundreds-tab">
+            <table class="table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Confirmed/100k hab</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in top_ten_confirmed_by_hundreds.items %}
+                <tr>
+                  <th scope="row" style="text-align:left;">{{k}}</th>
+                    <td>
+                      {{v|integer|style:'us'}}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <caption>
+                Confirmed/100k habitants in the world: {{confirmed|mul:0.1|div:world_population|integer|style:'us'}}
+              </caption>
+            </table>
+          </div> <!-- End div tab-pane -->
+
+          <div class="tab-pane fade show" id="v-pills-deaths" role="tabpanel" aria-labelledby="v-pills-deaths-tab">
+            <table class="table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Death cases</th>
+                  <th>% of World Cases</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in top_ten_deaths.items %}
+                <tr>
+                  <th scope="row" style="text-align:left;">{{k}}</th>
+                    <td>
+                      {{v|style:'us'}}
+                    </td>
+                    <td>
+                      {{v|div:deaths|pct}}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot style="font-weight:bold; color:blue;">
+                <tr>
+                  <th scope="row" style="text-align:left;">Total</th>
+                    <td>{{total_deaths_top_ten|style:'us'}}</td>
+                    <td>{{total_deaths_top_ten|div:deaths|pct}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div> <!-- End div tab-pane -->
+
+          <div class="tab-pane fade show" id="v-pills-new-deaths" role="tabpanel" aria-labelledby="v-pills-new-deaths-tab">
+            <table class="table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Last 24h</th>
+                  <th>% of world cases</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in top_ten_new_deaths.items %}
+                <tr>
+                  <th scope="row" style="text-align:left;">{{k}}</th>
+                    <td>
+                      {{v|style:'us'}}
+                    </td>
+                    <td>
+                      {{v|div:deaths_new|pct}}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot style="font-weight:bold; color:blue;">
+                <tr>
+                  <th scope="row" style="text-align:left;">Total</th>
+                    <td>{{total_new_deaths_top_ten|style:'us'}}</td>
+                    <td>{{total_new_deaths_top_ten|div:deaths_new|pct}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div> <!-- End div tab-pane -->
+
+          <div class="tab-pane fade show" id="v-pills-deaths-by-hundreds" role="tabpanel" aria-labelledby="v-pills-deaths-by-hundreds-tab">
+            <table class="table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Deaths/100k hab</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in top_ten_deaths_by_hundreds.items %}
+                <tr>
+                  <th scope="row" style="text-align:left;">{{k}}</th>
+                    <td>
+                      {{v|integer|style:'us'}}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <caption>
+                Deaths/100k habitants in the world: {{deaths|mul:0.1|div:world_population|integer|style:'us'}}
+              </caption>
+            </table>
+          </div> <!-- End div tab-pane -->
+
+        </div>
+      </div> <!-- SECOND COLUMN -->
+    </div> <!-- END FEATURETTE -->
+
+    <hr class="featurette-divider">
+
+    <!-- /END THE FEATURETTES -->
+
+  </div> <!-- div id -->
+
+{% endblock content %}

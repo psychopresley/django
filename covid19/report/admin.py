@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Country,StatusReport,MonthReport,WeekReport,ConfigReport
+from .models import *
 from django.utils.translation import gettext_lazy as _
 
 admin.site.disable_action('delete_selected')
@@ -226,6 +226,30 @@ class WeekReportAdmin(admin.ModelAdmin):
     list_display = ['__str__','region','week',]
     # list_filter =[MonthListFilter,YearListFilter,]
     search_fields = ['country__name','country__region']
+
+
+@admin.register(UNData)
+class UNDataAdmin(admin.ModelAdmin):
+    ordering = ['country']   # ordering = ['-country'] for descending order
+
+    fields = ('country', ('population', 'density'),
+             ('pct_minus_fourteen', 'pct_plus_sixty'),
+             ('population_male', 'population_female', 'sex_ratio'))
+
+    list_display = ['__str__','year',]
+    # list_filter =[MonthListFilter,YearListFilter,]
+    search_fields = ['country']
+
+
+@admin.register(ISOCodeData)
+class ISOCodeDataAdmin(admin.ModelAdmin):
+    ordering = ['geoip_name']   # ordering = ['-country'] for descending order
+
+    fields = ('geoip_name', 'iso_code', 'un_name', 'country_name', 'geoname_id')
+
+    list_display = ['__str__','iso_code','un_name','country_name']
+    # list_filter =[MonthListFilter,YearListFilter,]
+    search_fields = ['geoip_name','iso_code','un_name','country_name']
 
 
 @admin.register(ConfigReport)

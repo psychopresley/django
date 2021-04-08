@@ -27,7 +27,9 @@
                 active
               </div>
             </div>
-        </div><br><br><br>
+        </div>
+        <p style="font-size:14px;"><em>Last update: {{db_update}}</em></p>
+        <br><br>
         <div class="container marketing" style="text-align:center; vertical-align:center; background-color:#4C0433; color:white; padding:0px; border:1px solid black">
             <div class="row" style="padding:0.5rem 0 0 0.5rem;">
               <h2>{{confirmed_new|style:'us'}} / 24h</h2>
@@ -49,19 +51,21 @@
         </div>
       </div> <!-- end div col-5 -->
       <div class="col-md-7">
-        <nav>
-          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#cardplot" type="button" role="tab" aria-controls="cardplot" aria-selected="true">World status</button>
-            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#parliamentchart" type="button" role="tab" aria-controls="parliamentchart" aria-selected="false">Countries</button>
-          </div>
-        </nav>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#countriestablechart" type="button" role="tab" aria-controls="countriestablechart" aria-selected="false">Countries</button>
+          </li>
+        </ul>
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="cardplot" role="tabpanel" aria-labelledby="cardplot-tab">
             <div class="flourish-embed flourish-cards" data-src="visualisation/4933318">
               <script src="https://public.flourish.studio/resources/embed.js"></script>
             </div>
           </div>
-          <div class="tab-pane" id="parliamentchart" role="tabpanel" aria-labelledby="parliamentchart-tab">
+          <div class="tab-pane" id="countriestablechart" role="tabpanel" aria-labelledby="countriestablechart-tab">
             <div class="flourish-embed flourish-table" data-src="visualisation/5027605">
               <script src="https://public.flourish.studio/resources/embed.js"></script>
             </div>

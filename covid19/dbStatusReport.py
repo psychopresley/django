@@ -8,7 +8,7 @@ import numpy as np
 from pandas import read_json, read_csv
 from datetime import date, timedelta
 from time import ctime
-from report.models import Country, StatusReport
+from report.models import Country, StatusReport, ISOCodeData, UNData
 
 def main():
     def db_del(database,confirm_before=True):
@@ -70,6 +70,17 @@ def main():
 
         return model_coef
 
+    def population(x):
+        exception_list = ['Cruise Ship','Taiwan']
+        if x in exception_list:
+            population=1e10
+        else:
+            x = ISOCodeData.objects.get(country_name=x)
+            x = UNData.objects.get(country=x.un_name)
+            population = x.population
+
+        return population
+
 
     try:
         # In the config.csv file, on 'countryinfo_file' row of columns 'var':
@@ -129,6 +140,7 @@ def main():
                 df_aux[column_region_rank]=df_aux.groupby(['Date','region'])[column].rank(method='min',ascending=False)
                 df_aux[column_new_region_rank]=df_aux.groupby(['Date','region'])[column_new].rank(method='min',ascending=False)
 
+
             # Columns calculated specificly for Status Report model db:
             df_aux['active_pct'] = df_aux['Active'] / df_aux['Confirmed']
             df_aux['mortality'] = df_aux['Deaths'] / df_aux['Confirmed']
@@ -140,14 +152,19 @@ def main():
             df_aux = df_aux.loc[df_aux['Date']==max(df_aux['Date'])]
             df_aux.Date = df_aux.Date.transform(lambda x:date(x.year, x.month, x.day))
 
-
             # Defining quartile intervals for the mortality:
             quantile=df_aux['mortality'].quantile(q=[0,0.1,0.5,0.9,1])
             df_aux['mortality_quartile']=df_aux['mortality'].apply(lambda x:quart_func(x,quantile.values,'mortality'))
 
             model_coef = quantiles_model(quantile.to_dict())
-            print(quantile.to_dict(),model_coef)
             df_aux['mortality_quartile_position']=df_aux['mortality'].apply(lambda x:quantiles_pos(x,model_coef))
+
+            # Joining UN Data:
+            df_aux['population'] = df_aux['Country/Region'].apply(lambda x:population(x))
+            for column in column_names:
+                df_aux[column+'_by_100k'] = df_aux[column]*0.1/df_aux['population']
+                df_aux[column+'_by_100k_rank_region'] = df_aux.groupby(['Date','region'])[column+'_by_100k'].rank(method='min',ascending=False)
+                df_aux[column+'_by_100k_rank_world'] = df_aux.groupby('Date')[column+'_by_100k'].rank(method='min',ascending=False)
 
             status_report = df_aux.copy()
 
@@ -162,7 +179,6 @@ def main():
                     previous_info = previous_report.loc[previous_report['Country/Region']==item]
                     country = StatusReport.objects.get(country__name=item)
 
-                    print([info.mortality.values[0],info.mortality_quartile_position.values[0]])
                     if previous_info.Confirmed_new_cases.values[0] == 0:
                         confirmed_new_pct_change = 0
                     else:
@@ -183,6 +199,9 @@ def main():
                     country.confirmed_rank_world=int(info.Confirmed_rank_in_world.values[0])
                     country.confirmed_new_rank_region=int(info.Confirmed_new_cases_rank_in_region.values[0])
                     country.confirmed_new_rank_world=int(info.Confirmed_new_cases_rank_in_world.values[0])
+                    country.confirmed_by_hundreds=float(info['Confirmed_by_100k'].values[0])
+                    country.confirmed_by_hundreds_rank_region=int(info['Confirmed_by_100k_rank_region'].values[0])
+                    country.confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0])
                     country.deaths=int(info.Deaths.values[0])
                     country.deaths_new=int(info.Deaths_new_cases.values[0])
                     country.deaths_new_pct_change=float(deaths_new_pct_change)
@@ -191,6 +210,9 @@ def main():
                     country.deaths_rank_world=int(info.Deaths_rank_in_world.values[0])
                     country.deaths_new_rank_region=int(info.Deaths_new_cases_rank_in_region.values[0])
                     country.deaths_new_rank_world=int(info.Deaths_new_cases_rank_in_world.values[0])
+                    country.deaths_by_hundreds=float(info['Deaths_by_100k'].values[0])
+                    country.deaths_by_hundreds_rank_region=int(info['Deaths_by_100k_rank_region'].values[0])
+                    country.deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0])
                     country.recovered=int(info.Recovered.values[0])
                     country.recovered_new=int(info.Recovered_new_cases.values[0])
                     country.recovered_pct_change=float(info['Recovered_daily_%inc_by_country'].values[0])
@@ -198,6 +220,9 @@ def main():
                     country.recovered_rank_world=int(info.Recovered_rank_in_world.values[0])
                     country.recovered_new_rank_region=int(info.Recovered_new_cases_rank_in_region.values[0])
                     country.recovered_new_rank_world=int(info.Recovered_new_cases_rank_in_world.values[0])
+                    country.recovered_by_hundreds=float(info['Recovered_by_100k'].values[0])
+                    country.recovered_by_hundreds_rank_region=int(info['Recovered_by_100k_rank_region'].values[0])
+                    country.recovered_by_hundreds_rank_world=int(info['Recovered_by_100k_rank_world'].values[0])
                     country.active=int(info.Active.values[0])
                     country.active_new=int(info.Active_new_cases.values[0])
                     country.active_pct=float(info.active_pct.values[0])
@@ -206,6 +231,9 @@ def main():
                     country.active_rank_world=int(info.Active_rank_in_world.values[0])
                     country.active_new_rank_region=int(info.Active_new_cases_rank_in_region.values[0])
                     country.active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0])
+                    country.active_by_hundreds=float(info['Active_by_100k'].values[0])
+                    country.active_by_hundreds_rank_region=int(info['Active_by_100k_rank_region'].values[0])
+                    country.active_by_hundreds_rank_world=int(info['Active_by_100k_rank_world'].values[0])
                     country.mortality=float(info.mortality.values[0])
                     country.mortality_quartile=info.mortality_quartile.values[0]
                     country.mortality_quartile_position=info.mortality_quartile_position.values[0]
@@ -249,6 +277,9 @@ def main():
                                                                    confirmed_rank_world=int(info.Confirmed_rank_in_world.values[0]),
                                                                    confirmed_new_rank_region=int(info.Confirmed_new_cases_rank_in_region.values[0]),
                                                                    confirmed_new_rank_world=int(info.Confirmed_new_cases_rank_in_world.values[0]),
+                                                                   confirmed_by_hundreds=float(info['Confirmed_by_100k'].values[0]),
+                                                                   confirmed_by_hundreds_rank_region=int(info['Confirmed_by_100k_rank_region'].values[0]),
+                                                                   confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0]),
                                                                    deaths=int(info.Deaths.values[0]),
                                                                    deaths_new=int(info.Deaths_new_cases.values[0]),
                                                                    deaths_new_pct_change=float(deaths_new_pct_change),
@@ -257,6 +288,9 @@ def main():
                                                                    deaths_rank_world=int(info.Deaths_rank_in_world.values[0]),
                                                                    deaths_new_rank_region=int(info.Deaths_new_cases_rank_in_region.values[0]),
                                                                    deaths_new_rank_world=int(info.Deaths_new_cases_rank_in_world.values[0]),
+                                                                   deaths_by_hundreds=float(info['Deaths_by_100k'].values[0]),
+                                                                   deaths_by_hundreds_rank_region=int(info['Deaths_by_100k_rank_region'].values[0]),
+                                                                   deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0]),
                                                                    recovered=int(info.Recovered.values[0]),
                                                                    recovered_new=int(info.Recovered_new_cases.values[0]),
                                                                    recovered_pct_change=float(info['Recovered_daily_%inc_by_country'].values[0]),
@@ -264,6 +298,9 @@ def main():
                                                                    recovered_rank_world=int(info.Recovered_rank_in_world.values[0]),
                                                                    recovered_new_rank_region=int(info.Recovered_new_cases_rank_in_region.values[0]),
                                                                    recovered_new_rank_world=int(info.Recovered_new_cases_rank_in_world.values[0]),
+                                                                   recovered_by_hundreds=float(info['Recovered_by_100k'].values[0]),
+                                                                   recovered_by_hundreds_rank_region=int(info['Recovered_by_100k_rank_region'].values[0]),
+                                                                   recovered_by_hundreds_rank_world=int(info['Recovered_by_100k_rank_world'].values[0]),
                                                                    active=int(info.Active.values[0]),
                                                                    active_new=int(info.Active_new_cases.values[0]),
                                                                    active_pct=float(info.active_pct.values[0]),
@@ -272,6 +309,9 @@ def main():
                                                                    active_rank_world=int(info.Active_rank_in_world.values[0]),
                                                                    active_new_rank_region=int(info.Active_new_cases_rank_in_region.values[0]),
                                                                    active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0]),
+                                                                   active_by_hundreds=float(info['Active_by_100k'].values[0]),
+                                                                   active_by_hundreds_rank_region=int(info['Active_by_100k_rank_region'].values[0]),
+                                                                   active_by_hundreds_rank_world=int(info['Active_by_100k_rank_world'].values[0]),
                                                                    mortality_rank_region=int(info.mortality_rank_region.values[0]),
                                                                    mortality_rank_world=int(info.mortality_rank_world.values[0]),
                                                                    mortality=float(info.mortality.values[0]),

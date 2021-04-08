@@ -21,4 +21,5 @@ app_name = 'report'
 urlpatterns = [
     path('read_me/', views.ReadMeView.as_view(), name='readpage'),
     path('countries/', views.countriespage, name='countriespage'),
+    path('statistics/', views.StatisticsView.as_view(), name='statisticspage'),
 ]
