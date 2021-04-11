@@ -1,18 +1,28 @@
 from django.db import models
+from django.conf import settings
+from django.utils import timezone
 import datetime
 import os
 
 # Create your models here.
 
 class ConfigReport(models.Model):
-    var_name = models.CharField(max_length=20,primary_key=True,default='undefined')
-    file_path = models.FilePathField(path=os.getcwd)
-    file_name = models.CharField(max_length=20)
-    date = models. DateField(default=datetime.date.today)
-    db_delete = models.BooleanField(default=False)
-    db_reload = models.BooleanField(default=False)
-    db_update = models.BooleanField(default=True)
+    var_name = models.CharField(max_length=30,primary_key=True,default='dbconfig_')
+    base_file = models.FilePathField(path=settings.DATA_FILE_DIR)
+    aux_file_one = models.FilePathField(path=settings.DATA_FILE_DIR)
+    aux_file_two = models.FilePathField(path=settings.DATA_FILE_DIR)
+    date = models.CharField(max_length=60,default='not specified')
+    TASK_CHOICES = (
+        (0,'delete'),
+        (1,'update'),
+        (2,'reload'),
+    )
+    task = models.IntegerField(default=1, choices=TASK_CHOICES)
     confirm_delete = models.BooleanField(default=True)
+    auto_exec = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.var_name
 
 
 class ISOCodeData(models.Model):

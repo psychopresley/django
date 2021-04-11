@@ -258,9 +258,10 @@ class ISOCodeDataAdmin(admin.ModelAdmin):
 class ConfigReportAdmin(admin.ModelAdmin):
     ordering = ['var_name']   # ordering = ['-country'] for descending order
 
-    fields = ('var_name', ('file_path', 'file_name'),
-             ('db_delete', 'db_update', 'db_reload'))
+    # fields = ('var_name','file_path','task','confirm_delete','auto_exec')
+    fields = ('var_name','base_file',('aux_file_one','aux_file_two'),'task','confirm_delete','auto_exec')
 
-    #list_display = ['__str__','region','week',]
+    list_display = ['__str__','date','task','auto_exec','confirm_delete',]
+    list_editable = ['task','auto_exec','confirm_delete']
     # list_filter =[MonthListFilter,YearListFilter,]
     # search_fields = ['country__name','country__region']

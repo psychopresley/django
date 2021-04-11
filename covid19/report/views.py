@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.generic import View,TemplateView
 from pathlib import Path
 from . import forms
-from report.models import StatusReport, MonthReport, WeekReport, ISOCodeData, UNData
+from report.models import StatusReport, MonthReport, WeekReport, ISOCodeData, UNData, ConfigReport
 
 # Importing plotly modules:
 import plotly.graph_objs as go
