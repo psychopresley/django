@@ -140,9 +140,6 @@ def main():
                 df_aux[column_region_rank]=df_aux.groupby(['Date','region'])[column].rank(method='min',ascending=False)
                 df_aux[column_new_region_rank]=df_aux.groupby(['Date','region'])[column_new].rank(method='min',ascending=False)
 
-                df_aux[column_new+'_short_avg'] = df_aux.groupby('Country/Region')[column_new].rolling(window=3,min_periods=1).mean().values
-                df_aux[column_new+'_medium_avg'] = df_aux.groupby('Country/Region')[column_new].rolling(window=7,min_periods=1).mean().values
-                df_aux[column_new+'_long_avg'] = df_aux.groupby('Country/Region')[column_new].rolling(window=14,min_periods=1).mean().values
 
             # Columns calculated specificly for Status Report model db:
             df_aux['active_pct'] = df_aux['Active'] / df_aux['Confirmed']
@@ -196,9 +193,6 @@ def main():
                     country.db_update=date.today()
                     country.confirmed=int(info.Confirmed.values[0])
                     country.confirmed_new=int(info.Confirmed_new_cases.values[0])
-                    country.confirmed_new_short_avg=float(info.Confirmed_new_cases_short_avg.values[0])
-                    country.confirmed_new_medium_avg=float(info.Confirmed_new_cases_medium_avg.values[0])
-                    country.confirmed_new_long_avg=float(info.Confirmed_new_cases_long_avg.values[0])
                     country.confirmed_new_pct_change=float(confirmed_new_pct_change)
                     country.confirmed_pct_change=float(info['Confirmed_daily_%inc_by_country'].values[0])
                     country.confirmed_rank_region=int(info.Confirmed_rank_in_region.values[0])
@@ -210,9 +204,6 @@ def main():
                     country.confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0])
                     country.deaths=int(info.Deaths.values[0])
                     country.deaths_new=int(info.Deaths_new_cases.values[0])
-                    country.deaths_new_short_avg=float(info.Deaths_new_cases_short_avg.values[0])
-                    country.deaths_new_medium_avg=float(info.Deaths_new_cases_medium_avg.values[0])
-                    country.deaths_new_long_avg=float(info.Deaths_new_cases_long_avg.values[0])
                     country.deaths_new_pct_change=float(deaths_new_pct_change)
                     country.deaths_pct_change=float(info['Deaths_daily_%inc_by_country'].values[0])
                     country.deaths_rank_region=int(info.Deaths_rank_in_region.values[0])
@@ -224,9 +215,6 @@ def main():
                     country.deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0])
                     country.recovered=int(info.Recovered.values[0])
                     country.recovered_new=int(info.Recovered_new_cases.values[0])
-                    country.recovered_new_short_avg=float(info.Recovered_new_cases_short_avg.values[0])
-                    country.recovered_new_medium_avg=float(info.Recovered_new_cases_medium_avg.values[0])
-                    country.recovered_new_long_avg=float(info.Recovered_new_cases_long_avg.values[0])
                     country.recovered_pct_change=float(info['Recovered_daily_%inc_by_country'].values[0])
                     country.recovered_rank_region=int(info.Recovered_rank_in_region.values[0])
                     country.recovered_rank_world=int(info.Recovered_rank_in_world.values[0])
@@ -237,9 +225,6 @@ def main():
                     country.recovered_by_hundreds_rank_world=int(info['Recovered_by_100k_rank_world'].values[0])
                     country.active=int(info.Active.values[0])
                     country.active_new=int(info.Active_new_cases.values[0])
-                    country.active_new_short_avg=float(info.Active_new_cases_short_avg.values[0])
-                    country.active_new_medium_avg=float(info.Active_new_cases_medium_avg.values[0])
-                    country.active_new_long_avg=float(info.Active_new_cases_long_avg.values[0])
                     country.active_pct=float(info.active_pct.values[0])
                     country.active_pct_change=float(info['Active_daily_%inc_by_country'].values[0])
                     country.active_rank_region=int(info.Active_rank_in_region.values[0])
@@ -286,9 +271,6 @@ def main():
                                                                    db_update=date.today(),
                                                                    confirmed=int(info.Confirmed.values[0]),
                                                                    confirmed_new=int(info.Confirmed_new_cases.values[0]),
-                                                                   confirmed_new_short_avg=float(info.Confirmed_new_cases_short_avg.values[0]),
-                                                                   confirmed_new_medium_avg=float(info.Confirmed_new_cases_medium_avg.values[0]),
-                                                                   confirmed_new_long_avg=float(info.Confirmed_new_cases_long_avg.values[0]),
                                                                    confirmed_new_pct_change=float(confirmed_new_pct_change),
                                                                    confirmed_pct_change=float(info['Confirmed_daily_%inc_by_country'].values[0]),
                                                                    confirmed_rank_region=int(info.Confirmed_rank_in_region.values[0]),
@@ -300,9 +282,6 @@ def main():
                                                                    confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0]),
                                                                    deaths=int(info.Deaths.values[0]),
                                                                    deaths_new=int(info.Deaths_new_cases.values[0]),
-                                                                   deaths_new_short_avg=float(info.Deaths_new_cases_short_avg.values[0]),
-                                                                   deaths_new_medium_avg=float(info.Deaths_new_cases_medium_avg.values[0]),
-                                                                   deaths_new_long_avg=float(info.Deaths_new_cases_long_avg.values[0]),
                                                                    deaths_new_pct_change=float(deaths_new_pct_change),
                                                                    deaths_pct_change=float(info['Deaths_daily_%inc_by_country'].values[0]),
                                                                    deaths_rank_region=int(info.Deaths_rank_in_region.values[0]),
@@ -314,9 +293,6 @@ def main():
                                                                    deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0]),
                                                                    recovered=int(info.Recovered.values[0]),
                                                                    recovered_new=int(info.Recovered_new_cases.values[0]),
-                                                                   recovered_new_short_avg=float(info.Recovered_new_cases_short_avg.values[0]),
-                                                                   recovered_new_medium_avg=float(info.Recovered_new_cases_medium_avg.values[0]),
-                                                                   recovered_new_long_avg=float(info.Recovered_new_cases_long_avg.values[0]),
                                                                    recovered_pct_change=float(info['Recovered_daily_%inc_by_country'].values[0]),
                                                                    recovered_rank_region=int(info.Recovered_rank_in_region.values[0]),
                                                                    recovered_rank_world=int(info.Recovered_rank_in_world.values[0]),
@@ -327,9 +303,6 @@ def main():
                                                                    recovered_by_hundreds_rank_world=int(info['Recovered_by_100k_rank_world'].values[0]),
                                                                    active=int(info.Active.values[0]),
                                                                    active_new=int(info.Active_new_cases.values[0]),
-                                                                   active_new_short_avg=float(info.Active_new_cases_short_avg.values[0]),
-                                                                   active_new_medium_avg=float(info.Active_new_cases_medium_avg.values[0]),
-                                                                   active_new_long_avg=float(info.Active_new_cases_long_avg.values[0]),
                                                                    active_pct=float(info.active_pct.values[0]),
                                                                    active_pct_change=float(info['Active_daily_%inc_by_country'].values[0]),
                                                                    active_rank_region=int(info.Active_rank_in_region.values[0]),

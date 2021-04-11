@@ -185,8 +185,10 @@ class StatusReportAdmin(admin.ModelAdmin):
             'description': 'information on data variation and rank',
             'classes': ('collapse',),
             'fields': (('confirmed_new', 'confirmed_rank_region', 'confirmed_rank_world'),
+                       ('confirmed_new_short_avg', 'confirmed_new_medium_avg', 'confirmed_new_long_avg'),
                        ('active_new', 'active_rank_region', 'active_rank_world'),
                        ('deaths_new', 'deaths_rank_region', 'deaths_rank_world'),
+                       ('deaths_new_short_avg', 'deaths_new_medium_avg', 'deaths_new_long_avg'),
                        ('recovered_new', 'recovered_rank_region', 'recovered_rank_world'),)
         }),
     )
