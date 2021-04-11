@@ -87,6 +87,14 @@
                   <span class="number">{{confirmed_by_hundreds|integer|style:'us'}} cases/100k habitants</span>
                 </li>
                 <li>
+                  New cases average:
+                  <ul>
+                    <li>3-day average: <span class="number">{{confirmed_new_short_avg|integer|style:'us'}}</span></li>
+                    <li>7-day average: <span class="number">{{confirmed_new_medium_avg|integer|style:'us'}}</span></li>
+                    <li>14-day average: <span class="number">{{confirmed_new_long_avg|integer|style:'us'}}</span></li>
+                  </ul>
+                </li>
+                <li>
                   <span class="number number-rank">{{confirmed_rank_region}}°</span> in the region /
                   <span class="number number-rank">{{confirmed_rank_world}}°</span> in the world
                   considering the total numbers;
@@ -143,6 +151,14 @@
               <ul>
                 <li>
                   <span class="number">{{deaths_by_hundreds|integer|style:'us'}} cases/100k habitants</span>
+                </li>
+                <li>
+                  New cases average:
+                  <ul>
+                    <li>3-day average: <span class="number">{{deaths_new_short_avg|integer|style:'us'}}</span></li>
+                    <li>7-day average: <span class="number">{{deaths_new_medium_avg|integer|style:'us'}}</span></li>
+                    <li>14-day average: <span class="number">{{deaths_new_long_avg|integer|style:'us'}}</span></li>
+                  </ul>
                 </li>
                 <li><span class="number number-rank">{{deaths_rank_region}}°</span> in the region /
                   <span class="number number-rank">{{deaths_rank_world}}°</span> in the world considering
