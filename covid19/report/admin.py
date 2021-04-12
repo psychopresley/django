@@ -261,7 +261,7 @@ class ConfigReportAdmin(admin.ModelAdmin):
     # fields = ('var_name','file_path','task','confirm_delete','auto_exec')
     fields = ('var_name','base_file',('aux_file_one','aux_file_two'),'task','confirm_delete','auto_exec')
 
-    list_display = ['__str__','date','task','auto_exec','confirm_delete',]
+    list_display = ['__str__','date','task','time_exec','log_status','auto_exec','confirm_delete',]
     list_editable = ['task','auto_exec','confirm_delete']
     # list_filter =[MonthListFilter,YearListFilter,]
     # search_fields = ['country__name','country__region']

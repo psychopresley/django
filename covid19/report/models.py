@@ -9,8 +9,8 @@ import os
 class ConfigReport(models.Model):
     var_name = models.CharField(max_length=30,primary_key=True,default='dbconfig_')
     base_file = models.FilePathField(path=settings.DATA_FILE_DIR)
-    aux_file_one = models.FilePathField(path=settings.DATA_FILE_DIR)
-    aux_file_two = models.FilePathField(path=settings.DATA_FILE_DIR)
+    aux_file_one = models.FilePathField(path=settings.CONFIG_FILE_DIR)
+    aux_file_two = models.FilePathField(path=settings.CONFIG_FILE_DIR)
     date = models.CharField(max_length=60,default='not specified')
     TASK_CHOICES = (
         (0,'delete'),
@@ -20,6 +20,13 @@ class ConfigReport(models.Model):
     task = models.IntegerField(default=1, choices=TASK_CHOICES)
     confirm_delete = models.BooleanField(default=True)
     auto_exec = models.BooleanField(default=True)
+    time_exec = models.FloatField(default=1.0)
+    LOG_STATUS_CHOICES = (
+        (0,'No changes detected'),
+        (1,'Success - database updated'),
+        (2,'Failure - something went wrong.'),
+    )
+    log_status = models.IntegerField(default=1, choices=LOG_STATUS_CHOICES)
 
     def __str__(self):
         return self.var_name

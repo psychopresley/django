@@ -7,7 +7,7 @@ django.setup()
 import numpy as np
 from pandas import read_json, read_csv
 from datetime import date, timedelta
-from time import ctime
+from time import ctime, time
 from report.models import Country, StatusReport, ISOCodeData, UNData, ConfigReport
 
 # Retieving configuration info:
@@ -87,10 +87,6 @@ def population(x):
 
 def main():
     try:
-        log_dbStatusReport=[]
-        log_dbStatusReport.append('\n----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------\n')
-        log_dbStatusReport.append('\n'+ 'Local time: ' + ctime() + '\n\n')
-
         if dbconfig.task == 0:
             db_del(StatusReport,confirm_before=dbconfig.confirm_delete)
         else:
@@ -246,7 +242,6 @@ def main():
 
                     country.save()
                     print('{} updated in models.StatusReport'.format(item))
-                log_dbStatusReport.append('\n models.StatusReport updated succesfully \n')
             else:
                 db_del(StatusReport,confirm_before=dbconfig.confirm_delete)
 
@@ -339,49 +334,23 @@ def main():
                     else:
                         print(item + ' is not on StatusReport.models')
 
-        message = 'Script executed succesfully!'
-        print(message)
-        log_dbStatusReport.append('\n Most recent date on report: {} \n'.format(StatusReport.objects.order_by('-date')[0].date))
-        log_dbStatusReport.append('\n {} \n'.format(message))
+        dbconfig.log_status=1
     except:
-        message = 'Something went wrong! The script was not executed'
-        print(message)
-        log_dbStatusReport.append('\n {} \n'.format(message))
-    finally:
-        message = 'End of execution of the populate_StatusReport.py script'
-        print(message)
-        log_dbStatusReport.append('\n {} \n'.format(message))
-
-        log_dir = r'C:\Users\user\Documents\GitHub\django\covid19\static\report\log'
-        os.chdir(log_dir)
-
-        log = open('log_dbStatusReport.txt','w')
-        log.writelines(log_dbStatusReport)
-        log.close()
-
+        dbconfig.log_status=2
 
 
 if __name__ == '__main__':
 
+    script_start_time = time()
     current_date = ctime(os.path.getmtime(dbconfig.base_file))
 
     if current_date == dbconfig.date and dbconfig.auto_exec:
-        log_dbStatusReport=[]
-        log_dbStatusReport.append('\n----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------\n')
-        log_dbStatusReport.append('\n'+ 'Local time: ' + ctime() + '\n\n')
-        log_dbStatusReport.append('\n --> current file has not been modified. Nothing to do here.')
-
-        log_dir = r'C:\Users\user\Documents\GitHub\django\covid19\static\report\log'
-        os.chdir(log_dir)
-
-        log = open('log_dbStatusReport.txt','w')
-        log.writelines(log_dbStatusReport)
-        log.close()
-
-        print('No necessary actions for the current file')
-        pass
+        dbconfig.log_status=0
+        dbconfig.time_exec=round(time()-script_start_time,2)
+        dbconfig.save()
     else:
         main()
 
         dbconfig.date=current_date
+        dbconfig.time_exec=round(time()-script_start_time,2)
         dbconfig.save()
