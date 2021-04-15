@@ -12,19 +12,12 @@ if __name__ == '__main__':
 
     # Retieving configuration info:
     dbconfig = ConfigReport.objects.all()
+    df=pd.DataFrame()
 
     for obj in dbconfig:
-        df=pd.DataFrame()
-        columns = []
-        values = []
-
+        df_aux=pd.DataFrame()
         for k,v in obj.__dict__.items():
-            columns.append(k)
-            values.append(v)
+            df_aux[k]=[v]
+        df=pd.concat([df,df_aux.drop(['_state'],axis=1)])
 
-        df=pd.DataFrame(data=values,columns = columns)
-        # series = pd.Series(obj.__dict__)
-        # df = pd.concat([df,pd.DataFrame(series,columns=[series.var_name]).drop(['_state','var_name'])],axis=1)
-
-    print(df)
-    # print(values)
+    df.to_csv('config.csv',index=False)

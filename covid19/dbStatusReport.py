@@ -8,82 +8,8 @@ import numpy as np
 from pandas import read_json, read_csv
 from datetime import date, timedelta
 from time import ctime, time
+from report.functions import *
 from report.models import Country, StatusReport, ISOCodeData, UNData, ConfigReport
-
-# Retieving configuration info:
-dbconfig = ConfigReport.objects.get(var_name__contains='StatusReport')
-
-# Functions to be used in main()
-def db_del(database,confirm_before=True):
-    # This function delete all entries in "database" model
-
-    flag = True
-
-    if confirm_before:
-        confirm_delete = input('This will erase all entries in models.StatusReport. Press "n" if you wish to skip delete or any other key to continue: ')
-
-        if confirm_delete == 'n':
-            flag = False
-        else:
-            pass
-
-    if flag:
-        database.objects.all().delete()
-        print('All entries in models.{} deleted succesfully!'.format(database))
-    else:
-        print('No modifications on database.')
-        pass
-
-def ordinal(x):
-    # Function to be used in date format:
-    if str(x)[-1] == '1':
-        return 'st'
-    elif str(x)[-1] == '2':
-        return 'nd'
-    elif str(x)[-1] == '3':
-        return 'rd'
-    else:
-        return 'th'
-
-# creating quartiles map function:
-def quart_func(x,q,case):
-    if x < q[1]:
-        return '1st (very low {})'.format(case.lower())
-    elif q[1] <= x < q[2]:
-        return '2nd (medium-low {})'.format(case.lower())
-    elif q[2] <= x < q[3]:
-        return '3rd (medium-high {})'.format(case.lower())
-    else:
-        return '4th (very high {})'.format(case.lower())
-
-# creating quartiles map function:
-def quantiles_pos(mortality, model_coef):
-    return ([mortality**4,mortality**3,mortality**2,mortality,1]*model_coef).item()
-
-# creating quartiles map function:
-def quantiles_model(quantiles):
-    regressors = []
-    y=[]
-    for k,v in quantiles.items():
-        regressors.append([v**4,v**3,v**2,v,1])
-        y.append([k])
-
-    regressors = np.matrix(regressors)
-    model_coef = np.linalg.inv(regressors)*np.array(y)
-
-    return model_coef
-
-def population(x):
-    exception_list = ['Cruise Ship','Taiwan']
-    if x in exception_list:
-        population=1e10
-    else:
-        x = ISOCodeData.objects.get(country_name=x)
-        x = UNData.objects.get(country=x.un_name)
-        population = x.population
-
-    return population
-
 
 def main():
     try:
@@ -129,6 +55,7 @@ def main():
                 df_aux[column_new+'_medium_avg'] = df_aux.groupby('Country/Region')[column_new].rolling(window=7,min_periods=1).mean().values
                 df_aux[column_new+'_long_avg'] = df_aux.groupby('Country/Region')[column_new].rolling(window=14,min_periods=1).mean().values
 
+
             # Columns calculated specificly for Status Report model db:
             df_aux['active_pct'] = df_aux['Active'] / df_aux['Confirmed']
             df_aux['mortality'] = df_aux['Deaths'] / df_aux['Confirmed']
@@ -149,10 +76,12 @@ def main():
 
             # Joining UN Data:
             df_aux['population'] = df_aux['Country/Region'].apply(lambda x:population(x))
+            print('oieee!!!')
             for column in column_names:
                 df_aux[column+'_by_100k'] = df_aux[column]*0.1/df_aux['population']
                 df_aux[column+'_by_100k_rank_region'] = df_aux.groupby(['Date','region'])[column+'_by_100k'].rank(method='min',ascending=False)
                 df_aux[column+'_by_100k_rank_world'] = df_aux.groupby('Date')[column+'_by_100k'].rank(method='min',ascending=False)
+
 
             status_report = df_aux.copy()
 
@@ -335,22 +264,25 @@ def main():
                         print(item + ' is not on StatusReport.models')
 
         dbconfig.log_status=1
+        dbconfig.date=current_date
     except:
         dbconfig.log_status=2
+    finally:
+        print('End of {} script'.format(os.path.basename(__file__)))
 
 
 if __name__ == '__main__':
 
     script_start_time = time()
-    current_date = ctime(os.path.getmtime(dbconfig.base_file))
 
+    # Retieving configuration info:
+    dbconfig = ConfigReport.objects.get(var_name__contains='StatusReport')
+
+    current_date = ctime(os.path.getmtime(dbconfig.base_file))
     if current_date == dbconfig.date and dbconfig.auto_exec:
         dbconfig.log_status=0
-        dbconfig.time_exec=round(time()-script_start_time,2)
-        dbconfig.save()
     else:
         main()
 
-        dbconfig.date=current_date
-        dbconfig.time_exec=round(time()-script_start_time,2)
-        dbconfig.save()
+    dbconfig.time_exec=round(time()-script_start_time,2)
+    dbconfig.save()
