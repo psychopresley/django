@@ -1,4 +1,3 @@
-
 import os
 import django
 
@@ -6,58 +5,38 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','covid19.settings')
 django.setup()
 
 from pandas import read_csv
-from report.models import Country
+from time import ctime, time
+from report.models import Country, ConfigReport
 
-def main():
-    def db_del(database,confirm_before=True):
-        # This function delete all entries in "database" model
+def db_del(database,confirm_before=True):
+    # This function delete all entries in "database" model
 
-        flag = True
+    flag = True
 
-        if confirm_before:
-            confirm_delete = input('This will erase all entries in models.{}. Press "n" if you wish to skip delete or any other key to continue: '.format(database))
+    if confirm_before:
+        confirm_delete = input('This will erase all entries in models.{}. Press "n" if you wish to skip delete or any other key to continue: '.format(database))
 
-            if confirm_delete == 'n':
-                flag = False
-            else:
-                pass
-
-        if flag:
-            database.objects.all().delete()
-            print('All entries in models.{} deleted succesfully!'.format(database))
+        if confirm_delete == 'n':
+            flag = False
         else:
-            print('No modifications on database.')
             pass
 
+    if flag:
+        database.objects.all().delete()
+        print('All entries in models.{} deleted succesfully!'.format(database))
+    else:
+        print('No modifications on database.')
+        pass
+
+def main():
     try:
-        # In the config.csv file, on 'countryinfo_file' row of columns 'var':
-        #  - aux1: Set 0, for delete all entries in database or 1 for add/update entries;
-        #  - aux2: Set 0, for reload database from 'countries_table.csv' file or 1 for update existing entries;
-        #  - aux3: Set 1, for confirmation need in case aux1 is set to 0;
-
-        config_filepath = r"C:\Users\user\Documents\GitHub\django\covid19\static\report\config"
-
-        if 'config.csv' in os.listdir(config_filepath):
-            print('Reading configuration file')
-            config = read_csv(os.path.join(config_filepath,'config.csv'),index_col='var').fillna('-')
+        if dbconfig.task == 0:
+            db_del(Country,confirm_before=dbconfig.confirm_delete)
         else:
-    	    raise FileNotFoundError('No configuration file "config.csv" found.')
-
-        task = config.loc['countryinfo_file'].aux1
-        update = config.loc['countryinfo_file'].aux2
-        confirm_value=config.loc['countryinfo_file'].aux3
-
-        if not task:
-            db_del(Country,confirm_before=confirm_value)
-
-        else:
-            country_table_file = os.path.join(config.loc['countryinfo_file'].file_path,
-                                              config.loc['countryinfo_file'].file_name)
-
-            countries_table = read_csv(country_table_file)
+            countries_table = read_csv(dbconfig.aux_file_one)
             countries_list = countries_table['Country'].unique()
 
-            if update:
+            if dbconfig.task == 1:
                 print('updating all entries in models.Country')
 
                 for item in countries_list:
@@ -73,7 +52,7 @@ def main():
                     country.save()
                     print('{} updated in models.Country'.format(item))
             else:
-                db_del(Country,confirm_before=confirm_value)
+                db_del(Country,confirm_before=dbconfig.confirm_delete)
 
                 print('Inserting all countries in the list to models.Country')
 
@@ -90,12 +69,21 @@ def main():
 
                     print(item + ' inserted into models.Country')
 
-        print('Script executed succesfully!')
+        dbconfig.log_status=1
     except:
-        print('Something went wrong! The script was not executed')
+        dbconfig.log_status=2
     finally:
-        print('End of execution of the dbCountry.py script')
+        print('End of {} script'.format(os.path.basename(__file__)))
 
 
 if __name__ == '__main__':
+
+    script_start_time = time()
+
+    # Retieving configuration info:
+    dbconfig = ConfigReport.objects.get(var_name='dbconfig_Country')
+
     main()
+
+    dbconfig.time_exec=round(time()-script_start_time,2)
+    dbconfig.save()
