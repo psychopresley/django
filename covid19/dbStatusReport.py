@@ -7,111 +7,22 @@ django.setup()
 import numpy as np
 from pandas import read_json, read_csv
 from datetime import date, timedelta
-from time import ctime
-from report.models import Country, StatusReport, ISOCodeData, UNData
+from time import ctime, time
+from report.functions import *
+from report.models import Country, StatusReport, ISOCodeData, UNData, ConfigReport
 
 def main():
-    def db_del(database,confirm_before=True):
-        # This function delete all entries in "database" model
-
-        flag = True
-
-        if confirm_before:
-            confirm_delete = input('This will erase all entries in models.StatusReport. Press "n" if you wish to skip delete or any other key to continue: ')
-
-            if confirm_delete == 'n':
-                flag = False
-            else:
-                pass
-
-        if flag:
-            database.objects.all().delete()
-            print('All entries in models.{} deleted succesfully!'.format(database))
-        else:
-            print('No modifications on database.')
-            pass
-
-    def ordinal(x):
-        # Function to be used in date format:
-        if str(x)[-1] == '1':
-            return 'st'
-        elif str(x)[-1] == '2':
-            return 'nd'
-        elif str(x)[-1] == '3':
-            return 'rd'
-        else:
-            return 'th'
-
-    # creating quartiles map function:
-    def quart_func(x,q,case):
-        if x < q[1]:
-            return '1st (very low {})'.format(case.lower())
-        elif q[1] <= x < q[2]:
-            return '2nd (medium-low {})'.format(case.lower())
-        elif q[2] <= x < q[3]:
-            return '3rd (medium-high {})'.format(case.lower())
-        else:
-            return '4th (very high {})'.format(case.lower())
-
-    # creating quartiles map function:
-    def quantiles_pos(mortality, model_coef):
-        return ([mortality**4,mortality**3,mortality**2,mortality,1]*model_coef).item()
-
-    # creating quartiles map function:
-    def quantiles_model(quantiles):
-        regressors = []
-        y=[]
-        for k,v in quantiles.items():
-            regressors.append([v**4,v**3,v**2,v,1])
-            y.append([k])
-
-        regressors = np.matrix(regressors)
-        model_coef = np.linalg.inv(regressors)*np.array(y)
-
-        return model_coef
-
-    def population(x):
-        exception_list = ['Cruise Ship','Taiwan']
-        if x in exception_list:
-            population=1e10
-        else:
-            x = ISOCodeData.objects.get(country_name=x)
-            x = UNData.objects.get(country=x.un_name)
-            population = x.population
-
-        return population
-
-
     try:
-        # In the config.csv file, on 'countryinfo_file' row of columns 'var':
-        #  - aux1: Set 0, for delete all entries in database or 1 for add/update entries;
-        #  - aux2: Set 0, for reload database from 'country_report.json' file or 1 for update existing entries;
-        #  - aux3: Set 1, for confirmation need in case aux1 is set to 0;
-
-        log_dbStatusReport=[]
-        log_dbStatusReport.append('\n----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------\n')
-        log_dbStatusReport.append('\n'+ 'Local time: ' + ctime() + '\n\n')
-
-        task = config.loc['status_report'].aux1
-        update = config.loc['status_report'].aux2
-        confirm_value=config.loc['status_report'].aux3
-
-        if not task:
-            db_del(StatusReport,confirm_before=confirm_value)
+        if dbconfig.task == 0:
+            db_del(StatusReport,confirm_before=dbconfig.confirm_delete)
         else:
-            country_report = os.path.join(config.loc['status_report'].file_path,
-                                              config.loc['status_report'].file_name)
-
-            country_table_file = os.path.join(config.loc['countryinfo_file'].file_path,
-                                              config.loc['countryinfo_file'].file_name)
-
-            countries_table = read_csv(country_table_file,index_col='Country')
+            countries_table = read_csv(dbconfig.aux_file_one,index_col='Country')
 
             # reading region dictionary:
             region_dict = countries_table['Region'].to_dict()
 
-            print("Reading 'country_report.json' file")
-            df = read_json(country_report)
+            print("Reading data file")
+            df = read_json(dbconfig.base_file)
 
             print("Generating status report table")
             df_aux = df.copy()[['Country/Region','Date']]
@@ -144,6 +55,7 @@ def main():
                 df_aux[column_new+'_medium_avg'] = df_aux.groupby('Country/Region')[column_new].rolling(window=7,min_periods=1).mean().values
                 df_aux[column_new+'_long_avg'] = df_aux.groupby('Country/Region')[column_new].rolling(window=14,min_periods=1).mean().values
 
+
             # Columns calculated specificly for Status Report model db:
             df_aux['active_pct'] = df_aux['Active'] / df_aux['Confirmed']
             df_aux['mortality'] = df_aux['Deaths'] / df_aux['Confirmed']
@@ -164,17 +76,19 @@ def main():
 
             # Joining UN Data:
             df_aux['population'] = df_aux['Country/Region'].apply(lambda x:population(x))
+            print('oieee!!!')
             for column in column_names:
                 df_aux[column+'_by_100k'] = df_aux[column]*0.1/df_aux['population']
                 df_aux[column+'_by_100k_rank_region'] = df_aux.groupby(['Date','region'])[column+'_by_100k'].rank(method='min',ascending=False)
                 df_aux[column+'_by_100k_rank_world'] = df_aux.groupby('Date')[column+'_by_100k'].rank(method='min',ascending=False)
+
 
             status_report = df_aux.copy()
 
             print("Status_report table generated succesfully!")
             countries_list = status_report['Country/Region'].unique()
 
-            if update:
+            if dbconfig.task == 1:
                 print('updating all entries in models.StatusReport')
 
                 for item in countries_list:
@@ -257,9 +171,8 @@ def main():
 
                     country.save()
                     print('{} updated in models.StatusReport'.format(item))
-                log_dbStatusReport.append('\n models.StatusReport updated succesfully \n')
             else:
-                db_del(StatusReport,confirm_before=confirm_value)
+                db_del(StatusReport,confirm_before=dbconfig.confirm_delete)
 
                 print('Inserting all countries in the list to models.StatusReport')
 
@@ -350,61 +263,26 @@ def main():
                     else:
                         print(item + ' is not on StatusReport.models')
 
-        message = 'Script executed succesfully!'
-        print(message)
-        log_dbStatusReport.append('\n Most recent date on report: {} \n'.format(StatusReport.objects.order_by('-date')[0].date))
-        log_dbStatusReport.append('\n {} \n'.format(message))
+        dbconfig.log_status=1
+        dbconfig.date=current_date
     except:
-        message = 'Something went wrong! The script was not executed'
-        print(message)
-        log_dbStatusReport.append('\n {} \n'.format(message))
+        dbconfig.log_status=2
     finally:
-        message = 'End of execution of the populate_StatusReport.py script'
-        print(message)
-        log_dbStatusReport.append('\n {} \n'.format(message))
-
-        log_dir = r'C:\Users\user\Documents\GitHub\django\covid19\static\report\log'
-        os.chdir(log_dir)
-
-        log = open('log_dbStatusReport.txt','w')
-        log.writelines(log_dbStatusReport)
-        log.close()
-
+        print('End of {} script'.format(os.path.basename(__file__)))
 
 
 if __name__ == '__main__':
-    config_filepath = r"C:\Users\user\Documents\GitHub\django\covid19\static\report\config"
 
-    if 'config.csv' in os.listdir(config_filepath):
-        print('Reading configuration file')
-        config = read_csv(os.path.join(config_filepath,'config.csv'),index_col='var').fillna('-')
-    else:
-        raise FileNotFoundError('No configuration file "config.csv" found.')
+    script_start_time = time()
 
-    country_report = os.path.join(config.loc['status_report'].file_path,
-                                  config.loc['status_report'].file_name)
+    # Retieving configuration info:
+    dbconfig = ConfigReport.objects.get(var_name__contains='StatusReport')
 
-    last_modified = config.loc['status_report'].aux4
-    current_date = ctime(os.path.getmtime(country_report))
-
-    if current_date == last_modified and False:
-        log_dbStatusReport=[]
-        log_dbStatusReport.append('\n----------dbStatusReport.py SCRIPT EXECUTION REPORT-----------\n')
-        log_dbStatusReport.append('\n'+ 'Local time: ' + ctime() + '\n\n')
-        log_dbStatusReport.append('\n --> current file has not been modified. Nothing to do here.')
-
-        log_dir = r'C:\Users\user\Documents\GitHub\django\covid19\static\report\log'
-        os.chdir(log_dir)
-
-        log = open('log_dbStatusReport.txt','w')
-        log.writelines(log_dbStatusReport)
-        log.close()
-
-        print('No necessary actions for the current file')
-        pass
+    current_date = ctime(os.path.getmtime(dbconfig.base_file))
+    if current_date == dbconfig.date and dbconfig.auto_exec:
+        dbconfig.log_status=0
     else:
         main()
 
-        os.chdir(config_filepath)
-        config.loc['status_report','aux4'] = current_date
-        config.to_csv('config.csv')
+    dbconfig.time_exec=round(time()-script_start_time,2)
+    dbconfig.save()

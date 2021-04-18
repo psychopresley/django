@@ -16,6 +16,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = BASE_DIR.joinpath('templates')
 STATIC_DIR = BASE_DIR.joinpath('static')
+CONFIG_FILE_DIR = r'C:\Users\user\Documents\GitHub\django\covid19\static\report\config'
+DATA_FILE_DIR = r'C:\Users\user\Documents\GitHub\COVID-19\consolidated_data'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
