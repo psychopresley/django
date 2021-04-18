@@ -4,7 +4,8 @@ from django.http import HttpResponse
 from django.views.generic import View,TemplateView
 from pathlib import Path
 from . import forms
-from report.models import StatusReport, MonthReport, WeekReport, ISOCodeData, UNData
+from .functions import *
+from report.models import StatusReport, MonthReport, WeekReport, ISOCodeData, UNData, ConfigReport
 
 # Importing plotly modules:
 import plotly.graph_objs as go
@@ -17,36 +18,17 @@ from geoip2.database import Reader
 from socket import gethostbyname, getfqdn
 import requests
 
+# Include the `fusioncharts.py` file that contains functions to embed the charts.
+from . import fusioncharts as fsn
+
 # Importing python native modules:
+import os
+import numpy as np
 from calendar import week
 from datetime import datetime, timedelta
-import os
 
-# defining custom function to obtain first and last day of the week:
-def start_end_week(year, week):
-    monday = datetime.strptime(f'{year}-{week}-1', "%Y-%W-%w").date()
-    return '{} / {}'.format(monday.strftime('%b, %d'), (monday + timedelta(days=6.9)).strftime('%b, %d'))
 
-# defining custom function to obtain the public IP address of the request:
-def getIP():
-    '''
-    The code below was taken from:
-    https://stackoverflow.com/questions/2311510/getting-a-machines-external-ip-address-with-python/41432835
-
-    Please refer to the link for original code and credits.
-
-    geoip2 api documentation: https://geoip2.readthedocs.io/en/latest/
-    maxmind database: https://www.maxmind.com
-    '''
-    # local_ip = gethostbyname(getfqdn())
-    public_ip = requests.get('https://www.wikipedia.org').headers['X-Client-IP']
-    response = reader.country(public_ip)
-
-    return response.country
-
-# C:\Users\user\Documents\GitHub\django\covid19\report
-# Creating a Reader's object for request IP detection with the getIP function:
-
+# creating the reader to use in getIP(reader) function:
 curr_dir = os.path.dirname(__file__)
 geoip_dir = 'geoip_db'
 geoip_file = 'GeoLite2-Country.mmdb'
@@ -214,7 +196,7 @@ def countriespage(request):
 
     # Checking the request IP and redirect to display the country to which
     # it belongs:
-    x = ISOCodeData.objects.get(iso_code=getIP().iso_code)
+    x = ISOCodeData.objects.get(iso_code=getIP(reader).iso_code)
     if x.country_name in countries_in_db:
         selected_country = x.country_name
         form['country'].initial = selected_country
@@ -310,42 +292,11 @@ def countriespage(request):
     # colorscales code: https://plotly.com/python/builtin-colorscales/
 
 
-    # 1 - MONTH REPORT CHARTS:
-    fig = make_subplots(
-    rows=2, cols=1,
-    row_heights=[0.5, 0.5],
-    # subplot_titles=("Confirmed","Deaths"),
-    shared_xaxes=True,
-    specs=[[{"type": "bar"}],
-           [{"type": "bar"}]])
+    # # 1 - MONTH REPORT CHARTS:
+    subplot1data = (x_month[::-1],y_confirmed[::-1])
+    subplot2data = (x_month[::-1],y_deaths[::-1])
 
-    fig.add_trace(
-    go.Bar(x=x_month[::-1], y=y_confirmed[::-1], name='Confirmed', opacity=0.5, marker={"color":y_confirmed,"colorscale":'algae',"reversescale":True},showlegend=False,),
-    row=1, col=1
-    )
-
-    fig.add_trace(
-    go.Bar(x=x_month[::-1], y=y_deaths[::-1], name='Deaths', opacity=0.5, marker={"color":y_deaths,"colorscale":'Teal',"reversescale":True},showlegend=False,),
-    row=2, col=1
-    )
-
-    fig.update_layout(
-    template="seaborn",
-    margin={'l':20,'r':10,'t':30,'b':10},
-    plot_bgcolor='white',
-    font_family='Quicksand',
-    )
-
-    # Update xaxis properties
-    fig.update_xaxes(title_text="Month", row=2, col=1, type='category')
-    fig.update_xaxes(row=1, col=1, type='category')
-
-    # Update Y-axis properties
-    fig.update_yaxes(title_text="Confirmed", row=1, col=1)
-    fig.update_yaxes(title_text="Deaths", row=2, col=1)
-
-    plot_month = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
-
+    plot_month = month_subplot(subplot1data,subplot2data,['Confirmed','Deaths'])
 
 # ==============================================================================
 # ==============================================================================
@@ -394,107 +345,14 @@ def countriespage(request):
     # https://www.codingwithricky.com/2019/08/28/easy-django-plotly/
     # colorscales code: https://plotly.com/python/builtin-colorscales/
 
-
     # 2 - WEEK REPORT CHARTS:
-    fig = make_subplots(
-    rows=2, cols=1,
-    row_heights=[0.5, 0.5],
-    # subplot_titles=("Confirmed","Deaths"),
-    shared_xaxes=True,
-    specs=[[{"type": "bar"}],
-           [{"type": "bar"}]])
+    subplot1data = (x_week[::-1],y_confirmed_week[::-1])
+    subplot2data = (x_week[::-1],y_deaths_week[::-1])
 
-    fig.update_layout(
-    template="seaborn",
-    margin={'l':20,'r':10,'t':30,'b':10},
-    plot_bgcolor='white',
-    font_family="Quicksand",
-    )
+    plot_week = week_subplot(subplot1data,subplot2data,labels=['Confirmed','Deaths'])
+    plot_heatmap_week = heatmap_subplot(subplot1data,subplot2data,labels=['Confirmed','Deaths'])
+    plot_histogram = density_plot(y_deaths_week[::-1],y_confirmed_week[::-1])
 
-    fig.append_trace(
-    go.Bar(x=x_week[::-1], y=y_confirmed_week[::-1], name='Confirmed', opacity=0.5, marker={"color":y_confirmed_week,"colorscale":'algae',"reversescale":True},showlegend=False,),
-    row=1, col=1
-    )
-
-    fig.append_trace(
-    go.Bar(x=x_week[::-1], y=y_deaths_week[::-1], name='Deaths', opacity=0.5, marker={"color":y_deaths_week,"colorscale":'Teal',"reversescale":True},showlegend=False,),
-    row=2, col=1
-    )
-
-
-    # Update X-axis properties
-    fig.update_xaxes(title_text="Week", row=2, col=1, type='category')
-    fig.update_xaxes(row=1, col=1, type='category')
-
-    # Update Y-axis properties
-    fig.update_yaxes(title_text="Confirmed", row=1, col=1)
-    fig.update_yaxes(title_text="Deaths", row=2, col=1)
-
-    plot_week = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
-
-
-    # Heatmaps
-    fig = make_subplots(
-    rows=2, cols=1,
-    row_heights=[0.5, 0.5],
-    shared_xaxes=True,
-    specs=[[{"type": "heatmap"}],
-           [{"type": "heatmap"}]])
-
-    fig.update_layout(
-    template="seaborn",
-    margin={'l':20,'r':10,'t':30,'b':10},
-    plot_bgcolor='white',
-    font_family="Quicksand",
-    )
-
-    fig.append_trace(
-    go.Heatmap(
-        z=[y_deaths_week[::-1]],
-        x=x_week[::-1],
-        y=['Deaths'],
-        colorscale='RdBu_r',
-        showscale=False,
-        ),row=2, col=1)
-
-    fig.append_trace(
-    go.Heatmap(
-        z=[y_confirmed_week[::-1]],
-        x=x_week[::-1],
-        y=['Confirmed'],
-        colorscale='RdBu_r',
-        showscale=False,
-        ),row=1, col=1)
-
-
-    # Update X-axis properties
-    fig.update_xaxes(title_text="Week", row=2, col=1, type='category')
-    fig.update_xaxes(row=1, col=1, type='category')
-
-    plot_heatmap_week = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
-
-
-    # CONTOUR MAPS:
-    fig = go.Figure(go.Histogram2dContour(
-        x=y_deaths_week[::-1],
-        y=y_confirmed_week[::-1],
-        colorscale='RdBu_r',
-        histnorm="percent",
-        xbins={'end':max(y_deaths_week)},
-        ybins={'end':max(y_confirmed_week)},
-        showscale=False,
-        ncontours=20,
-        contours={'showlines':False}
-    ))
-
-    fig.update_layout(
-    template="seaborn",
-    plot_bgcolor='white',
-    title={'text':"Density levels",'font':{'family':'Quicksand','size':30}},
-    )
-
-
-    plot_histogram = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
 
     return render(request,'report/countries.html',
                   {'form':form,
