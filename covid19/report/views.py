@@ -124,10 +124,12 @@ class StatisticsView(TemplateView):
         top_ten_confirmed = StatusReport.objects.all().order_by('-confirmed')[:10]
         top_ten_new_confirmed = StatusReport.objects.all().order_by('confirmed_new_rank_world')[:10]
         top_ten_confirmed_by_hundreds = StatusReport.objects.all().order_by('-confirmed_by_hundreds')[:10]
+        top_ten_confirmed_new_by_hundreds = StatusReport.objects.all().order_by('-confirmed_new_by_hundreds')[:10]
 
         top_ten_deaths = StatusReport.objects.all().order_by('-deaths')[:10]
         top_ten_new_deaths = StatusReport.objects.all().order_by('deaths_new_rank_world')[:10]
         top_ten_deaths_by_hundreds = StatusReport.objects.all().order_by('-deaths_by_hundreds')[:10]
+        top_ten_deaths_new_by_hundreds = StatusReport.objects.all().order_by('-deaths_new_by_hundreds')[:10]
 
         dict_confirmed={}
         total_confirmed_top_ten = 0
@@ -161,6 +163,13 @@ class StatisticsView(TemplateView):
         for obj in top_ten_deaths_by_hundreds:
             dict_deaths_by_hundreds={**dict_deaths_by_hundreds,**{obj.__str__():obj.__dict__['deaths_by_hundreds']}}
 
+        dict_confirmed_new_by_hundreds={}
+        for obj in top_ten_confirmed_new_by_hundreds:
+            dict_confirmed_new_by_hundreds={**dict_confirmed_new_by_hundreds,**{obj.__str__():obj.__dict__['confirmed_new_by_hundreds']}}
+
+        dict_deaths_new_by_hundreds={}
+        for obj in top_ten_deaths_new_by_hundreds:
+            dict_deaths_new_by_hundreds={**dict_deaths_new_by_hundreds,**{obj.__str__():obj.__dict__['deaths_new_by_hundreds']}}
 
         context['world_population'] = UNData.objects.get(country__startswith='Total').population
         context['total_confirmed_top_ten'] = total_confirmed_top_ten
@@ -173,6 +182,8 @@ class StatisticsView(TemplateView):
         context['top_ten_new_deaths'] = dict_deaths_new
         context['top_ten_confirmed_by_hundreds'] = dict_confirmed_by_hundreds
         context['top_ten_deaths_by_hundreds'] = dict_deaths_by_hundreds
+        context['top_ten_confirmed_new_by_hundreds'] = dict_confirmed_new_by_hundreds
+        context['top_ten_deaths_new_by_hundreds'] = dict_deaths_new_by_hundreds
 
         return context
 

@@ -20,9 +20,11 @@
               <button class="nav-link active" id="v-pills-confirmed-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed" type="button" role="tab" aria-controls="v-pills-confirmed" aria-selected="true">by total confirmed cases</button>
               <button class="nav-link" id="v-pills-new-confirmed-tab" data-bs-toggle="pill" data-bs-target="#v-pills-new-confirmed" type="button" role="tab" aria-controls="v-pills-new-confirmed" aria-selected="false">by confirmed in the last 24h</button>
               <button class="nav-link" id="v-pills-confirmed-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed-by-hundreds" type="button" role="tab" aria-controls="v-pills-confirmed-by-hundreds" aria-selected="false">by confirmed cases/100k hab.</button>
+              <button class="nav-link" id="v-pills-confirmed-new-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed-new-by-hundreds" type="button" role="tab" aria-controls="v-pills-confirmed-new-by-hundreds" aria-selected="false">by confirmed cases/100k hab. in the last 24h</button>
               <button class="nav-link" id="v-pills-deaths-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths" type="button" role="tab" aria-controls="v-pills-deaths" aria-selected="true">by total deaths</button>
               <button class="nav-link" id="v-pills-new-deaths-tab" data-bs-toggle="pill" data-bs-target="#v-pills-new-deaths" type="button" role="tab" aria-controls="v-pills-new-deaths" aria-selected="false">by deaths in the last 24h</button>
               <button class="nav-link" id="v-pills-deaths-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths-by-hundreds" type="button" role="tab" aria-controls="v-pills-deaths-by-hundreds" aria-selected="false">by deaths/100k hab.</button>
+              <button class="nav-link" id="v-pills-deaths-new-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths-new-by-hundreds" type="button" role="tab" aria-controls="v-pills-deaths-new-by-hundreds" aria-selected="false">by deaths/100k hab. in the last 24h</button>
             </div>
             <style>
               .nav-link {background-color:inherit;color:#8C356E;border:none;}
@@ -121,6 +123,30 @@
             </table>
           </div> <!-- End div tab-pane -->
 
+          <div class="tab-pane fade show" id="v-pills-confirmed-new-by-hundreds" role="tabpanel" aria-labelledby="v-pills-confirmed-new-by-hundreds-tab">
+            <table class="table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Confirmed/100k hab (Last 24h)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in top_ten_confirmed_new_by_hundreds.items %}
+                <tr>
+                  <th scope="row" style="text-align:left;">{{k}}</th>
+                    <td>
+                      {{v|integer|style:'us'}}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <caption>
+                Confirmed/100k habitants (Last 24h) in the world: {{confirmed|mul:0.1|div:world_population|integer|style:'us'}}
+              </caption>
+            </table>
+          </div> <!-- End div tab-pane -->
+
           <div class="tab-pane fade show" id="v-pills-deaths" role="tabpanel" aria-labelledby="v-pills-deaths-tab">
             <table class="table" style="text-align:center;">
               <thead>
@@ -205,6 +231,30 @@
               </tbody>
               <caption>
                 Deaths/100k habitants in the world: {{deaths|mul:0.1|div:world_population|integer|style:'us'}}
+              </caption>
+            </table>
+          </div> <!-- End div tab-pane -->
+
+          <div class="tab-pane fade show" id="v-pills-deaths-new-by-hundreds" role="tabpanel" aria-labelledby="v-pills-deaths-new-by-hundreds-tab">
+            <table class="table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Deaths/100k hab (Last 24h)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for k,v in top_ten_deaths_new_by_hundreds.items %}
+                <tr>
+                  <th scope="row" style="text-align:left;">{{k}}</th>
+                    <td>
+                      {{v|integer|style:'us'}}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <caption>
+                Deaths/100k habitants (Last 24h) in the world: {{deaths|mul:0.1|div:world_population|integer|style:'us'}}
               </caption>
             </table>
           </div> <!-- End div tab-pane -->
