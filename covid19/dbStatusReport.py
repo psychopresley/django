@@ -76,11 +76,12 @@ def main():
 
             # Joining UN Data:
             df_aux['population'] = df_aux['Country/Region'].apply(lambda x:population(x))
-            print('oieee!!!')
             for column in column_names:
                 df_aux[column+'_by_100k'] = df_aux[column]*0.1/df_aux['population']
                 df_aux[column+'_by_100k_rank_region'] = df_aux.groupby(['Date','region'])[column+'_by_100k'].rank(method='min',ascending=False)
                 df_aux[column+'_by_100k_rank_world'] = df_aux.groupby('Date')[column+'_by_100k'].rank(method='min',ascending=False)
+                df_aux[column+'_new_cases_by_100k'] = df_aux[column+'_new_cases']*0.1/df_aux['population']
+                df_aux[column+'_new_cases_by_100k_rank_world'] = df_aux.groupby('Date')[column+'_new_cases_by_100k'].rank(method='min',ascending=False)
 
 
             status_report = df_aux.copy()
@@ -122,6 +123,8 @@ def main():
                     country.confirmed_by_hundreds=float(info['Confirmed_by_100k'].values[0])
                     country.confirmed_by_hundreds_rank_region=int(info['Confirmed_by_100k_rank_region'].values[0])
                     country.confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0])
+                    country.confirmed_new_by_hundreds=int(info['Confirmed_new_cases_by_100k'].values[0])
+                    country.confirmed_new_by_hundreds_rank_world=int(info['Confirmed_new_cases_by_100k_rank_world'].values[0])
                     country.deaths=int(info.Deaths.values[0])
                     country.deaths_new=int(info.Deaths_new_cases.values[0])
                     country.deaths_new_short_avg=float(info.Deaths_new_cases_short_avg.values[0])
@@ -136,6 +139,8 @@ def main():
                     country.deaths_by_hundreds=float(info['Deaths_by_100k'].values[0])
                     country.deaths_by_hundreds_rank_region=int(info['Deaths_by_100k_rank_region'].values[0])
                     country.deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0])
+                    country.deaths_new_by_hundreds=int(info['Deaths_new_cases_by_100k'].values[0])
+                    country.deaths_new_by_hundreds_rank_world=int(info['Deaths_new_cases_by_100k_rank_world'].values[0])
                     country.recovered=int(info.Recovered.values[0])
                     country.recovered_new=int(info.Recovered_new_cases.values[0])
                     country.recovered_new_short_avg=float(info.Recovered_new_cases_short_avg.values[0])
@@ -211,6 +216,8 @@ def main():
                                                                    confirmed_by_hundreds=float(info['Confirmed_by_100k'].values[0]),
                                                                    confirmed_by_hundreds_rank_region=int(info['Confirmed_by_100k_rank_region'].values[0]),
                                                                    confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0]),
+                                                                   confirmed_new_by_hundreds=int(info['Confirmed_new_cases_by_100k'].values[0]),
+                                                                   confirmed_new_by_hundreds_rank_world=int(info['Confirmed_new_cases_by_100k_rank_world'].values[0]),
                                                                    deaths=int(info.Deaths.values[0]),
                                                                    deaths_new=int(info.Deaths_new_cases.values[0]),
                                                                    deaths_new_short_avg=float(info.Deaths_new_cases_short_avg.values[0]),
@@ -225,6 +232,8 @@ def main():
                                                                    deaths_by_hundreds=float(info['Deaths_by_100k'].values[0]),
                                                                    deaths_by_hundreds_rank_region=int(info['Deaths_by_100k_rank_region'].values[0]),
                                                                    deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0]),
+                                                                   deaths_new_by_hundreds=int(info['Deaths_new_cases_by_100k'].values[0]),
+                                                                   deaths_new_by_hundreds_rank_world=int(info['Deaths_new_cases_by_100k_rank_world'].values[0]),
                                                                    recovered=int(info.Recovered.values[0]),
                                                                    recovered_new=int(info.Recovered_new_cases.values[0]),
                                                                    recovered_new_short_avg=float(info.Recovered_new_cases_short_avg.values[0]),
