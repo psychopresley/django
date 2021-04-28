@@ -15,13 +15,28 @@
         </h1>
       </div>
       <div class="col-1">
-        <img
-          class="contain"
-          id="country-image"
-          src={{map_image}}
-          width="80"
-          height="80"
-          alt={{country_name}}>
+        {% with area=population|mul:1e6|div:density %}
+        <!-- <a data-bs-toggle="collapse" data-bs-target="#CountryInfoColapse" aria-expanded="false" aria-controls="CountryInfoColapse"> -->
+        <a data-bs-toggle="popover" title="UN Data, 2020 (estimates)" data-bs-placement="right" data-bs-content="
+        <ul>
+          <li>Population (millions): {{population|floatformat}}</li>
+          <li>Area: {{area|integer|style:'us'}} km²</li>
+          <li>Density: {{density|floatformat}} hab/km²</li>
+          <li>Sex ratio (men/women): {{sex_ratio|div:100|floatformat:3}}</li>
+          <li>Female Population (million): {{population_female|floatformat}}</li>
+          <li>Male Population (millions): {{population_male|floatformat}}</li>
+          <li>Population over 60yrs: {{pct_plus_sixty|floatformat:2}}%</li>
+          <li>Population under 14yrs: {{pct_minus_fourteen|floatformat:2}}%</li>
+        </ul>">
+          <img
+            class="contain"
+            id="country-image"
+            src={{map_image}}
+            width="80"
+            height="80"
+            alt={{country_name}}>
+        </a>
+        {% endwith %}
       </div>
 
     </div> <!-- END OF DIV CLASS CONTAINER ID=COUNTRY-NAME -->
@@ -188,92 +203,216 @@
                 <li><span  data-bs-toggle="modal" data-bs-target="#QuartileModal" style="cursor:default;">Quartile*</span>: {{mortality_quartile}};
                 </li>
               </ul>
-
-              <div class="container">
-                <div class="progress" style="height: 3px;">
-                  <div class="progress-bar progress-bar-stripped {% if mortality_quartile_position >= 0.9 %}bg-danger{% elif mortality_quartile_position >= 0.5 %}bg-warning{% elif mortality_quartile_position >= 0.1 %}bg-primary{% else %}bg-success{% endif %}" role="progressbar" style="width:{{mortality_quartile_position|pct}};" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <br>
-                <div class="progress">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">1st</div>
-                  <div class="progress-bar bg-primary" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">2nd</div>
-                  <div class="progress-bar bg-warning" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">3rd</div>
-                  <div class="progress-bar bg-danger" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">4th</div>
-                </div>
-              </div><br>
           </div><!-- div collapse -->
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="QuartileModal" tabindex="-1" aria-labelledby="QuartileModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header" style="background-color:#330641; color:white;">
-            <h5 class="modal-title" id="QuartileModalLabel">About the quartiles</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="container">
-              <table class="table" style="text-align:center;">
-                <thead>
-                  <tr>
-                    <th scope="col" style="text-align:center;">
-                      Quartile
-                    </th>
-                    <th scope="col" style="text-align:center;">
-                      Mortality
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1st</th>
-                      <td>
-                        < {{quartile_list|slice:'2'|last|pct}}
-                      </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2nd</th>
-                      <td>
-                        {{quartile_list|slice:'2'|last|pct}} to {{quartile_list|slice:'3'|last|pct}}
-                      </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3rd</th>
-                      <td>
-                        {{quartile_list|slice:'3'|last|pct}} to {{quartile_list|slice:'4'|last|pct}}
-                      </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4th</th>
-                      <td>
-                        > {{quartile_list|last|pct}}
-                      </td>
-                  </tr>
-                </tbody>
-              </table>
 
-            <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#collapseQuartileText" aria-expanded="false" aria-controls="collapseQuartileText">what is a quartile?</a></p>
-            <div class="collapse" id="collapseQuartileText">
-              <div class="card card-body" style="border:none;">
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+   <!-- START OF THE QUARTILES AREA -->
+    <div class="container marketing">
+      <br><h3> Quartiles</h3>
+      <hr class="featurette-divider">
+
+      <div class="container" style="padding:0;">
+        <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#HowToGaugeCharts" aria-expanded="false" aria-controls="HowToGaugeCharts">How to read the gauge charts</a></p>
+        <div class="collapse" id="HowToGaugeCharts">
+          <div class="card card-body" style="border:none;">
+            <div class="row">
+              <div class="col-7">
                 <p>Quartiles are a statistical tool that help us visualize how a certain parameter of a member in a dataset
                 places itself when compared to the other members of the same set. In this case, we analyse how high is the
                 mortality rate of the selected country in comparison with the mortalities of the other countries.</p>
 
                 <p>As an example, the first quartile is defined by the 10% countries with the lowest death rates and the 4th quartile is defined
                 by the 10% countries with the highest rates. In the betweens you'll find the other countries.</p>
-              </div><!-- div card body -->
-            </div><!-- div collapse -->
-          </div> <!-- DIV CONTAINER -->
-        </div>
+              </div>
+              <div class="col-5">
+                <ul class="nav nav-tabs">
+                  <li class="nav-item">
+                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#MortalityQuartilesTable" type="button" role="tab" aria-controls="MortalityQuartilesTable" aria-selected="true">Mortality</button>
+                  </li>
+                  <li class="nav-item">
+                    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#ConfirmedQuartilesTable" type="button" role="tab" aria-controls="ConfirmedQuartilesTable" aria-selected="false">Confirmed/100k</button>
+                  </li>
+                  <li class="nav-item">
+                    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#DeathsQuartilesTable" type="button" role="tab" aria-controls="DeathsQuartilesTable" aria-selected="false">Deaths/100k</button>
+                  </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane fade show active" id="MortalityQuartilesTable" role="tabpanel" aria-labelledby="MortalityQuartilesTable-tab">
+                    <table class="table" style="text-align:center;">
+                      <thead>
+                        <tr>
+                          <th scope="col" style="text-align:center;">
+                            Quartile
+                          </th>
+                          <th scope="col" style="text-align:center;">
+                            Mortality
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">1st</th>
+                            <td>
+                              < {{mortality_quartile_list|slice:'2'|last|pct}}
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">2nd</th>
+                            <td>
+                              {{mortality_quartile_list|slice:'2'|last|pct}} to {{mortality_quartile_list|slice:'3'|last|pct}}
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">3rd</th>
+                            <td>
+                              {{mortality_quartile_list|slice:'3'|last|pct}} to {{mortality_quartile_list|slice:'4'|last|pct}}
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">4th</th>
+                            <td>
+                              > {{mortality_quartile_list|last|pct}}
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div> <!-- Mortality Tab Pane-->
+                  <div class="tab-pane" id="ConfirmedQuartilesTable" role="tabpanel" aria-labelledby="ConfirmedQuartilesTable-tab">
+                    <table class="table" style="text-align:center;">
+                      <thead>
+                        <tr>
+                          <th scope="col" style="text-align:center;">
+                            Quartile
+                          </th>
+                          <th scope="col" style="text-align:center;">
+                            Confirmed/100k
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">1st</th>
+                            <td>
+                              < {{confirmed_quartile_list|slice:'2'|last|integer|style:'us'}}
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">2nd</th>
+                            <td>
+                              {{confirmed_quartile_list|slice:'2'|last|integer|style:'us'}} to {{confirmed_quartile_list|slice:'3'|last|integer|style:'us'}}
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">3rd</th>
+                            <td>
+                              {{confirmed_quartile_list|slice:'3'|last|integer|style:'us'}} to {{confirmed_quartile_list|slice:'4'|last|integer|style:'us'}}
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">4th</th>
+                            <td>
+                              > {{confirmed_quartile_list|last|integer|style:'us'}}
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div> <!-- Confirmed/100k Tab Pane-->
+                  <div class="tab-pane" id="DeathsQuartilesTable" role="tabpanel" aria-labelledby="DeathsQuartilesTable-tab">
+                    <table class="table" style="text-align:center;">
+                      <thead>
+                        <tr>
+                          <th scope="col" style="text-align:center;">
+                            Quartile
+                          </th>
+                          <th scope="col" style="text-align:center;">
+                            Deaths/100k
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">1st</th>
+                            <td>
+                              < {{deaths_quartile_list|slice:'2'|last|integer|style:'us'}}
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">2nd</th>
+                            <td>
+                              {{deaths_quartile_list|slice:'2'|last|integer|style:'us'}} to {{deaths_quartile_list|slice:'3'|last|integer|style:'us'}}
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">3rd</th>
+                            <td>
+                              {{deaths_quartile_list|slice:'3'|last|integer|style:'us'}} to {{deaths_quartile_list|slice:'4'|last|integer|style:'us'}}
+                            </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">4th</th>
+                            <td>
+                              > {{deaths_quartile_list|last|integer|style:'us'}}
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div> <!-- Deaths/100k Tab Pane-->
+                </div> <!-- TAB CONTENT -->
+              </div><!-- div col-6 -->
+            </div><!-- div row -->
+        </div><!-- div collapse -->
       </div>
-    </div>
 
+      <div class="row">
+        <div class="col-lg-4">
+          {{plot_mortality_gauge|safe}}
+        </div><!-- /.col-lg-4 -->
 
-</div>
+        <div class="col-lg-4">
+          <div id="Confirmed/100k-container">{{plot_confirmedbyhundreds_gauge|safe}}</div>
+        </div><!-- /.col-lg-4 -->
 
-<div>  <!-- START OF THE MONTH REPORT AREA -->
+        <div class="col-lg-4" style="border-right-style:none;">
+          <div id="Deaths/100k-container">{{plot_deathsbyhundreds_gauge|safe}}</div>
+        </div><!-- /.col-lg-4 -->
+
+      </div><!-- /.row -->
+    </div> <!-- container how to read the gauge charts -->
+  </div><!-- container marketing -->
+
+  <!-- END OF THE QUARTILES AREA -->
+
+  <!-- START OF THE RANK BULLETS AREA -->
+   <div class="container marketing">
+     <br><h3> Ranks </h3>
+     <hr class="featurette-divider">
+
+     <div class="row featurette">
+       <div class="col-lg-4" style="border-right-style:none;">
+         {{plot_deathsbyhundreds_rank|safe}}
+       </div><!-- /.col-lg-4 -->
+
+       <div class="col-lg-4" style="border-right-style:none;">
+         {{plot_deathsbyhundreds_rank|safe}}
+       </div><!-- /.col-lg-4 -->
+
+       <div class="col-lg-4" style="border-right-style:none;">
+         {{plot_deathsbyhundreds_rank|safe}}
+       </div><!-- /.col-lg-4 -->
+
+     </div><!-- /.row -->
+    </div><!-- container marketing -->
+
+    <!-- END OF THE RANK BULLETS AREA -->
+
+<div class="container marketing">  <!-- START OF THE MONTH REPORT AREA -->
   <br><h3> Month-by-Month</h3>
   {% get_value month_rows as confirmed_month %}
   {% get_value month_rows key='deaths_month' as deaths_month %}
@@ -362,7 +501,7 @@
 
 </div>  <!-- END OF THE MONTH REPORT AREA -->
 
-<div>  <!-- START OF THE WEEK REPORT AREA -->
+<div class="container marketing">  <!-- START OF THE WEEK REPORT AREA -->
   <br><h3> Week-by-week</h3>
   {% get_value week_rows key='confirmed_week' as confirmed_week %}
   {% get_value week_rows key='deaths_week' as deaths_week %}

@@ -72,7 +72,9 @@ def main():
             df_aux['mortality_quartile']=df_aux['mortality'].apply(lambda x:quart_func(x,quantile.values,'mortality'))
 
             model_coef = quantiles_model(quantile.to_dict())
-            df_aux['mortality_quartile_position']=df_aux['mortality'].apply(lambda x:quantiles_pos(x,model_coef))
+            x_values = [i[1] for i in model_coef]
+
+            df_aux['mortality_quartile_position']=df_aux['mortality'].apply(lambda x:quantiles_pos(x,model_coef,x_values))
 
             # Joining UN Data:
             df_aux['population'] = df_aux['Country/Region'].apply(lambda x:population(x))
@@ -83,6 +85,18 @@ def main():
                 df_aux[column+'_new_cases_by_100k'] = df_aux[column+'_new_cases']*0.1/df_aux['population']
                 df_aux[column+'_new_cases_by_100k_rank_world'] = df_aux.groupby('Date')[column+'_new_cases_by_100k'].rank(method='min',ascending=False)
 
+
+            # Defining quartile intervals for confirmed/100k and deaths/100k habitants:
+            columns = ['Confirmed_by_100k','Deaths_by_100k']
+            for item in columns:
+                quantile=df_aux[item].quantile(q=[0,0.1,0.5,0.9,1])
+                df_aux[item + '_quartile']=df_aux[item].apply(lambda x:quart_func(x,quantile.values,item))
+
+                end_of_scale = max(df_aux[item])
+                model_coef = quantiles_model(quantile.to_dict(),end_of_scale)
+                x_values = [i[1] for i in model_coef]
+
+                df_aux[item + '_quartile_position']=df_aux[item].apply(lambda x:quantiles_pos(x,model_coef,x_values))
 
             status_report = df_aux.copy()
 
@@ -121,6 +135,8 @@ def main():
                     country.confirmed_new_rank_region=int(info.Confirmed_new_cases_rank_in_region.values[0])
                     country.confirmed_new_rank_world=int(info.Confirmed_new_cases_rank_in_world.values[0])
                     country.confirmed_by_hundreds=float(info['Confirmed_by_100k'].values[0])
+                    country.confirmed_by_hundreds_quartile=info['Confirmed_by_100k_quartile'].values[0]
+                    country.confirmed_by_hundreds_quartile_position=float(info['Confirmed_by_100k_quartile_position'].values[0])
                     country.confirmed_by_hundreds_rank_region=int(info['Confirmed_by_100k_rank_region'].values[0])
                     country.confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0])
                     country.confirmed_new_by_hundreds=int(info['Confirmed_new_cases_by_100k'].values[0])
@@ -137,6 +153,8 @@ def main():
                     country.deaths_new_rank_region=int(info.Deaths_new_cases_rank_in_region.values[0])
                     country.deaths_new_rank_world=int(info.Deaths_new_cases_rank_in_world.values[0])
                     country.deaths_by_hundreds=float(info['Deaths_by_100k'].values[0])
+                    country.deaths_by_hundreds_quartile=info['Deaths_by_100k_quartile'].values[0]
+                    country.deaths_by_hundreds_quartile_position=float(info['Deaths_by_100k_quartile_position'].values[0])
                     country.deaths_by_hundreds_rank_region=int(info['Deaths_by_100k_rank_region'].values[0])
                     country.deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0])
                     country.deaths_new_by_hundreds=int(info['Deaths_new_cases_by_100k'].values[0])
@@ -214,6 +232,8 @@ def main():
                                                                    confirmed_new_rank_region=int(info.Confirmed_new_cases_rank_in_region.values[0]),
                                                                    confirmed_new_rank_world=int(info.Confirmed_new_cases_rank_in_world.values[0]),
                                                                    confirmed_by_hundreds=float(info['Confirmed_by_100k'].values[0]),
+                                                                   confirmed_by_hundreds_quartile=info['Confirmed_by_100k_quartile'].values[0],
+                                                                   confirmed_by_hundreds_quartile_position=float(info['Confirmed_by_100k_quartile_position'].values[0]),
                                                                    confirmed_by_hundreds_rank_region=int(info['Confirmed_by_100k_rank_region'].values[0]),
                                                                    confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0]),
                                                                    confirmed_new_by_hundreds=int(info['Confirmed_new_cases_by_100k'].values[0]),
@@ -230,6 +250,8 @@ def main():
                                                                    deaths_new_rank_region=int(info.Deaths_new_cases_rank_in_region.values[0]),
                                                                    deaths_new_rank_world=int(info.Deaths_new_cases_rank_in_world.values[0]),
                                                                    deaths_by_hundreds=float(info['Deaths_by_100k'].values[0]),
+                                                                   deaths_by_hundreds_quartile=info['Deaths_by_100k_quartile'].values[0],
+                                                                   deaths_by_hundreds_quartile_position=float(info['Deaths_by_100k_quartile_position'].values[0]),
                                                                    deaths_by_hundreds_rank_region=int(info['Deaths_by_100k_rank_region'].values[0]),
                                                                    deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0]),
                                                                    deaths_new_by_hundreds=int(info['Deaths_new_cases_by_100k'].values[0]),

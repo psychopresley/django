@@ -7,7 +7,7 @@ django.setup()
 import numpy as np
 from datetime import datetime, timedelta
 from report.models import ISOCodeData, UNData
-
+from collections import OrderedDict
 
 # Importing geoip2 and correlated modules:
 from geoip2.database import Reader
@@ -19,6 +19,9 @@ import plotly.graph_objs as go
 import plotly.express as px
 from plotly.offline import plot
 from plotly.subplots import make_subplots
+
+# Importing fusioncharts.py module:
+from . import fusioncharts as fsn
 
 
 def db_del(database,confirm_before=True):
@@ -64,21 +67,28 @@ def quart_func(x,q,case):
         return '4th (very high {})'.format(case.lower())
 
 # creating quartiles map function:
-def quantiles_pos(mortality, model_coef):
-    return ([mortality**4,mortality**3,mortality**2,mortality,1]*model_coef).item()
+def quantiles_pos(arg,model_coef,x_values):
+    for i in list(range(0,len(x_values)-1)):
+        if x_values[i] <= arg < x_values[i+1]:
+            line=model_coef[i]
+
+    return line[0]*(arg - line[1]) + line[2]
+
 
 # creating quartiles map function:
-def quantiles_model(quantiles):
-    regressors = []
-    y=[]
-    for k,v in quantiles.items():
-        regressors.append([v**4,v**3,v**2,v,1])
-        y.append([k])
+def quantiles_model(quantiles,end_of_scale=1):
+    y=list(quantiles.keys())
+    x=list(quantiles.values())
 
-    regressors = np.matrix(regressors)
-    model_coef = np.linalg.inv(regressors)*np.array(y)
+    model_coef=[]
+    for i in list(range(1,len(x))):
+        alpha = (y[i]-y[i-1])/(x[i]-x[i-1])
+        model_coef.append((alpha,x[i-1],y[i-1]))
+
+    model_coef.append((alpha,end_of_scale+1,1))
 
     return model_coef
+
 
 def population(x):
     exception_list = ['Cruise Ship','Taiwan']
@@ -253,3 +263,200 @@ def density_plot(x,y):
     )
 
     return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
+def quartiles_gauge(value,quartile,quartile_position,text='Indicator',suffix='%',precision=2):
+
+    max_range = value/quartile_position
+    if quartile[0] == '1':
+        number_color = 'green'
+        quartile_dict={'range': [0, 0.1*max_range], 'color': 'green'}
+    elif quartile[0] == '2':
+        number_color = 'blue'
+        quartile_dict={'range': [0.1*max_range, 0.5*max_range], 'color': 'blue'}
+    elif quartile[0] == '3':
+        number_color = 'yellow'
+        quartile_dict={'range': [0.5*max_range, 0.9*max_range], 'color': 'yellow'}
+    else:
+        number_color = 'red'
+        quartile_dict={'range': [0.9*max_range, max_range], 'color': 'red'}
+
+
+    # SPEEDOMETER:
+    fig = go.Figure(go.Indicator(
+    domain = {'row': 0, 'column': 0},
+    mode = "gauge+number",
+    value = value,
+    delta = {'reference':0},
+    title = {'text': text},
+    number = {'suffix':suffix,'valueformat':',.{}f'.format(precision)},
+    gauge = {
+            'axis': {'range': [None, max_range], 'tickwidth': 1, 'tickcolor': "darkblue", 'showticklabels': False,},
+            'bar': {'color': "black"},
+            'bgcolor': "white",
+            'borderwidth': 2,
+            'bordercolor': "purple",
+            'steps': [quartile_dict],}))
+
+    fig.add_trace(go.Indicator(
+        mode = "number+delta",
+        value = int(quartile[0]),
+        delta = {'reference':int(quartile[0]) - quartile_position,'valueformat':'.1%'},
+        number = {'font':{'color':number_color},'prefix':'Q'},
+        domain = {'row': 1, 'column': 0}))
+
+    fig.update_layout(
+    grid = {'rows': 2, 'columns': 1, 'pattern': "independent"},
+    template="seaborn",
+    plot_bgcolor='white',
+    )
+
+    return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
+def scatter_undata(xdata,ydata,labels):
+
+    fig = go.Figure()
+
+    # Add traces
+    fig.add_trace(go.Scatter(x=xdata, y=ydata,
+                        mode='markers',
+                        name='markers'))
+
+    fig.update_layout(
+    template="seaborn",
+    plot_bgcolor='white',
+    )
+
+    return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
+def rank_bullets(value,range=[0,100],text='Bullets',suffix='°'):
+
+    min_range = range[0]
+    max_range = range[1]
+
+    # BULLETS:
+    fig = go.Figure()
+
+    fig.add_trace(go.Indicator(
+        mode = "number+gauge+delta",
+        value = value,
+        number = {'suffix':suffix},
+        delta = {'reference': 0},
+        domain = {'x': [0.25, 1], 'y': [0.08, 0.25]},
+        title = {'text': text},
+        gauge = {
+            'shape': "bullet",
+            'axis': {'range': [min_range, max_range]},
+            'threshold': {
+                'line': {'color': "black", 'width': 2},
+                'thickness': 0.75,
+                'value': value},
+            'steps': [
+                {'range': [min_range, max_range/2], 'color': "gray"},
+                {'range': [max_range/2, max_range], 'color': "lightgray"}],
+            'bar': {'color': "black"}}))
+
+    fig.add_trace(go.Indicator(
+        mode = "number+gauge+delta",
+        value = value,
+        number = {'suffix':suffix},
+        delta = {'reference': 0},
+        domain = {'x': [0.25, 1], 'y': [0.4, 0.6]},
+        title = {'text': text},
+        gauge = {
+            'shape': "bullet",
+            'axis': {'range': [min_range, max_range]},
+            'threshold': {
+                'line': {'color': "black", 'width': 2},
+                'thickness': 0.75,
+                'value': 170},
+            'steps': [
+                {'range': [min_range, max_range/2], 'color': "gray"},
+                {'range': [max_range/2, max_range], 'color': "lightgray"}],
+            'bar': {'color': "black"}}))
+
+    fig.update_layout(height = 400 , margin = {'t':0, 'b':0, 'l':0}, template="seaborn", plot_bgcolor='white')
+
+    return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
+def fusion_gauge(value, quartile, id):
+
+    if quartile[0] == '1':
+        number_color = 'green'
+        quartile_dict={'range': [0, 10], 'color': 'green'}
+        # quartile_dict={'range': [0, 0.4], 'color': 'green'}
+        suffix='st'
+    elif quartile[0] == '2':
+        number_color = 'blue'
+        quartile_dict={'range': [10, 50], 'color': 'blue'}
+        # quartile_dict={'range': [0.4, 2], 'color': 'blue'}
+        suffix='nd'
+    elif quartile[0] == '3':
+        number_color = 'yellow'
+        quartile_dict={'range': [50, 90], 'color': 'yellow'}
+        # quartile_dict={'range': [2, 3.6], 'color': 'yellow'}
+        suffix='rd'
+    else:
+        number_color = 'red'
+        quartile_dict={'range': [90, 100], 'color': 'red'}
+        # quartile_dict={'range': [3.6, 4], 'color': 'red'}
+        suffix='th'
+
+    #Load dial indicator values from simple string array# e.g.dialValues = ["52", "10", "81", "95"]
+    dialValues = ["{}".format(value)]
+
+    # widget data is passed to the `dataSource` parameter, as dict, in the form of key-value pairs.
+    dataSource = OrderedDict()
+
+    # The `widgetConfig` dict contains key-value pairs of data for widget attribute
+    widgetConfig = OrderedDict()
+    widgetConfig["caption"] = id
+    widgetConfig["lowerLimit"] = "0"
+    widgetConfig["upperLimit"] = "4"
+    widgetConfig["showValue"] = "1"
+    # widgetConfig["numberSuffix"] = "%"
+    widgetConfig["theme"] = "fusion"
+    widgetConfig["showToolTip"] = "0"
+
+    # The `colorData` dict contains key-value pairs of data for ColorRange of dial
+    colorRangeData = OrderedDict()
+    colorRangeData["color"] = [{
+            "minValue": "0",
+            "maxValue": "1",
+            "code": "#198754"
+        },
+        {
+            "minValue": "1",
+            "maxValue": "5",
+            "code": "#0d6efd"
+        },
+        {
+            "minValue": "50",
+            "maxValue": "90",
+            "code": "#ffc107"
+        },
+        {
+            "minValue": "90",
+            "maxValue": "100",
+            "code": "#dc3545"
+        }
+
+    ]
+
+    # Convert the data in the `dialData` array into a format that can be consumed by FusionCharts.
+    dialData = OrderedDict()
+    dialData["dial"] = []
+
+    dataSource["chart"] = widgetConfig
+    dataSource["colorRange"] = colorRangeData
+    dataSource["dials"] = dialData
+
+    # Iterate through the data in `dialValues` and insert into the `dialData["dial"]` list.
+    # The data for the `dial`should be in an array wherein each element of the
+    # array is a JSON object# having the `value` as keys.
+    for i in range(len(dialValues)):
+        dialData["dial"].append({
+        "value": dialValues[i]
+    })
+    # Create an object for the angular-gauge using the FusionCharts class constructor
+    # The widget data is passed to the `dataSource` parameter.
+    return fsn.FusionCharts("angulargauge", "{}".format(id), "100%", "200", "{}-container".format(id), "json", dataSource).render()

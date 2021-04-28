@@ -19,13 +19,16 @@ from socket import gethostbyname, getfqdn
 import requests
 
 # Include the `fusioncharts.py` file that contains functions to embed the charts.
+# Fusion charts tutorial: https://www.fusioncharts.com/django-charts?framework=django
 from . import fusioncharts as fsn
+
 
 # Importing python native modules:
 import os
 import numpy as np
 from calendar import week
 from datetime import datetime, timedelta
+from collections import OrderedDict
 
 
 # creating the reader to use in getIP(reader) function:
@@ -121,6 +124,9 @@ class StatisticsView(TemplateView):
             context[item] = total
             context[item+'_new'] = total_new
 
+
+        # Creating the Top10 data:
+
         top_ten_confirmed = StatusReport.objects.all().order_by('-confirmed')[:10]
         top_ten_new_confirmed = StatusReport.objects.all().order_by('confirmed_new_rank_world')[:10]
         top_ten_confirmed_by_hundreds = StatusReport.objects.all().order_by('-confirmed_by_hundreds')[:10]
@@ -171,6 +177,33 @@ class StatisticsView(TemplateView):
         for obj in top_ten_deaths_new_by_hundreds:
             dict_deaths_new_by_hundreds={**dict_deaths_new_by_hundreds,**{obj.__str__():obj.__dict__['deaths_new_by_hundreds']}}
 
+
+        # CREATING THE UN DATA VARIABLES FOR PLOT:
+
+        exception_list = ['Cruise Ship','Taiwan']
+        countries = StatusReport.objects.all()
+        pct_plus_sixty = []
+        density=[]
+        deaths_by_hundreds = []
+        labels = []
+
+        for obj in countries:
+            if obj.country.name in exception_list:
+                pass
+            else:
+                labels.append(obj.country.name)
+                deaths_by_hundreds.append(obj.deaths_by_hundreds)
+
+                x = ISOCodeData.objects.get(country_name=obj.country.name)
+                x = UNData.objects.get(country=x.un_name)
+                pct_plus_sixty.append(x.pct_plus_sixty)
+                density.append(x.density)
+
+        scatter_deaths_over_sixty = scatter_undata(pct_plus_sixty,deaths_by_hundreds,labels)
+        scatter_deaths_density = scatter_undata(deaths_by_hundreds,density,labels)
+
+        # PASSING ALL DATA TO CONTEXT:
+
         context['world_population'] = UNData.objects.get(country__startswith='Total').population
         context['total_confirmed_top_ten'] = total_confirmed_top_ten
         context['total_new_confirmed_top_ten'] = total_new_confirmed_top_ten
@@ -184,6 +217,9 @@ class StatisticsView(TemplateView):
         context['top_ten_deaths_by_hundreds'] = dict_deaths_by_hundreds
         context['top_ten_confirmed_new_by_hundreds'] = dict_confirmed_new_by_hundreds
         context['top_ten_deaths_new_by_hundreds'] = dict_deaths_new_by_hundreds
+        context['top_ten_deaths_new_by_hundreds'] = dict_deaths_new_by_hundreds
+        context['scatter_deaths_over_sixty'] = scatter_deaths_over_sixty
+        context['scatter_deaths_density'] = scatter_deaths_density
 
         return context
 
@@ -222,21 +258,42 @@ def countriespage(request):
         if form.is_valid():
             selected_country = form.cleaned_data['country'];
 
+    for item in ['confirmed','deaths']:
+        total=0
+        world_dict={}
+        for obj in StatusReport.objects.all():
+            total += obj.__dict__[item]
+
+        world_dict = {**world_dict,**{item+'_world':total}}
+
     status = StatusReport.objects.get(country=selected_country)
     month_report = MonthReport.objects.filter(country=selected_country).order_by('-month')
     week_report = WeekReport.objects.filter(country=selected_country).order_by('-week')
+    country_info = UNData.objects.get(country=selected_country).__dict__
 
     # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
-    quartile_list=[]
+    mortality_quartile_list=[]
+    confirmed_quartile_list=[]
+    deaths_quartile_list=[]
+
     for quartile in ['1st','2nd','3rd','4th']:
-        lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
-        quartile_list.append(lower_bound)
+        mortality_lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
+        confirmed_lower_bound = min(StatusReport.objects.filter(confirmed_by_hundreds_quartile__startswith=quartile).values_list('confirmed_by_hundreds'))[0]
+        deaths_lower_bound = min(StatusReport.objects.filter(deaths_by_hundreds_quartile__startswith=quartile).values_list('deaths_by_hundreds'))[0]
+
+        mortality_quartile_list.append(mortality_lower_bound)
+        confirmed_quartile_list.append(confirmed_lower_bound)
+        deaths_quartile_list.append(deaths_lower_bound)
 
 
     status_dict = {'country_coord':status.country._coordinates_(),
                    'report_date':status.date,
                    'db_update':status.db_update,
-                   'quartile_list':quartile_list,
+                   'mortality_quartile_list':mortality_quartile_list,
+                   'confirmed_quartile_list':confirmed_quartile_list,
+                   'deaths_quartile_list':deaths_quartile_list,
+                   **world_dict,
+                   **country_info,
                    **status.country.__dict__,
                   }
 
@@ -365,13 +422,46 @@ def countriespage(request):
     plot_histogram = density_plot(y_deaths_week[::-1],y_confirmed_week[::-1])
 
 
+    # 3 - FUSIONCHARTS ANGULAR GAUGE:
+    # plot_mortality_gauge = fusion_gauge(status.mortality_quartile_position*100,'Mortality')
+    plot_mortality_gauge = quartiles_gauge(status.mortality*100,
+                                           status.mortality_quartile,
+                                           status.mortality_quartile_position,
+                                           text='Mortality',)
+
+    plot_confirmedbyhundreds_gauge = quartiles_gauge(status.confirmed_by_hundreds,
+                                                     status.confirmed_by_hundreds_quartile,
+                                                     status.confirmed_by_hundreds_quartile_position,
+                                                     text='Confirmed/100k',
+                                                     suffix='',
+                                                     precision=0)
+
+    plot_deathsbyhundreds_gauge = quartiles_gauge(status.deaths_by_hundreds,
+                                                  status.deaths_by_hundreds_quartile,
+                                                  status.deaths_by_hundreds_quartile_position,
+                                                  text='Deaths/100k',
+                                                  suffix='',
+                                                  precision=0)
+
+    plot_deathsbyhundreds_rank = rank_bullets(status.deaths_by_hundreds_rank_world,
+                                              range=[0,100],
+                                              text='World')
+
+    plot_dict = {
+    'plot_month':plot_month,
+    'plot_week':plot_week,
+    'plot_heatmap_week':plot_heatmap_week,
+    'plot_histogram':plot_histogram,
+    'plot_mortality_gauge':plot_mortality_gauge,
+    'plot_confirmedbyhundreds_gauge':plot_confirmedbyhundreds_gauge,
+    'plot_deathsbyhundreds_gauge':plot_deathsbyhundreds_gauge,
+    'plot_deathsbyhundreds_rank':plot_deathsbyhundreds_rank,
+    }
+
     return render(request,'report/countries.html',
                   {'form':form,
                   'nav_countries':'navbar-item-active',
-                  'plot_month':plot_month,
-                  'plot_week':plot_week,
-                  'plot_heatmap_week':plot_heatmap_week,
-                  'plot_histogram':plot_histogram,
+                  **plot_dict,
                   **status_dict,
                   **month_dict,
                   **week_dict,})
