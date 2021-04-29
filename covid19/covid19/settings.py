@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'report',
     "bootstrap5",
+    "latexify",
 ]
 
 MIDDLEWARE = [

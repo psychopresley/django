@@ -1,6 +1,7 @@
 {% extends "report/base.html" %}
 {% block content %}
 {% load report_tagfilters %}
+{% load latexify %}
 
 
 <div class="display_page" id="statisticspage">
@@ -262,21 +263,39 @@
         </div>
       </div> <!-- SECOND COLUMN -->
     </div> <!-- END FEATURETTE -->
+    <br>
+
+    <h3>Correlation</h3>
+    <hr class="featurette-divider">
+
+    <div class="container marketing">
+      <div class="row">
+        <div class="col-6">
+          {{scatter_confirmed_over_sixty|safe}}<hr>
+          {{scatter_confirmed_density|safe}}
+        </div>
+        <div class="col-6">
+          {{scatter_deaths_over_sixty|safe}}<hr>
+          {{scatter_deaths_density|safe}}
+        </div>
+      </div>
+    </div>
 
     <hr class="featurette-divider">
 
-    <div class="container">
-      {{scatter_deaths_over_sixty|safe}}
-    </div><!-- div container -->
+    <div class="container marketing">
+      <div class="row">
+        <div class="col-6">
+          {{scatter_deaths_vs_confirmed|safe}}
+        </div>
+      </div>
+    </div>
 
     <hr class="featurette-divider">
-
-    <div class="container">
-      {{scatter_deaths_density|safe}}
-    </div><!-- div container -->
 
     <!-- /END THE FEATURETTES -->
 
   </div> <!-- div id -->
 
+{% include "latexify/scripts.html" %}
 {% endblock content %}

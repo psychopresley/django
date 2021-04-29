@@ -8,6 +8,8 @@ import numpy as np
 from datetime import datetime, timedelta
 from report.models import ISOCodeData, UNData
 from collections import OrderedDict
+from sklearn.linear_model import LinearRegression, TheilSenRegressor, RANSACRegressor, HuberRegressor
+from sklearn.metrics import mean_squared_error, r2_score
 
 # Importing geoip2 and correlated modules:
 from geoip2.database import Reader
@@ -312,19 +314,34 @@ def quartiles_gauge(value,quartile,quartile_position,text='Indicator',suffix='%'
 
     return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
 
-def scatter_undata(xdata,ydata,labels):
+def scatter_undata(xdata,ydata,labels,xtext='xaxis',ytext='yaxis',with_fit=False,fit_intercept=True):
 
     fig = go.Figure()
-
-    # Add traces
-    fig.add_trace(go.Scatter(x=xdata, y=ydata,
-                        mode='markers',
-                        name='markers'))
 
     fig.update_layout(
     template="seaborn",
     plot_bgcolor='white',
     )
+
+    fig.update_xaxes(title_text=xtext)
+    fig.update_yaxes(title_text=ytext)
+
+    # Add traces
+    fig.add_trace(go.Scatter(x=xdata, y=ydata,mode='markers',name='countries',hovertext=labels))
+
+    if with_fit:
+        # SCIKIT-LEARN LINEAR REGRESSION MODELS:
+
+        model = LinearRegression(fit_intercept=fit_intercept)
+        model.fit(xdata.reshape(-1,1), ydata)
+
+        y_pred = model.predict(xdata.reshape(-1, 1))
+
+        print(r2_score(ydata,y_pred))
+        # Add model traces
+        fig.add_trace(go.Scatter(x=xdata, y=y_pred,name='fit model'))
+    else:
+        pass
 
     return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
 

@@ -22,13 +22,15 @@ import requests
 # Fusion charts tutorial: https://www.fusioncharts.com/django-charts?framework=django
 from . import fusioncharts as fsn
 
-
 # Importing python native modules:
 import os
 import numpy as np
+import pandas as pd
 from calendar import week
 from datetime import datetime, timedelta
 from collections import OrderedDict
+from sklearn.linear_model import LinearRegression, TheilSenRegressor, RANSACRegressor, HuberRegressor
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 # creating the reader to use in getIP(reader) function:
@@ -47,6 +49,7 @@ else:
 
 reader = Reader(geoip_db)
 countries_in_db = [y.country.name for y in StatusReport.objects.all()]
+statistics_file = curr_dir + '/statistics/statistics.json'
 
 
 # Create your views here.
@@ -177,30 +180,85 @@ class StatisticsView(TemplateView):
         for obj in top_ten_deaths_new_by_hundreds:
             dict_deaths_new_by_hundreds={**dict_deaths_new_by_hundreds,**{obj.__str__():obj.__dict__['deaths_new_by_hundreds']}}
 
-
         # CREATING THE UN DATA VARIABLES FOR PLOT:
 
-        exception_list = ['Cruise Ship','Taiwan']
-        countries = StatusReport.objects.all()
-        pct_plus_sixty = []
-        density=[]
-        deaths_by_hundreds = []
-        labels = []
+        # 1 - Reading statistics table:
+        df = pd.read_json(statistics_file)
 
-        for obj in countries:
-            if obj.country.name in exception_list:
-                pass
-            else:
-                labels.append(obj.country.name)
-                deaths_by_hundreds.append(obj.deaths_by_hundreds)
+        # 2 - Retrieving plot variables:
 
-                x = ISOCodeData.objects.get(country_name=obj.country.name)
-                x = UNData.objects.get(country=x.un_name)
-                pct_plus_sixty.append(x.pct_plus_sixty)
-                density.append(x.density)
+        # 2.1 - populational density as independent variable:
 
-        scatter_deaths_over_sixty = scatter_undata(pct_plus_sixty,deaths_by_hundreds,labels)
-        scatter_deaths_density = scatter_undata(deaths_by_hundreds,density,labels)
+        # removing outliers for the populational density:
+        df_density = df[df['density_outlier']==0]
+
+        # 2.1.1 - confirmed/100k plot:
+        df_aux = df_density[df_density['confirmed/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['density'].values
+        ydata=df_aux['confirmed/100k'].values
+
+        scatter_confirmed_density = scatter_undata(xdata,ydata,labels,
+                                                   xtext='Populational density (hab/km²)',
+                                                   ytext='Confirmed/100k habitants',
+                                                   with_fit=True,
+                                                   fit_intercept=False)
+
+        # 2.1.2 - deaths/100k plot:
+        df_aux = df_density[df_density['deaths/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['density'].values
+        ydata=df_aux['deaths/100k'].values
+
+        scatter_deaths_density = scatter_undata(xdata,ydata,labels,
+                                                xtext='Populational density (hab/km²)',
+                                                ytext='Deaths/100k habitants',
+                                                with_fit=True,
+                                                fit_intercept=False)
+
+        # 2.2 - population over 60yrs as independent variable:
+
+        # 2.2.1 - confirmed/100k plot:
+        df_aux = df[df['confirmed/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['population +60'].values
+        ydata=df_aux['confirmed/100k'].values
+
+
+        # Scatter plot with linear regression model:
+        scatter_confirmed_over_sixty = scatter_undata(xdata,ydata,labels,
+                                                   xtext='% of population over 60 years',
+                                                   ytext='Confirmed / 100k habitants',
+                                                   with_fit=True)
+
+
+        # 2.2.2 - deaths/100k plot:
+        df_aux = df[df['deaths/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['population +60'].values
+        ydata=df_aux['deaths/100k'].values
+
+        scatter_deaths_over_sixty = scatter_undata(xdata,ydata,labels,
+                                                   xtext='% of population over 60 years',
+                                                   ytext='Deaths / 100k habitants',
+                                                   with_fit=True)
+
+        # 2.3 - Perfet correlation example: Confirmed/100k vs Deaths/100k:
+
+        df_aux = df[df['confirmed/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['confirmed/100k'].values
+        ydata=df_aux['deaths/100k'].values
+
+        scatter_deaths_vs_confirmed = scatter_undata(xdata,ydata,labels,
+                                                     xtext='Confirmed cases / 100k habitants',
+                                                     ytext='Deaths / 100k habitants',
+                                                     with_fit=True)
 
         # PASSING ALL DATA TO CONTEXT:
 
@@ -218,8 +276,11 @@ class StatisticsView(TemplateView):
         context['top_ten_confirmed_new_by_hundreds'] = dict_confirmed_new_by_hundreds
         context['top_ten_deaths_new_by_hundreds'] = dict_deaths_new_by_hundreds
         context['top_ten_deaths_new_by_hundreds'] = dict_deaths_new_by_hundreds
+        context['scatter_confirmed_over_sixty'] = scatter_confirmed_over_sixty
+        context['scatter_confirmed_density'] = scatter_confirmed_density
         context['scatter_deaths_over_sixty'] = scatter_deaths_over_sixty
         context['scatter_deaths_density'] = scatter_deaths_density
+        context['scatter_deaths_vs_confirmed'] = scatter_deaths_vs_confirmed
 
         return context
 
