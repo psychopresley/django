@@ -19,13 +19,18 @@ from socket import gethostbyname, getfqdn
 import requests
 
 # Include the `fusioncharts.py` file that contains functions to embed the charts.
+# Fusion charts tutorial: https://www.fusioncharts.com/django-charts?framework=django
 from . import fusioncharts as fsn
 
 # Importing python native modules:
 import os
 import numpy as np
+import pandas as pd
 from calendar import week
 from datetime import datetime, timedelta
+from collections import OrderedDict
+from sklearn.linear_model import LinearRegression, TheilSenRegressor, RANSACRegressor, HuberRegressor
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 # creating the reader to use in getIP(reader) function:
@@ -44,6 +49,7 @@ else:
 
 reader = Reader(geoip_db)
 countries_in_db = [y.country.name for y in StatusReport.objects.all()]
+statistics_file = curr_dir + '/statistics/statistics.json'
 
 
 # Create your views here.
@@ -121,15 +127,34 @@ class StatisticsView(TemplateView):
             context[item] = total
             context[item+'_new'] = total_new
 
+
+        # Creating the Top10 data:
+
         top_ten_confirmed = StatusReport.objects.all().order_by('-confirmed')[:10]
+        plot_confirmedbar = top_ten_bar(top_ten_confirmed,
+                                        'confirmed',
+                                        title='Total confirmed cases')
+
         top_ten_new_confirmed = StatusReport.objects.all().order_by('confirmed_new_rank_world')[:10]
+        plot_newconfirmedbar = top_ten_bar(top_ten_new_confirmed,
+                                           'confirmed_new',
+                                           title='Confirmed cases (Last 24h)')
+
         top_ten_confirmed_by_hundreds = StatusReport.objects.all().order_by('-confirmed_by_hundreds')[:10]
+        plot_confirmedbyhundredsbar = top_ten_bar(top_ten_confirmed_by_hundreds,
+                                                  'confirmed_by_hundreds',
+                                                  title='Confirmed cases / 100k habitants')
+
         top_ten_confirmed_new_by_hundreds = StatusReport.objects.all().order_by('-confirmed_new_by_hundreds')[:10]
+        plot_confirmednewbyhundredsbar = top_ten_bar(top_ten_confirmed_new_by_hundreds,
+                                                     'confirmed_new_by_hundreds',
+                                                     title='Confirmed cases (Last 24h) / 100k habitants')
 
         top_ten_deaths = StatusReport.objects.all().order_by('-deaths')[:10]
         top_ten_new_deaths = StatusReport.objects.all().order_by('deaths_new_rank_world')[:10]
         top_ten_deaths_by_hundreds = StatusReport.objects.all().order_by('-deaths_by_hundreds')[:10]
         top_ten_deaths_new_by_hundreds = StatusReport.objects.all().order_by('-deaths_new_by_hundreds')[:10]
+
 
         dict_confirmed={}
         total_confirmed_top_ten = 0
@@ -171,6 +196,115 @@ class StatisticsView(TemplateView):
         for obj in top_ten_deaths_new_by_hundreds:
             dict_deaths_new_by_hundreds={**dict_deaths_new_by_hundreds,**{obj.__str__():obj.__dict__['deaths_new_by_hundreds']}}
 
+        # CREATING THE UN DATA VARIABLES FOR PLOT:
+
+        # 1 - Reading statistics table:
+        df = pd.read_json(statistics_file)
+
+        # 2 - Retrieving plot variables:
+
+        # 2.1 - populational density as independent variable:
+
+        # removing outliers for the populational density:
+        df_density = df[df['density_outlier']==0]
+
+        # 2.1.1 - confirmed/100k plot:
+        df_aux = df_density[df_density['confirmed/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['density'].values
+        ydata=df_aux['confirmed/100k'].values
+
+        sct_1 = scatter_undata(xdata,ydata,labels,
+                               xtext='Population density (hab/km²)',
+                               ytext='Confirmed cases/100k habitants',
+                               with_fit=True,
+                               fit_intercept=False)
+
+        # 2.1.2 - deaths/100k plot:
+        df_aux = df_density[df_density['deaths/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['density'].values
+        ydata=df_aux['deaths/100k'].values
+
+        scatter_deaths_density = scatter_undata(xdata,ydata,labels,
+                                                xtext='Population density (hab/km²)',
+                                                ytext='Deaths/100k habitants',
+                                                with_fit=True,
+                                                fit_intercept=False)
+
+        # 2.1.3 - Mortality plot:
+        df_aux = df_density[df_density['mortality_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['density'].values
+        ydata=df_aux['mortality'].values
+
+        scatter_mortality_density = scatter_undata(xdata,ydata,labels,
+                                                   xtext='Population density (hab/km²)',
+                                                   ytext='Mortality',
+                                                   with_fit=True,
+                                                   fit_intercept=False)
+
+        # 2.2 - population over 60yrs as independent variable:
+
+        # 2.2.1 - confirmed/100k plot:
+        df_aux = df[df['confirmed/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['population +60'].values
+        ydata=df_aux['confirmed/100k'].values
+
+
+        # Scatter plot with linear regression model:
+        scatter_confirmed_over_sixty = scatter_undata(xdata,ydata,labels,
+                                                   xtext='% of population over 60 years',
+                                                   ytext='Confirmed cases/100k habitants',
+                                                   with_fit=True)
+
+
+        # 2.2.2 - deaths/100k plot:
+        df_aux = df[df['deaths/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['population +60'].values
+        ydata=df_aux['deaths/100k'].values
+        y2data=df_aux['mortality'].values
+
+        scatter_deaths_over_sixty = scatter_undata(xdata,ydata,labels,
+                                                   xtext='% of population over 60 years',
+                                                   ytext='Deaths/100k habitants',
+                                                   with_fit=True)
+
+        # 2.2.3 - Mortality plot:
+        df_aux = df[df['mortality_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['population +60'].values
+        ydata=df_aux['mortality'].values
+
+        scatter_mortality_over_sixty = scatter_undata(xdata,ydata,labels,
+                                                   xtext='% of population over 60 years',
+                                                   ytext='Mortality',
+                                                   with_fit=True)
+
+        # 2.3 - Perfet correlation example: Confirmed/100k vs Deaths/100k:
+
+        df_aux = df[df['confirmed/100k_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['confirmed/100k'].values
+        ydata=df_aux['deaths/100k'].values
+
+        scatter_deaths_vs_confirmed = scatter_undata(xdata,ydata,labels,
+                                                     xtext='Confirmed cases / 100k habitants',
+                                                     ytext='Deaths / 100k habitants',
+                                                     with_fit=True)
+
+
+        # PASSING ALL DATA TO CONTEXT:
+
         context['world_population'] = UNData.objects.get(country__startswith='Total').population
         context['total_confirmed_top_ten'] = total_confirmed_top_ten
         context['total_new_confirmed_top_ten'] = total_new_confirmed_top_ten
@@ -184,6 +318,18 @@ class StatisticsView(TemplateView):
         context['top_ten_deaths_by_hundreds'] = dict_deaths_by_hundreds
         context['top_ten_confirmed_new_by_hundreds'] = dict_confirmed_new_by_hundreds
         context['top_ten_deaths_new_by_hundreds'] = dict_deaths_new_by_hundreds
+        context['top_ten_deaths_new_by_hundreds'] = dict_deaths_new_by_hundreds
+        context['scatter_confirmed_over_sixty'] = scatter_confirmed_over_sixty
+        context['scatter_confirmed_density'] = sct_1
+        context['scatter_deaths_over_sixty'] = scatter_deaths_over_sixty
+        context['scatter_deaths_density'] = scatter_deaths_density
+        context['scatter_mortality_over_sixty'] = scatter_mortality_over_sixty
+        context['scatter_mortality_density'] = scatter_mortality_density
+        context['scatter_deaths_vs_confirmed'] = scatter_deaths_vs_confirmed
+        context['plot_confirmedbyhundredsbar'] = plot_confirmedbyhundredsbar
+        context['plot_confirmednewbyhundredsbar'] = plot_confirmednewbyhundredsbar
+        context['plot_newconfirmedbar'] = plot_newconfirmedbar
+        context['plot_confirmedbar'] = plot_confirmedbar
 
         return context
 
@@ -222,21 +368,46 @@ def countriespage(request):
         if form.is_valid():
             selected_country = form.cleaned_data['country'];
 
+    for item in ['confirmed','deaths']:
+        total=0
+        world_dict={}
+        for obj in StatusReport.objects.all():
+            total += obj.__dict__[item]
+
+        world_dict = {**world_dict,**{item+'_world':total}}
+
     status = StatusReport.objects.get(country=selected_country)
     month_report = MonthReport.objects.filter(country=selected_country).order_by('-month')
     week_report = WeekReport.objects.filter(country=selected_country).order_by('-week')
 
+    # RETRIEVING THE COUNTRY'S UN DATA:
+    x = ISOCodeData.objects.get(country_name=selected_country)
+    country_info = UNData.objects.get(country=x.un_name).__dict__
+    # country_info = UNData.objects.get(country=selected_country).__dict__
+
     # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
-    quartile_list=[]
+    mortality_quartile_list=[]
+    confirmed_quartile_list=[]
+    deaths_quartile_list=[]
+
     for quartile in ['1st','2nd','3rd','4th']:
-        lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
-        quartile_list.append(lower_bound)
+        mortality_lower_bound = min(StatusReport.objects.filter(mortality_quartile__startswith=quartile).values_list('mortality'))[0]
+        confirmed_lower_bound = min(StatusReport.objects.filter(confirmed_by_hundreds_quartile__startswith=quartile).values_list('confirmed_by_hundreds'))[0]
+        deaths_lower_bound = min(StatusReport.objects.filter(deaths_by_hundreds_quartile__startswith=quartile).values_list('deaths_by_hundreds'))[0]
+
+        mortality_quartile_list.append(mortality_lower_bound)
+        confirmed_quartile_list.append(confirmed_lower_bound)
+        deaths_quartile_list.append(deaths_lower_bound)
 
 
     status_dict = {'country_coord':status.country._coordinates_(),
                    'report_date':status.date,
                    'db_update':status.db_update,
-                   'quartile_list':quartile_list,
+                   'mortality_quartile_list':mortality_quartile_list,
+                   'confirmed_quartile_list':confirmed_quartile_list,
+                   'deaths_quartile_list':deaths_quartile_list,
+                   **world_dict,
+                   **country_info,
                    **status.country.__dict__,
                   }
 
@@ -365,13 +536,46 @@ def countriespage(request):
     plot_histogram = density_plot(y_deaths_week[::-1],y_confirmed_week[::-1])
 
 
+    # 3 - FUSIONCHARTS ANGULAR GAUGE:
+    # plot_mortality_gauge = fusion_gauge(status.mortality_quartile_position*100,'Mortality')
+    plot_mortality_gauge = quartiles_gauge(status.mortality*100,
+                                           status.mortality_quartile,
+                                           status.mortality_quartile_position,
+                                           text='Mortality',)
+
+    plot_confirmedbyhundreds_gauge = quartiles_gauge(status.confirmed_by_hundreds,
+                                                     status.confirmed_by_hundreds_quartile,
+                                                     status.confirmed_by_hundreds_quartile_position,
+                                                     text='Confirmed/100k',
+                                                     suffix='',
+                                                     precision=0)
+
+    plot_deathsbyhundreds_gauge = quartiles_gauge(status.deaths_by_hundreds,
+                                                  status.deaths_by_hundreds_quartile,
+                                                  status.deaths_by_hundreds_quartile_position,
+                                                  text='Deaths/100k',
+                                                  suffix='',
+                                                  precision=0)
+
+    plot_deathsbyhundreds_rank = rank_bullets(status.deaths_by_hundreds_rank_world,
+                                              range=[0,100],
+                                              text='World')
+
+    plot_dict = {
+    'plot_month':plot_month,
+    'plot_week':plot_week,
+    'plot_heatmap_week':plot_heatmap_week,
+    'plot_histogram':plot_histogram,
+    'plot_mortality_gauge':plot_mortality_gauge,
+    'plot_confirmedbyhundreds_gauge':plot_confirmedbyhundreds_gauge,
+    'plot_deathsbyhundreds_gauge':plot_deathsbyhundreds_gauge,
+    'plot_deathsbyhundreds_rank':plot_deathsbyhundreds_rank,
+    }
+
     return render(request,'report/countries.html',
                   {'form':form,
                   'nav_countries':'navbar-item-active',
-                  'plot_month':plot_month,
-                  'plot_week':plot_week,
-                  'plot_heatmap_week':plot_heatmap_week,
-                  'plot_histogram':plot_histogram,
+                  **plot_dict,
                   **status_dict,
                   **month_dict,
                   **week_dict,})

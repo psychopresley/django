@@ -1,6 +1,7 @@
 {% extends "report/base.html" %}
 {% block content %}
 {% load report_tagfilters %}
+{% load latexify %}
 
 
 <div class="display_page" id="statisticspage">
@@ -9,31 +10,49 @@
 
     <br>
     <div>  <!-- START OF THE TOP 10 COUNTRIES TABLE AREA -->
-      <h3>TOP 10 COUNTRIES</h3>
+      <h3>Top 10 countries by</h3>
       <hr class="featurette-divider">
 
+      <h4>I. Confirmed Cases</h4><br>
+
+      <div class="row">
+        <div class="col-6">
+          {{plot_confirmedbar|safe}}
+        </div>
+
+        <div class="col-6">
+          {{plot_newconfirmedbar|safe}}
+        </div>
+
+      </div> <!-- DIV ROW -->
+
+      <div class="row">
+        <div class="col-6">
+          {{plot_confirmedbyhundredsbar|safe}}
+        </div>
+
+        <div class="col-6">
+          {{plot_confirmednewbyhundredsbar|safe}}
+        </div>
+
+      </div> <!-- DIV ROW -->
+
     <div class="row featurette">
-      <div class="col-md-4">
+      <div class="col-md-5">
         <div class="container marketing" style="text-align:left;">
-          <div class="d-flex align-items-start">
-            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-              <button class="nav-link active" id="v-pills-confirmed-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed" type="button" role="tab" aria-controls="v-pills-confirmed" aria-selected="true">by total confirmed cases</button>
-              <button class="nav-link" id="v-pills-new-confirmed-tab" data-bs-toggle="pill" data-bs-target="#v-pills-new-confirmed" type="button" role="tab" aria-controls="v-pills-new-confirmed" aria-selected="false">by confirmed in the last 24h</button>
-              <button class="nav-link" id="v-pills-confirmed-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed-by-hundreds" type="button" role="tab" aria-controls="v-pills-confirmed-by-hundreds" aria-selected="false">by confirmed cases/100k hab.</button>
-              <button class="nav-link" id="v-pills-confirmed-new-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed-new-by-hundreds" type="button" role="tab" aria-controls="v-pills-confirmed-new-by-hundreds" aria-selected="false">by confirmed cases/100k hab. in the last 24h</button>
-              <button class="nav-link" id="v-pills-deaths-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths" type="button" role="tab" aria-controls="v-pills-deaths" aria-selected="true">by total deaths</button>
-              <button class="nav-link" id="v-pills-new-deaths-tab" data-bs-toggle="pill" data-bs-target="#v-pills-new-deaths" type="button" role="tab" aria-controls="v-pills-new-deaths" aria-selected="false">by deaths in the last 24h</button>
-              <button class="nav-link" id="v-pills-deaths-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths-by-hundreds" type="button" role="tab" aria-controls="v-pills-deaths-by-hundreds" aria-selected="false">by deaths/100k hab.</button>
-              <button class="nav-link" id="v-pills-deaths-new-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths-new-by-hundreds" type="button" role="tab" aria-controls="v-pills-deaths-new-by-hundreds" aria-selected="false">by deaths/100k hab. in the last 24h</button>
-            </div>
-            <style>
-              .nav-link {background-color:inherit;color:#8C356E;border:none;}
-              .nav-link::after {outline-color:inherit;}
-            </style>
+          <div class="list-group">
+            <button class="list-group-item list-group-item-action active" id="v-pills-confirmed-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed" type="button" role="tab" aria-controls="v-pills-confirmed" aria-selected="true">total confirmed cases</button>
+            <button class="list-group-item list-group-item-action" id="v-pills-new-confirmed-tab" data-bs-toggle="pill" data-bs-target="#v-pills-new-confirmed" type="button" role="tab" aria-controls="v-pills-new-confirmed" aria-selected="false">confirmed in the last 24h</button>
+            <button class="list-group-item list-group-item-action" id="v-pills-confirmed-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed-by-hundreds" type="button" role="tab" aria-controls="v-pills-confirmed-by-hundreds" aria-selected="false">confirmed cases/100k hab.</button>
+            <button class="list-group-item list-group-item-action" id="v-pills-confirmed-new-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-confirmed-new-by-hundreds" type="button" role="tab" aria-controls="v-pills-confirmed-new-by-hundreds" aria-selected="false">confirmed cases/100k hab. in the last 24h</button>
+            <button class="list-group-item list-group-item-action" id="v-pills-deaths-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths" type="button" role="tab" aria-controls="v-pills-deaths" aria-selected="true">total deaths</button>
+            <button class="list-group-item list-group-item-action" id="v-pills-new-deaths-tab" data-bs-toggle="pill" data-bs-target="#v-pills-new-deaths" type="button" role="tab" aria-controls="v-pills-new-deaths" aria-selected="false">deaths in the last 24h</button>
+            <button class="list-group-item list-group-item-action" id="v-pills-deaths-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths-by-hundreds" type="button" role="tab" aria-controls="v-pills-deaths-by-hundreds" aria-selected="false">deaths/100k hab.</button>
+            <button class="list-group-item list-group-item-action" id="v-pills-deaths-new-by-hundreds-tab" data-bs-toggle="pill" data-bs-target="#v-pills-deaths-new-by-hundreds" type="button" role="tab" aria-controls="v-pills-deaths-new-by-hundreds" aria-selected="false">deaths/100k hab. in the last 24h</button>
           </div>
         </div> <!-- End Container marketing -->
       </div> <!-- end div col-5 -->
-      <div class="col-md-8">
+      <div class="col-md-7">
         <div class="tab-content" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="v-pills-confirmed" role="tabpanel" aria-labelledby="v-pills-confirmed-tab">
             <table class="table" style="text-align:center;">
@@ -262,6 +281,79 @@
         </div>
       </div> <!-- SECOND COLUMN -->
     </div> <!-- END FEATURETTE -->
+    <br>
+
+    <h3>Correlation</h3>
+    <hr class="featurette-divider">
+
+    <div class="container marketing">
+      <div class="row">
+        <div class="col-6">
+          <p>
+            Correlation is a useful statistical parameter that allows us to determine
+            the influence of a certain variable in the value of the target measure. In
+            our case we can check if or how much the number of confirmed and death
+            cases in the countries is influenced by social indices.
+          </p>
+
+          <p>
+            As an example, let's begin with a simple analysis. It's natural to assume that
+            the higher the number of total confirmed cases of a country is the higher is the death tolls,
+            so let's check! For a fair comparison we scale down all numbers to 100,000 habitants so we
+            can compare large and small countries. In the plot on the right each point represents a country,
+            placed according to its data. It is clear that both variables are correlated due to the
+            patterns in the distribution of the points. Still, there's a high variability in the dataset,
+            indicating that  they're not strictly correlated. Of course the number of death cases is influenced
+            not only by the total cases but also to political measures, level of isolation and collapse of the
+            health system.
+          </p>
+
+          <p>
+            The Pearson's number (R²) is used to evaluate the method, with a maximum value of 1 indicating
+            total correlation and 0 indicating no correlation at all. It also can be negative but in this case
+            the model is unfit to describe the correlation. For the plot on the right, R² = {{scatter_deaths_vs_confirmed.r2|floatformat:3|safe}}
+            and it can be interpreted as a significant correlation. Also notice that if we take the model fit
+            linear coefficient, {{scatter_deaths_vs_confirmed.coef|floatformat:4|safe}}, we find the mortality rate
+            in the best fit model. If we wantd to find out what is the mortality of a certain country based on its
+            confirmed cases that would be our best guess. In a perfect fit model it would be equal to the average of
+            the mortality rates.
+
+          </p>
+
+        </div>
+        <div class="col-6" style="text-align:center">
+          {{scatter_deaths_vs_confirmed.plot_obj|safe}}
+          <span style="color:red;font-weight:bold;">R² = {{scatter_deaths_vs_confirmed.r2|floatformat:3|safe}}</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+
+    <div class="container marketing">
+      <div class="row">
+        <div class="col-4" style="text-align:center">
+          {{scatter_confirmed_over_sixty.plot_obj|safe}}
+          <span style="color:red;font-weight:bold;">R² = {{scatter_confirmed_over_sixty.r2|floatformat:3|safe}}</span>
+          <hr>
+          {{scatter_confirmed_density.plot_obj|safe}}
+          <span style="color:red;font-weight:bold;">R² = {{scatter_confirmed_density.r2|floatformat:3|safe}}</span>
+        </div>
+        <div class="col-4" style="text-align:center">
+          {{scatter_deaths_over_sixty.plot_obj|safe}}
+          <span style="color:red;font-weight:bold;">R² = {{scatter_deaths_over_sixty.r2|floatformat:3|safe}}</span><hr>
+          {{scatter_deaths_density.plot_obj|safe}}
+          <span style="color:red;font-weight:bold;">R² = {{scatter_deaths_density.r2|floatformat:3|safe}}</span>
+        </div>
+        <div class="col-4" style="text-align:center">
+          {{scatter_mortality_over_sixty.plot_obj|safe}}
+          <span style="color:red;font-weight:bold;">R² = {{scatter_mortality_over_sixty.r2|floatformat:3|safe}}</span>
+          {{scatter_mortality_density.plot_obj|safe}}
+          <span style="color:red;font-weight:bold;">R² = {{scatter_mortality_density.r2|floatformat:3|safe}}</span>
+        </div>
+      </div>
+    </div>
 
     <hr class="featurette-divider">
 
@@ -269,4 +361,5 @@
 
   </div> <!-- div id -->
 
+{% include "latexify/scripts.html" %}
 {% endblock content %}
