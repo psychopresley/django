@@ -131,14 +131,30 @@ class StatisticsView(TemplateView):
         # Creating the Top10 data:
 
         top_ten_confirmed = StatusReport.objects.all().order_by('-confirmed')[:10]
+        plot_confirmedbar = top_ten_bar(top_ten_confirmed,
+                                        'confirmed',
+                                        title='Total confirmed cases')
+
         top_ten_new_confirmed = StatusReport.objects.all().order_by('confirmed_new_rank_world')[:10]
+        plot_newconfirmedbar = top_ten_bar(top_ten_new_confirmed,
+                                           'confirmed_new',
+                                           title='Confirmed cases (Last 24h)')
+
         top_ten_confirmed_by_hundreds = StatusReport.objects.all().order_by('-confirmed_by_hundreds')[:10]
+        plot_confirmedbyhundredsbar = top_ten_bar(top_ten_confirmed_by_hundreds,
+                                                  'confirmed_by_hundreds',
+                                                  title='Confirmed cases / 100k habitants')
+
         top_ten_confirmed_new_by_hundreds = StatusReport.objects.all().order_by('-confirmed_new_by_hundreds')[:10]
+        plot_confirmednewbyhundredsbar = top_ten_bar(top_ten_confirmed_new_by_hundreds,
+                                                     'confirmed_new_by_hundreds',
+                                                     title='Confirmed cases (Last 24h) / 100k habitants')
 
         top_ten_deaths = StatusReport.objects.all().order_by('-deaths')[:10]
         top_ten_new_deaths = StatusReport.objects.all().order_by('deaths_new_rank_world')[:10]
         top_ten_deaths_by_hundreds = StatusReport.objects.all().order_by('-deaths_by_hundreds')[:10]
         top_ten_deaths_new_by_hundreds = StatusReport.objects.all().order_by('-deaths_new_by_hundreds')[:10]
+
 
         dict_confirmed={}
         total_confirmed_top_ten = 0
@@ -199,11 +215,11 @@ class StatisticsView(TemplateView):
         xdata=df_aux['density'].values
         ydata=df_aux['confirmed/100k'].values
 
-        scatter_confirmed_density = scatter_undata(xdata,ydata,labels,
-                                                   xtext='Populational density (hab/km²)',
-                                                   ytext='Confirmed/100k habitants',
-                                                   with_fit=True,
-                                                   fit_intercept=False)
+        sct_1 = scatter_undata(xdata,ydata,labels,
+                               xtext='Population density (hab/km²)',
+                               ytext='Confirmed cases/100k habitants',
+                               with_fit=True,
+                               fit_intercept=False)
 
         # 2.1.2 - deaths/100k plot:
         df_aux = df_density[df_density['deaths/100k_outlier']==0]
@@ -213,10 +229,23 @@ class StatisticsView(TemplateView):
         ydata=df_aux['deaths/100k'].values
 
         scatter_deaths_density = scatter_undata(xdata,ydata,labels,
-                                                xtext='Populational density (hab/km²)',
+                                                xtext='Population density (hab/km²)',
                                                 ytext='Deaths/100k habitants',
                                                 with_fit=True,
                                                 fit_intercept=False)
+
+        # 2.1.3 - Mortality plot:
+        df_aux = df_density[df_density['mortality_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['density'].values
+        ydata=df_aux['mortality'].values
+
+        scatter_mortality_density = scatter_undata(xdata,ydata,labels,
+                                                   xtext='Population density (hab/km²)',
+                                                   ytext='Mortality',
+                                                   with_fit=True,
+                                                   fit_intercept=False)
 
         # 2.2 - population over 60yrs as independent variable:
 
@@ -231,7 +260,7 @@ class StatisticsView(TemplateView):
         # Scatter plot with linear regression model:
         scatter_confirmed_over_sixty = scatter_undata(xdata,ydata,labels,
                                                    xtext='% of population over 60 years',
-                                                   ytext='Confirmed / 100k habitants',
+                                                   ytext='Confirmed cases/100k habitants',
                                                    with_fit=True)
 
 
@@ -241,10 +270,23 @@ class StatisticsView(TemplateView):
         labels = df_aux['country']
         xdata=df_aux['population +60'].values
         ydata=df_aux['deaths/100k'].values
+        y2data=df_aux['mortality'].values
 
         scatter_deaths_over_sixty = scatter_undata(xdata,ydata,labels,
                                                    xtext='% of population over 60 years',
-                                                   ytext='Deaths / 100k habitants',
+                                                   ytext='Deaths/100k habitants',
+                                                   with_fit=True)
+
+        # 2.2.3 - Mortality plot:
+        df_aux = df[df['mortality_outlier']==0]
+
+        labels = df_aux['country']
+        xdata=df_aux['population +60'].values
+        ydata=df_aux['mortality'].values
+
+        scatter_mortality_over_sixty = scatter_undata(xdata,ydata,labels,
+                                                   xtext='% of population over 60 years',
+                                                   ytext='Mortality',
                                                    with_fit=True)
 
         # 2.3 - Perfet correlation example: Confirmed/100k vs Deaths/100k:
@@ -259,6 +301,7 @@ class StatisticsView(TemplateView):
                                                      xtext='Confirmed cases / 100k habitants',
                                                      ytext='Deaths / 100k habitants',
                                                      with_fit=True)
+
 
         # PASSING ALL DATA TO CONTEXT:
 
@@ -277,10 +320,16 @@ class StatisticsView(TemplateView):
         context['top_ten_deaths_new_by_hundreds'] = dict_deaths_new_by_hundreds
         context['top_ten_deaths_new_by_hundreds'] = dict_deaths_new_by_hundreds
         context['scatter_confirmed_over_sixty'] = scatter_confirmed_over_sixty
-        context['scatter_confirmed_density'] = scatter_confirmed_density
+        context['scatter_confirmed_density'] = sct_1
         context['scatter_deaths_over_sixty'] = scatter_deaths_over_sixty
         context['scatter_deaths_density'] = scatter_deaths_density
+        context['scatter_mortality_over_sixty'] = scatter_mortality_over_sixty
+        context['scatter_mortality_density'] = scatter_mortality_density
         context['scatter_deaths_vs_confirmed'] = scatter_deaths_vs_confirmed
+        context['plot_confirmedbyhundredsbar'] = plot_confirmedbyhundredsbar
+        context['plot_confirmednewbyhundredsbar'] = plot_confirmednewbyhundredsbar
+        context['plot_newconfirmedbar'] = plot_newconfirmedbar
+        context['plot_confirmedbar'] = plot_confirmedbar
 
         return context
 
@@ -330,7 +379,11 @@ def countriespage(request):
     status = StatusReport.objects.get(country=selected_country)
     month_report = MonthReport.objects.filter(country=selected_country).order_by('-month')
     week_report = WeekReport.objects.filter(country=selected_country).order_by('-week')
-    country_info = UNData.objects.get(country=selected_country).__dict__
+
+    # RETRIEVING THE COUNTRY'S UN DATA:
+    x = ISOCodeData.objects.get(country_name=selected_country)
+    country_info = UNData.objects.get(country=x.un_name).__dict__
+    # country_info = UNData.objects.get(country=selected_country).__dict__
 
     # PASSING STATUSREPORT MODEL VARIABLES AS TEMPLATE TAGS
     mortality_quartile_list=[]

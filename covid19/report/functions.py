@@ -314,6 +314,33 @@ def quartiles_gauge(value,quartile,quartile_position,text='Indicator',suffix='%'
 
     return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
 
+def top_ten_bar(database,column,title='My bar chart'):
+
+    xdata=[]
+    ydata=[]
+
+    for obj in database:
+        xdata.append(obj.__dict__[column])
+        ydata.append(obj.__str__())
+
+    fig = go.Figure()
+
+    fig.update_layout(
+    template="seaborn",
+    plot_bgcolor='white',
+    title = {'text':title,'font':{'family':'Quicksand','size':24,}},
+    )
+
+    # Add traces
+    fig.add_trace(go.Bar(x=xdata[::-1],
+                         y=ydata[::-1],
+                         text=xdata[::-1],
+                         textposition='auto',
+                         marker={'color':xdata[::-1],'colorscale':'Bluered'},
+                         orientation='h'))
+
+    return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
 def scatter_undata(xdata,ydata,labels,xtext='xaxis',ytext='yaxis',with_fit=False,fit_intercept=True):
 
     fig = go.Figure()
@@ -329,21 +356,31 @@ def scatter_undata(xdata,ydata,labels,xtext='xaxis',ytext='yaxis',with_fit=False
     # Add traces
     fig.add_trace(go.Scatter(x=xdata, y=ydata,mode='markers',name='countries',hovertext=labels))
 
+    fit_parameters={}
     if with_fit:
         # SCIKIT-LEARN LINEAR REGRESSION MODELS:
 
         model = LinearRegression(fit_intercept=fit_intercept)
         model.fit(xdata.reshape(-1,1), ydata)
 
-        y_pred = model.predict(xdata.reshape(-1, 1))
+        ypred = model.predict(xdata.reshape(-1, 1))
 
-        print(r2_score(ydata,y_pred))
+        fit_parameters = {'coef':model.coef_,
+                          'intercept': model.intercept_,
+                          'r2':r2_score(ydata,ypred),
+                          }
+
         # Add model traces
-        fig.add_trace(go.Scatter(x=xdata, y=y_pred,name='fit model'))
+        fig.add_trace(go.Scatter(x=xdata, y=ypred,name='fit model'))
     else:
         pass
 
-    return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+    plot_obj = plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+    plot_dict = {**fit_parameters,
+                 'plot_obj':plot_obj,
+                 }
+
+    return plot_dict
 
 def rank_bullets(value,range=[0,100],text='Bullets',suffix='°'):
 
