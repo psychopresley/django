@@ -201,15 +201,31 @@ class WeekReport(models.Model):
 
     def __str__(self):
         return self.country.name
-#
-#
-# class DateReport(models.Model):
-#     country = models.ManyToManyField(Country)
-#     date = models.DateField()
-#     confirmed = models.IntegerField()
-#     deaths = models.IntegerField()
-#     recovered = models.IntegerField(default=0)
-#     active = models.IntegerField(default=0)
-#
-#     def __str__(self):
-#         return '%s - %s' % (self.country, str(self.date))
+
+
+class DailyReport(models.Model):
+    country = models.ForeignKey(Country,on_delete=models.CASCADE,default='undefined')
+    date = models.DateField(default=datetime.date.today)
+    confirmed = models.IntegerField(default=0)
+    confirmed_new = models.IntegerField(default=0)
+    confirmed_new_short_avg = models.IntegerField(default=0)
+    confirmed_new_medium_avg = models.IntegerField(default=0)
+    confirmed_new_long_avg = models.IntegerField(default=0)
+    confirmed_by_hundreds = models.IntegerField(default=0)
+    confirmed_new_by_hundreds = models.IntegerField(default=0)
+    deaths = models.IntegerField(default=0)
+    deaths_new = models.IntegerField(default=0)
+    deaths_new_short_avg = models.IntegerField(default=0)
+    deaths_new_medium_avg = models.IntegerField(default=0)
+    deaths_new_long_avg = models.IntegerField(default=0)
+    deaths_by_hundreds = models.IntegerField(default=0)
+    deaths_new_by_hundreds = models.IntegerField(default=0)
+    active = models.IntegerField(default=0)
+    active_new = models.IntegerField()
+    active_by_hundreds = models.IntegerField(default=1)
+    active_pct = models.FloatField(default=0)
+    mortality = models.FloatField(default=0)
+
+
+    def __str__(self):
+        return '{}: {}'.format(self.country.name,self.date)

@@ -226,7 +226,21 @@ class WeekReportAdmin(admin.ModelAdmin):
     region.short_description = 'region'
 
     list_display = ['__str__','region','week',]
-    # list_filter =[MonthListFilter,YearListFilter,]
+    search_fields = ['country__name','country__region']
+
+
+@admin.register(DailyReport)
+class DailyReportAdmin(admin.ModelAdmin):
+    ordering = ['-date','country']   # ordering = ['-country'] for descending order
+
+    def region(self, obj):
+        return obj.country.region
+
+    fields = ('country', 'date', 'confirmed_new', 'confirmed', 'deaths_new', 'deaths')
+
+    region.short_description = 'region'
+
+    list_display = ['__str__','region','date',]
     search_fields = ['country__name','country__region']
 
 
