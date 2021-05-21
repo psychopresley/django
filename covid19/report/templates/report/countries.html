@@ -213,204 +213,143 @@
     ================================================== -->
     <!-- Wrap the rest of the page in another container to center all the content. -->
 
-   <!-- START OF THE QUARTILES AREA -->
-    <div class="container marketing">
-      <br><h3> Quartiles</h3>
+    <div class="container marketing"> <!-- START OF THE DAILY REPORT AREA -->
+      <br><h3> Daily cases</h3>
+
       <hr class="featurette-divider">
 
-      <div class="container" style="padding:0;">
-        <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#HowToGaugeCharts" aria-expanded="false" aria-controls="HowToGaugeCharts">How to read the gauge charts</a></p>
-        <div class="collapse" id="HowToGaugeCharts">
-          <div class="card card-body" style="border:none;">
-            <div class="row">
-              <div class="col-7">
-                <p>Quartiles are a statistical tool that help us visualize how a certain parameter of a member in a dataset
-                places itself when compared to the other members of the same set. In this case, we analyse how high is the
-                mortality rate of the selected country in comparison with the mortalities of the other countries.</p>
-
-                <p>As an example, the first quartile is defined by the 10% countries with the lowest death rates and the 4th quartile is defined
-                by the 10% countries with the highest rates. In the betweens you'll find the other countries.</p>
-              </div>
-              <div class="col-5">
-                <ul class="nav nav-tabs">
-                  <li class="nav-item">
-                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#MortalityQuartilesTable" type="button" role="tab" aria-controls="MortalityQuartilesTable" aria-selected="true">Mortality</button>
-                  </li>
-                  <li class="nav-item">
-                    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#ConfirmedQuartilesTable" type="button" role="tab" aria-controls="ConfirmedQuartilesTable" aria-selected="false">Confirmed/100k</button>
-                  </li>
-                  <li class="nav-item">
-                    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#DeathsQuartilesTable" type="button" role="tab" aria-controls="DeathsQuartilesTable" aria-selected="false">Deaths/100k</button>
-                  </li>
-                </ul>
-                <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active" id="MortalityQuartilesTable" role="tabpanel" aria-labelledby="MortalityQuartilesTable-tab">
-                    <table class="table" style="text-align:center;">
-                      <thead>
-                        <tr>
-                          <th scope="col" style="text-align:center;">
-                            Quartile
-                          </th>
-                          <th scope="col" style="text-align:center;">
-                            Mortality
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">1st</th>
-                            <td>
-                              < {{mortality_quartile_list|slice:'2'|last|pct}}
-                            </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">2nd</th>
-                            <td>
-                              {{mortality_quartile_list|slice:'2'|last|pct}} to {{mortality_quartile_list|slice:'3'|last|pct}}
-                            </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">3rd</th>
-                            <td>
-                              {{mortality_quartile_list|slice:'3'|last|pct}} to {{mortality_quartile_list|slice:'4'|last|pct}}
-                            </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">4th</th>
-                            <td>
-                              > {{mortality_quartile_list|last|pct}}
-                            </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div> <!-- Mortality Tab Pane-->
-                  <div class="tab-pane" id="ConfirmedQuartilesTable" role="tabpanel" aria-labelledby="ConfirmedQuartilesTable-tab">
-                    <table class="table" style="text-align:center;">
-                      <thead>
-                        <tr>
-                          <th scope="col" style="text-align:center;">
-                            Quartile
-                          </th>
-                          <th scope="col" style="text-align:center;">
-                            Confirmed/100k
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">1st</th>
-                            <td>
-                              < {{confirmed_quartile_list|slice:'2'|last|integer|style:'us'}}
-                            </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">2nd</th>
-                            <td>
-                              {{confirmed_quartile_list|slice:'2'|last|integer|style:'us'}} to {{confirmed_quartile_list|slice:'3'|last|integer|style:'us'}}
-                            </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">3rd</th>
-                            <td>
-                              {{confirmed_quartile_list|slice:'3'|last|integer|style:'us'}} to {{confirmed_quartile_list|slice:'4'|last|integer|style:'us'}}
-                            </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">4th</th>
-                            <td>
-                              > {{confirmed_quartile_list|last|integer|style:'us'}}
-                            </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div> <!-- Confirmed/100k Tab Pane-->
-                  <div class="tab-pane" id="DeathsQuartilesTable" role="tabpanel" aria-labelledby="DeathsQuartilesTable-tab">
-                    <table class="table" style="text-align:center;">
-                      <thead>
-                        <tr>
-                          <th scope="col" style="text-align:center;">
-                            Quartile
-                          </th>
-                          <th scope="col" style="text-align:center;">
-                            Deaths/100k
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">1st</th>
-                            <td>
-                              < {{deaths_quartile_list|slice:'2'|last|integer|style:'us'}}
-                            </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">2nd</th>
-                            <td>
-                              {{deaths_quartile_list|slice:'2'|last|integer|style:'us'}} to {{deaths_quartile_list|slice:'3'|last|integer|style:'us'}}
-                            </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">3rd</th>
-                            <td>
-                              {{deaths_quartile_list|slice:'3'|last|integer|style:'us'}} to {{deaths_quartile_list|slice:'4'|last|integer|style:'us'}}
-                            </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">4th</th>
-                            <td>
-                              > {{deaths_quartile_list|last|integer|style:'us'}}
-                            </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div> <!-- Deaths/100k Tab Pane-->
-                </div> <!-- TAB CONTENT -->
-              </div><!-- div col-6 -->
-            </div><!-- div row -->
-        </div><!-- div collapse -->
+      <div class="row featurette">
+        <div class="col-md-6">
+          {% autoescape off %}
+            {{plot_confirmed_daily}}
+          {% endautoescape %}
+        </div>
+        <div class="col-md-6">
+          {% autoescape off %}
+            {{plot_deaths_daily}}
+          {% endautoescape %}
+        </div>
       </div>
 
-      <div class="row">
-        <div class="col-lg-4">
-          {{plot_mortality_gauge|safe}}
-        </div><!-- /.col-lg-4 -->
+    </div>
 
-        <div class="col-lg-4">
-          <div id="Confirmed/100k-container">{{plot_confirmedbyhundreds_gauge|safe}}</div>
-        </div><!-- /.col-lg-4 -->
+    <div class="container marketing">  <!-- START OF THE WEEK REPORT AREA -->
+      <br><h3> Week-by-week</h3>
+      {% get_value week_rows key='confirmed_week' as confirmed_week %}
+      {% get_value week_rows key='deaths_week' as deaths_week %}
+      {% get_value week_rows idx=1 key='confirmed_week' as confirmed_previous_week %}
+      {% get_value week_rows idx=1 key='deaths_week' as deaths_previous_week %}
 
-        <div class="col-lg-4" style="border-right-style:none;">
-          <div id="Deaths/100k-container">{{plot_deathsbyhundreds_gauge|safe}}</div>
-        </div><!-- /.col-lg-4 -->
+      {% get_value week_rows key='last_update' as last_update %}
 
-      </div><!-- /.row -->
-    </div> <!-- container how to read the gauge charts -->
-  </div><!-- container marketing -->
+      <hr class="featurette-divider">
 
-  <!-- END OF THE QUARTILES AREA -->
+      <div class="row featurette">
+        <div class="col-md-5">
+          <p class="lead">
+            {% with this_month=report_date|date:'M/y' week_day_number=last_update|date:'w'|add:"1" %}
+              {% with confirmed_prediction=confirmed_week|div:week_day_number|mul:7|integer deaths_prediction=deaths_week|div:week_day_number|mul:7|integer %}
+                {% with confirmed_prediction_pct=confirmed_prediction|pct_diff:confirmed_previous_week deaths_prediction_pct=deaths_prediction|pct_diff:deaths_previous_week %}
 
-  <!-- START OF THE RANK BULLETS AREA -->
-   <div class="container marketing">
-     <br><h3> Ranks </h3>
-     <hr class="featurette-divider">
+            A total of <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|style:'us'}}</span> new infections and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|style:'us'}}</span> deaths were reported so far in the week,
+            a daily average of <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|div:week_day_number|integer|style:'us'}}</span> new infections/day and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|div:week_day_number|integer|style:'us'}}</span>
+            deaths/day. If we take these averages as predictors, the current week will end with approximately <span class="color-secondary-1-2" style="font-weight:bold;">{{confirmed_prediction|style:'us'}}</span>
+            newly infected habitants, <span class="color-primary-2" style="font-weight:bold;">{% if confirmed_prediction_pct >= 0 %}an increase of{% else %}a decrease of {% endif %}
+            {{confirmed_prediction_pct|mod|pct:False}}</span> when compared to the previous week and <span class="color-secondary-1-2" style="font-weight:bold;">{{deaths_prediction|style:'us'}}</span> lives lost to the coronavirus,
+            <span class="color-primary-2" style="font-weight:bold;">{% if deaths_prediction_pct >= 0 %}an increase of{% else %}a decrease of {% endif %} {{deaths_prediction_pct|mod|pct:False}}</span>.
+          </p>
+          <br>
+          <div class="container" style="text-align:center;">
+            <button class="btn btn-outline-primary" id="btnshowweektable" type="button" style="color:#865696; border:none; font-size:20px;" data-bs-toggle="collapse" data-bs-target="#collapseTableWeekData" aria-expanded="false" aria-controls="collapseTableWeekData">Show table</button>
+          </div>
+        </div>
+        <div class="col-md-7" style="padding-left:15px;">
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#weekbarplot" type="button" role="tab" aria-controls="weekbarplot" aria-selected="true">Deaths/week</button>
+              <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#weekheatmapplot" type="button" role="tab" aria-controls="weekheatmapplot" aria-selected="false">Waves</button>
+              <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#histogramplot" type="button" role="tab" aria-controls="histogramplot" aria-selected="false">Histogram</button>
+            </div>
+          </nav>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="weekbarplot" role="tabpanel" aria-labelledby="weekbarplot-tab">
+              {% autoescape off %}
+                {{plot_week}}
+              {% endautoescape %}
+            </div>
+            <div class="tab-pane" id="weekheatmapplot" role="tabpanel" aria-labelledby="weekheatmapplot-tab">
+              {% autoescape off %}
+                {{plot_heatmap_week}}
+              {% endautoescape %}
+            </div>
+            <div class="tab-pane" id="histogramplot" role="tabpanel" aria-labelledby="histogramplot-tab">
+              {% autoescape off %}
+                {{plot_histogram}}
+              {% endautoescape %}
+            </div>
+          </div> <!-- TAB CONTENT -->
+          <style>
+            .nav-link {background-color:inherit;}
+            .nav-link::after {outline-color:inherit;}
+            .nav.nav-tabs {color:#8C356E;}
+          </style>
 
-     <div class="row featurette">
-       <div class="col-lg-4" style="border-right-style:none;">
-         {{plot_deathsbyhundreds_rank|safe}}
-       </div><!-- /.col-lg-4 -->
+          </div>
+        </div>
 
-       <div class="col-lg-4" style="border-right-style:none;">
-         {{plot_deathsbyhundreds_rank|safe}}
-       </div><!-- /.col-lg-4 -->
+      <div class="collapse" id="collapseTableWeekData">
+        <div class="container" style="padding:5px;">
+          <table class="table table-borderless table-sm table-records">
+            <thead>
+                <tr>
+                  {% for k in week_header %}
+                    <th>
+                      {{k}}
+                    </th>
+                  {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in week_rows %}
+                    <tr>
+                        <th scope="row" style="text-align:left;">{{r.week}}</th>
+                        <td>{{r.week_range}}</td>
+                        <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
+                            title="Daily average: {% if r.idx == 0 %}{{r.confirmed_week|div:week_day_number|integer|style:'us'}}{% else %}{{r.confirmed_week|div:7|integer|style:'us'}}{% endif %}">
+                            {{r.confirmed_week|style:'us'}} ({{r.confirmed_pct_change_week|pct:False}})
+                        </td>
+                        <td>
+                          <span>
+                            {{r.confirmed_rank_region_week}}°
+                          </span> -
+                          <span>
+                            {{r.confirmed_rank_world_week}}°
+                          </span>
+                        </td>
+                        <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
+                            title="Daily average: {% if r.idx == 0 %}{{r.deaths_week|div:week_day_number|integer|style:'us'}}{% else %}{{r.deaths_week|div:7|integer|style:'us'}}{% endif %}">
+                            {{r.deaths_week|style:'us'}} ({{r.deaths_pct_change_week|pct:False}})
+                        </td>
+                        <td>
+                          <span>
+                            {{r.deaths_rank_region_week}}°
+                          </span> -
+                          <span>
+                            {{r.deaths_rank_world_week}}°
+                           </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div><!-- div collapse -->
 
-       <div class="col-lg-4" style="border-right-style:none;">
-         {{plot_deathsbyhundreds_rank|safe}}
-       </div><!-- /.col-lg-4 -->
+      {% endwith %} <!-- variables this_month and week_day_number declaration -->
+      {% endwith %} <!-- variables this_month and week_day_number declaration -->
+      {% endwith %} <!-- variables this_month and week_day_number declaration -->
 
-     </div><!-- /.row -->
-    </div><!-- container marketing -->
-
-    <!-- END OF THE RANK BULLETS AREA -->
+    </div>  <!-- END OF THE WEEK REPORT AREA -->
 
 <div class="container marketing">  <!-- START OF THE MONTH REPORT AREA -->
   <br><h3> Month-by-Month</h3>
@@ -501,124 +440,204 @@
 
 </div>  <!-- END OF THE MONTH REPORT AREA -->
 
-<div class="container marketing">  <!-- START OF THE WEEK REPORT AREA -->
-  <br><h3> Week-by-week</h3>
-  {% get_value week_rows key='confirmed_week' as confirmed_week %}
-  {% get_value week_rows key='deaths_week' as deaths_week %}
-  {% get_value week_rows idx=1 key='confirmed_week' as confirmed_previous_week %}
-  {% get_value week_rows idx=1 key='deaths_week' as deaths_previous_week %}
+<!-- START OF THE QUARTILES AREA -->
+ <div class="container marketing">
+   <br><h3> Quartiles</h3>
+   <hr class="featurette-divider">
 
-  {% get_value week_rows key='last_update' as last_update %}
+   <div class="container" style="padding:0;">
+     <p><a class="btn btn-outline-primary" style="color:#865696; border-color:#865696;" data-bs-toggle="collapse" data-bs-target="#HowToGaugeCharts" aria-expanded="false" aria-controls="HowToGaugeCharts">How to read the gauge charts</a></p>
+     <div class="collapse" id="HowToGaugeCharts">
+       <div class="card card-body" style="border:none;">
+         <div class="row">
+           <div class="col-7">
+             <p>Quartiles are a statistical tool that help us visualize how a certain parameter of a member in a dataset
+             places itself when compared to the other members of the same set. In this case, we analyse how high is the
+             mortality rate of the selected country in comparison with the mortalities of the other countries.</p>
 
+             <p>As an example, the first quartile is defined by the 10% countries with the lowest death rates and the 4th quartile is defined
+             by the 10% countries with the highest rates. In the betweens you'll find the other countries.</p>
+           </div>
+           <div class="col-5">
+             <ul class="nav nav-tabs">
+               <li class="nav-item">
+                 <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#MortalityQuartilesTable" type="button" role="tab" aria-controls="MortalityQuartilesTable" aria-selected="true">Mortality</button>
+               </li>
+               <li class="nav-item">
+                 <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#ConfirmedQuartilesTable" type="button" role="tab" aria-controls="ConfirmedQuartilesTable" aria-selected="false">Confirmed/100k</button>
+               </li>
+               <li class="nav-item">
+                 <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#DeathsQuartilesTable" type="button" role="tab" aria-controls="DeathsQuartilesTable" aria-selected="false">Deaths/100k</button>
+               </li>
+             </ul>
+             <div class="tab-content" id="myTabContent">
+               <div class="tab-pane fade show active" id="MortalityQuartilesTable" role="tabpanel" aria-labelledby="MortalityQuartilesTable-tab">
+                 <table class="table" style="text-align:center;">
+                   <thead>
+                     <tr>
+                       <th scope="col" style="text-align:center;">
+                         Quartile
+                       </th>
+                       <th scope="col" style="text-align:center;">
+                         Mortality
+                       </th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <tr>
+                       <th scope="row">1st</th>
+                         <td>
+                           < {{mortality_quartile_list|slice:'2'|last|pct}}
+                         </td>
+                     </tr>
+                     <tr>
+                       <th scope="row">2nd</th>
+                         <td>
+                           {{mortality_quartile_list|slice:'2'|last|pct}} to {{mortality_quartile_list|slice:'3'|last|pct}}
+                         </td>
+                     </tr>
+                     <tr>
+                       <th scope="row">3rd</th>
+                         <td>
+                           {{mortality_quartile_list|slice:'3'|last|pct}} to {{mortality_quartile_list|slice:'4'|last|pct}}
+                         </td>
+                     </tr>
+                     <tr>
+                       <th scope="row">4th</th>
+                         <td>
+                           > {{mortality_quartile_list|last|pct}}
+                         </td>
+                     </tr>
+                   </tbody>
+                 </table>
+               </div> <!-- Mortality Tab Pane-->
+               <div class="tab-pane" id="ConfirmedQuartilesTable" role="tabpanel" aria-labelledby="ConfirmedQuartilesTable-tab">
+                 <table class="table" style="text-align:center;">
+                   <thead>
+                     <tr>
+                       <th scope="col" style="text-align:center;">
+                         Quartile
+                       </th>
+                       <th scope="col" style="text-align:center;">
+                         Confirmed/100k
+                       </th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <tr>
+                       <th scope="row">1st</th>
+                         <td>
+                           < {{confirmed_quartile_list|slice:'2'|last|integer|style:'us'}}
+                         </td>
+                     </tr>
+                     <tr>
+                       <th scope="row">2nd</th>
+                         <td>
+                           {{confirmed_quartile_list|slice:'2'|last|integer|style:'us'}} to {{confirmed_quartile_list|slice:'3'|last|integer|style:'us'}}
+                         </td>
+                     </tr>
+                     <tr>
+                       <th scope="row">3rd</th>
+                         <td>
+                           {{confirmed_quartile_list|slice:'3'|last|integer|style:'us'}} to {{confirmed_quartile_list|slice:'4'|last|integer|style:'us'}}
+                         </td>
+                     </tr>
+                     <tr>
+                       <th scope="row">4th</th>
+                         <td>
+                           > {{confirmed_quartile_list|last|integer|style:'us'}}
+                         </td>
+                     </tr>
+                   </tbody>
+                 </table>
+               </div> <!-- Confirmed/100k Tab Pane-->
+               <div class="tab-pane" id="DeathsQuartilesTable" role="tabpanel" aria-labelledby="DeathsQuartilesTable-tab">
+                 <table class="table" style="text-align:center;">
+                   <thead>
+                     <tr>
+                       <th scope="col" style="text-align:center;">
+                         Quartile
+                       </th>
+                       <th scope="col" style="text-align:center;">
+                         Deaths/100k
+                       </th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <tr>
+                       <th scope="row">1st</th>
+                         <td>
+                           < {{deaths_quartile_list|slice:'2'|last|integer|style:'us'}}
+                         </td>
+                     </tr>
+                     <tr>
+                       <th scope="row">2nd</th>
+                         <td>
+                           {{deaths_quartile_list|slice:'2'|last|integer|style:'us'}} to {{deaths_quartile_list|slice:'3'|last|integer|style:'us'}}
+                         </td>
+                     </tr>
+                     <tr>
+                       <th scope="row">3rd</th>
+                         <td>
+                           {{deaths_quartile_list|slice:'3'|last|integer|style:'us'}} to {{deaths_quartile_list|slice:'4'|last|integer|style:'us'}}
+                         </td>
+                     </tr>
+                     <tr>
+                       <th scope="row">4th</th>
+                         <td>
+                           > {{deaths_quartile_list|last|integer|style:'us'}}
+                         </td>
+                     </tr>
+                   </tbody>
+                 </table>
+               </div> <!-- Deaths/100k Tab Pane-->
+             </div> <!-- TAB CONTENT -->
+           </div><!-- div col-6 -->
+         </div><!-- div row -->
+     </div><!-- div collapse -->
+   </div>
+
+   <div class="row">
+     <div class="col-lg-4">
+       {{plot_mortality_gauge|safe}}
+     </div><!-- /.col-lg-4 -->
+
+     <div class="col-lg-4">
+       <div id="Confirmed/100k-container">{{plot_confirmedbyhundreds_gauge|safe}}</div>
+     </div><!-- /.col-lg-4 -->
+
+     <div class="col-lg-4" style="border-right-style:none;">
+       <div id="Deaths/100k-container">{{plot_deathsbyhundreds_gauge|safe}}</div>
+     </div><!-- /.col-lg-4 -->
+
+   </div><!-- /.row -->
+ </div> <!-- container how to read the gauge charts -->
+</div><!-- container marketing -->
+
+<!-- END OF THE QUARTILES AREA -->
+
+<!-- START OF THE RANK BULLETS AREA -->
+<div class="container marketing">
+  <br><h3> Ranks </h3>
   <hr class="featurette-divider">
 
   <div class="row featurette">
-    <div class="col-md-5">
-      <p class="lead">
-        {% with this_month=report_date|date:'M/y' week_day_number=last_update|date:'w'|add:"1" %}
-          {% with confirmed_prediction=confirmed_week|div:week_day_number|mul:7|integer deaths_prediction=deaths_week|div:week_day_number|mul:7|integer %}
-            {% with confirmed_prediction_pct=confirmed_prediction|pct_diff:confirmed_previous_week deaths_prediction_pct=deaths_prediction|pct_diff:deaths_previous_week %}
+    <div class="col-lg-4" style="border-right-style:none;">
+      {{plot_deathsbyhundreds_rank|safe}}
+    </div><!-- /.col-lg-4 -->
 
-        A total of <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|style:'us'}}</span> new infections and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|style:'us'}}</span> deaths were reported so far in the week,
-        a daily average of <span class="color-secondary-2-2" style="font-weight:bold;">{{confirmed_week|div:week_day_number|integer|style:'us'}}</span> new infections/day and <span class="color-secondary-2-2" style="font-weight:bold;">{{deaths_week|div:week_day_number|integer|style:'us'}}</span>
-        deaths/day. If we take these averages as predictors, the current week will end with approximately <span class="color-secondary-1-2" style="font-weight:bold;">{{confirmed_prediction|style:'us'}}</span>
-        newly infected habitants, <span class="color-primary-2" style="font-weight:bold;">{% if confirmed_prediction_pct >= 0 %}an increase of{% else %}a decrease of {% endif %}
-        {{confirmed_prediction_pct|mod|pct:False}}</span> when compared to the previous week and <span class="color-secondary-1-2" style="font-weight:bold;">{{deaths_prediction|style:'us'}}</span> lives lost to the coronavirus,
-        <span class="color-primary-2" style="font-weight:bold;">{% if deaths_prediction_pct >= 0 %}an increase of{% else %}a decrease of {% endif %} {{deaths_prediction_pct|mod|pct:False}}</span>.
-      </p>
-      <br>
-      <div class="container" style="text-align:center;">
-        <button class="btn btn-outline-primary" id="btnshowweektable" type="button" style="color:#865696; border:none; font-size:20px;" data-bs-toggle="collapse" data-bs-target="#collapseTableWeekData" aria-expanded="false" aria-controls="collapseTableWeekData">Show table</button>
-      </div>
-    </div>
-    <div class="col-md-7" style="padding-left:15px;">
-      <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#weekbarplot" type="button" role="tab" aria-controls="weekbarplot" aria-selected="true">Deaths/week</button>
-          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#weekheatmapplot" type="button" role="tab" aria-controls="weekheatmapplot" aria-selected="false">Waves</button>
-          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#histogramplot" type="button" role="tab" aria-controls="histogramplot" aria-selected="false">Histogram</button>
-        </div>
-      </nav>
-      <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="weekbarplot" role="tabpanel" aria-labelledby="weekbarplot-tab">
-          {% autoescape off %}
-            {{plot_week}}
-          {% endautoescape %}
-        </div>
-        <div class="tab-pane" id="weekheatmapplot" role="tabpanel" aria-labelledby="weekheatmapplot-tab">
-          {% autoescape off %}
-            {{plot_heatmap_week}}
-          {% endautoescape %}
-        </div>
-        <div class="tab-pane" id="histogramplot" role="tabpanel" aria-labelledby="histogramplot-tab">
-          {% autoescape off %}
-            {{plot_histogram}}
-          {% endautoescape %}
-        </div>
-      </div> <!-- TAB CONTENT -->
-      <style>
-        .nav-link {background-color:inherit;}
-        .nav-link::after {outline-color:inherit;}
-        .nav.nav-tabs {color:#8C356E;}
-      </style>
+    <div class="col-lg-4" style="border-right-style:none;">
+      {{plot_deathsbyhundreds_rank|safe}}
+    </div><!-- /.col-lg-4 -->
 
-      </div>
-    </div>
+    <div class="col-lg-4" style="border-right-style:none;">
+      {{plot_deathsbyhundreds_rank|safe}}
+    </div><!-- /.col-lg-4 -->
 
-  <div class="collapse" id="collapseTableWeekData">
-    <div class="container" style="padding:5px;">
-      <table class="table table-borderless table-sm table-records">
-        <thead>
-            <tr>
-              {% for k in week_header %}
-                <th>
-                  {{k}}
-                </th>
-              {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for r in week_rows %}
-                <tr>
-                    <th scope="row" style="text-align:left;">{{r.week}}</th>
-                    <td>{{r.week_range}}</td>
-                    <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
-                        title="Daily average: {% if r.idx == 0 %}{{r.confirmed_week|div:week_day_number|integer|style:'us'}}{% else %}{{r.confirmed_week|div:7|integer|style:'us'}}{% endif %}">
-                        {{r.confirmed_week|style:'us'}} ({{r.confirmed_pct_change_week|pct:False}})
-                    </td>
-                    <td>
-                      <span>
-                        {{r.confirmed_rank_region_week}}°
-                      </span> -
-                      <span>
-                        {{r.confirmed_rank_world_week}}°
-                      </span>
-                    </td>
-                    <td style="cursor:default;" data-bs-toggle="tooltip" data-bs-placement="right"
-                        title="Daily average: {% if r.idx == 0 %}{{r.deaths_week|div:week_day_number|integer|style:'us'}}{% else %}{{r.deaths_week|div:7|integer|style:'us'}}{% endif %}">
-                        {{r.deaths_week|style:'us'}} ({{r.deaths_pct_change_week|pct:False}})
-                    </td>
-                    <td>
-                      <span>
-                        {{r.deaths_rank_region_week}}°
-                      </span> -
-                      <span>
-                        {{r.deaths_rank_world_week}}°
-                       </span>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div><!-- div collapse -->
+  </div><!-- /.row -->
+ </div><!-- container marketing -->
 
+ <!-- END OF THE RANK BULLETS AREA -->
 
-
-  {% endwith %} <!-- variables this_month and week_day_number declaration -->
-  {% endwith %} <!-- variables this_month and week_day_number declaration -->
-  {% endwith %} <!-- variables this_month and week_day_number declaration -->
-
-</div>  <!-- END OF THE WEEK REPORT AREA -->
 
 {% endblock content %}

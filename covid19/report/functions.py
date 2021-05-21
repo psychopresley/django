@@ -166,6 +166,51 @@ def month_subplot(subplot1data,subplot2data,labels):
     return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
 
 
+def daily_subplot(subplot1data,subplot2data,subplot3data,colors=['darkblue','black','yellow'],labels=['plot1','plot2','plot3'],):
+    # 2 - WEEK REPORT CHARTS:
+    fig = make_subplots(
+    rows=2, cols=1,
+    row_heights=[0.5, 0.5],
+    # subplot_titles=("Confirmed","Deaths"),
+    shared_xaxes=False,
+    specs=[[{"type": "bar"}],
+           [{"type": "Scatter"}]])
+
+    fig.update_layout(
+    template="seaborn",
+    margin={'l':20,'r':10,'t':30,'b':10},
+    plot_bgcolor='white',
+    font_family="Quicksand",
+    )
+
+    fig.append_trace(
+    go.Bar(x=subplot1data[0], y=subplot1data[1], name=labels[0], opacity=1,
+           marker={'line':{"color":colors[0]}},showlegend=False,),row=1, col=1
+    )
+
+    fig.append_trace(
+    go.Scatter(x=subplot2data[0], y=subplot2data[1], mode='lines',
+               marker={'color':colors[1]}, name=labels[1],
+               showlegend=False,),row=2, col=1
+    )
+
+    fig.append_trace(
+    go.Scatter(x=subplot3data[0], y=subplot3data[1], mode='lines',
+               marker={"color":colors[2]}, name=labels[2],
+               showlegend=False,),row=2, col=1
+    )
+
+    # Update X-axis properties
+    fig.update_xaxes(title_text="Daily cases", row=2, col=1, type='category',visible=False)
+    fig.update_xaxes(row=1, col=1, type='category',visible=False)
+
+    # Update Y-axis properties
+    fig.update_yaxes(title_text=labels[0], row=1, col=1)
+    fig.update_yaxes(title_text=labels[1], row=2, col=1)
+
+    return plot({'data':fig,},output_type='div', include_plotlyjs=False, show_link=False, link_text="")
+
+
 def week_subplot(subplot1data,subplot2data,labels):
     # 2 - WEEK REPORT CHARTS:
     fig = make_subplots(

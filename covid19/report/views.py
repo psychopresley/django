@@ -5,7 +5,7 @@ from django.views.generic import View,TemplateView
 from pathlib import Path
 from . import forms
 from .functions import *
-from report.models import StatusReport, MonthReport, WeekReport, ISOCodeData, UNData, ConfigReport
+from report.models import StatusReport, MonthReport, WeekReport, DailyReport, ISOCodeData, UNData, ConfigReport
 
 # Importing plotly modules:
 import plotly.graph_objs as go
@@ -379,6 +379,7 @@ def countriespage(request):
     status = StatusReport.objects.get(country=selected_country)
     month_report = MonthReport.objects.filter(country=selected_country).order_by('-month')
     week_report = WeekReport.objects.filter(country=selected_country).order_by('-week')
+    daily_report = DailyReport.objects.filter(country=selected_country).order_by('-date')
 
     # RETRIEVING THE COUNTRY'S UN DATA:
     x = ISOCodeData.objects.get(country_name=selected_country)
@@ -527,7 +528,47 @@ def countriespage(request):
     # https://www.codingwithricky.com/2019/08/28/easy-django-plotly/
     # colorscales code: https://plotly.com/python/builtin-colorscales/
 
-    # 2 - WEEK REPORT CHARTS:
+    x_daily=[]
+    y_confirmed_new_daily=[]
+    y_confirmed_new_short_avg_daily=[]
+    y_confirmed_new_medium_avg_daily=[]
+    y_confirmed_new_long_avg_daily=[]
+
+    y_deaths_new_daily=[]
+    y_deaths_new_short_avg_daily=[]
+    y_deaths_new_medium_avg_daily=[]
+    y_deaths_new_long_avg_daily=[]
+
+    for obj in daily_report:
+        x_daily.append(obj.__dict__['date'])
+        y_confirmed_new_short_avg_daily.append(obj.__dict__['confirmed_new_short_avg'])
+        y_confirmed_new_medium_avg_daily.append(obj.__dict__['confirmed_new_medium_avg'])
+        y_confirmed_new_long_avg_daily.append(obj.__dict__['confirmed_new_long_avg'])
+        y_confirmed_new_daily.append(obj.__dict__['confirmed_new'])
+
+        y_deaths_new_short_avg_daily.append(obj.__dict__['deaths_new_short_avg'])
+        y_deaths_new_medium_avg_daily.append(obj.__dict__['deaths_new_medium_avg'])
+        y_deaths_new_long_avg_daily.append(obj.__dict__['deaths_new_long_avg'])
+        y_deaths_new_daily.append(obj.__dict__['deaths_new'])
+
+
+    # 2 - DAILY REPORT CHARTS:
+    subplot1data = (x_daily[::-1],y_confirmed_new_daily[::-1])
+    subplot2data = (x_daily[::-1][-100:],y_confirmed_new_long_avg_daily[::-1][-100:])
+    subplot3data = (x_daily[::-1][-100:],y_confirmed_new_medium_avg_daily[::-1][-100:])
+
+    plot_confirmed_daily = daily_subplot(subplot1data,subplot2data,subplot3data,
+                                         labels=['Confirmed cases','14-day Avg','7-day Avg',])
+
+    subplot1data = (x_daily[::-1],y_deaths_new_daily[::-1])
+    subplot2data = (x_daily[::-1][-100:],y_deaths_new_long_avg_daily[::-1][-100:])
+    subplot3data = (x_daily[::-1][-100:],y_deaths_new_medium_avg_daily[::-1][-100:])
+
+    plot_deaths_daily = daily_subplot(subplot1data,subplot2data,subplot3data,
+                                      colors=['darkgreen','black','yellow'],
+                                      labels=['Deaths','14-day Avg','7-day Avg',])
+
+    # 3 - WEEK REPORT CHARTS:
     subplot1data = (x_week[::-1],y_confirmed_week[::-1])
     subplot2data = (x_week[::-1],y_deaths_week[::-1])
 
@@ -536,7 +577,7 @@ def countriespage(request):
     plot_histogram = density_plot(y_deaths_week[::-1],y_confirmed_week[::-1])
 
 
-    # 3 - FUSIONCHARTS ANGULAR GAUGE:
+    # 4 - FUSIONCHARTS ANGULAR GAUGE:
     # plot_mortality_gauge = fusion_gauge(status.mortality_quartile_position*100,'Mortality')
     plot_mortality_gauge = quartiles_gauge(status.mortality*100,
                                            status.mortality_quartile,
@@ -564,6 +605,8 @@ def countriespage(request):
     plot_dict = {
     'plot_month':plot_month,
     'plot_week':plot_week,
+    'plot_confirmed_daily':plot_confirmed_daily,
+    'plot_deaths_daily':plot_deaths_daily,
     'plot_heatmap_week':plot_heatmap_week,
     'plot_histogram':plot_histogram,
     'plot_mortality_gauge':plot_mortality_gauge,

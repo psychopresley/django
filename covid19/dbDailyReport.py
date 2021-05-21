@@ -46,49 +46,58 @@ def main():
             df_aux['mortality'] = (df_aux['Deaths'] / df_aux['Confirmed']).replace(np.nan,0)
             df_aux.Date = df_aux.Date.transform(lambda x:date(x.year, x.month, x.day))
 
-            # Joining UN Data:
-            # df_aux['population'] = df_aux['Country/Region'].apply(lambda x:population(x))
-            # for column in column_names:
-            #     df_aux[column+'_by_100k'] = df_aux[column]*0.1/df_aux['population']
-            #     df_aux[column+'_new_cases_by_100k'] = df_aux[column+'_new_cases']*0.1/df_aux['population']
-
             daily_report = df_aux.copy()
-            # daily_report = daily_report[daily_report['Country/Region']=='Australia']
-            daily_report.to_csv('daily_report.csv')
 
             print("Daily_report table generated succesfully!")
             countries_list = daily_report['Country/Region'].unique()
 
             if dbconfig.task == 1:
-                print('updating all entries in models.DailyReport')
+                db_most_recent_date = DailyReport.objects.all().order_by('-date')[0].date
+                file_most_recent_date = daily_report.loc[daily_report['Date']==max(daily_report['Date'])]['Date'].unique()
+
+                if db_most_recent_date >= file_most_recent_date:
+                    print('database already up-to-date')
+                    pass
+                else:
+                    daily_report = daily_report.loc[daily_report['Date'] > db_most_recent_date]
+                    print('inserting new entries into models.DailyReport')
 
                 for item in countries_list:
-                    info = daily_report.loc[daily_report['Country/Region']==item]
-                    country = DailyReport.objects.get(country__name=item)
+                    country = Country.objects.filter(name=item)
 
-                    country.date=info.Date.values[0]
-                    country.confirmed=int(info.Confirmed.values[0])
-                    country.confirmed_new=int(info.Confirmed_new_cases.values[0])
-                    country.confirmed_new_short_avg=float(info.Confirmed_new_cases_short_avg.values[0])
-                    country.confirmed_new_medium_avg=float(info.Confirmed_new_cases_medium_avg.values[0])
-                    country.confirmed_new_long_avg=float(info.Confirmed_new_cases_long_avg.values[0])
-                    # country.confirmed_by_hundreds=int(info['Confirmed_by_100k'].values[0])
-                    # country.confirmed_new_by_hundreds=int(info['Confirmed_new_cases_by_100k'].values[0])
-                    country.deaths=int(info.Deaths.values[0])
-                    country.deaths_new=int(info.Deaths_new_cases.values[0])
-                    country.deaths_new_short_avg=float(info.Deaths_new_cases_short_avg.values[0])
-                    country.deaths_new_medium_avg=float(info.Deaths_new_cases_medium_avg.values[0])
-                    country.deaths_new_long_avg=float(info.Deaths_new_cases_long_avg.values[0])
-                    # country.deaths_by_hundreds=float(info['Deaths_by_100k'].values[0])
-                    # country.deaths_new_by_hundreds=int(info['Deaths_new_cases_by_100k'].values[0])
-                    country.active=int(info.Active.values[0])
-                    country.active_new=int(info.Active_new_cases.values[0])
-                    country.active_pct=float(info.active_pct.values[0])
-                    # country.active_by_hundreds=int(info['Active_by_100k'].values[0])
-                    country.mortality=float(info.mortality.values[0])
+                    if country.exists():
+                        info_country = daily_report.loc[daily_report['Country/Region']==item]
+                        pop = population(item)
 
-                    country.save()
-                    print('{} updated in models.DailyReport'.format(item))
+                        for item_date in info_country['Date'].unique():
+                            info = info_country.loc[info_country['Date']==item_date]
+
+                            entry = DailyReport.objects.get_or_create(country=country[0],
+                                                                      date=info.Date.values[0],
+                                                                      confirmed=int(info.Confirmed.values[0]),
+                                                                      confirmed_new=int(info.Confirmed_new_cases.values[0]),
+                                                                      confirmed_new_short_avg=int(info.Confirmed_new_cases_short_avg.values[0]),
+                                                                      confirmed_new_medium_avg=int(info.Confirmed_new_cases_medium_avg.values[0]),
+                                                                      confirmed_new_long_avg=int(info.Confirmed_new_cases_long_avg.values[0]),
+                                                                      confirmed_by_hundreds=int(info.Confirmed.values[0]*0.1/pop),
+                                                                      confirmed_new_by_hundreds=int(info.Confirmed_new_cases.values[0]*0.1/pop),
+                                                                      deaths=int(info.Deaths.values[0]),
+                                                                      deaths_new=int(info.Deaths_new_cases.values[0]),
+                                                                      deaths_new_short_avg=int(info.Deaths_new_cases_short_avg.values[0]),
+                                                                      deaths_new_medium_avg=int(info.Deaths_new_cases_medium_avg.values[0]),
+                                                                      deaths_new_long_avg=int(info.Deaths_new_cases_long_avg.values[0]),
+                                                                      deaths_by_hundreds=int(info.Deaths.values[0]*0.1/pop),
+                                                                      deaths_new_by_hundreds=int(info.Deaths_new_cases.values[0]*0.1/pop),
+                                                                      active=int(info.Active.values[0]),
+                                                                      active_new=int(info.Active_new_cases.values[0]),
+                                                                      active_pct=float(info.active_pct.values[0]),
+                                                                      active_by_hundreds=int(info.Active.values[0]*0.1/pop),
+                                                                      mortality=float(info.mortality.values[0]),)[0]
+
+                            entry.save()
+                        print('{} inserted into models.DailyReport'.format(item))
+                    else:
+                        print(item + ' is not on DailyReport.models')
             else:
                 db_del(DailyReport,confirm_before=dbconfig.confirm_delete)
 
@@ -99,25 +108,10 @@ def main():
 
                     if country.exists():
                         info_country = daily_report.loc[daily_report['Country/Region']==item]
+                        pop = population(item)
 
                         for item_date in info_country['Date'].unique():
                             info = info_country.loc[info_country['Date']==item_date]
-
-                            # print(info.Date.values[0])
-                            # print(int(info.Confirmed.values[0]))
-                            # print(int(info.Confirmed_new_cases.values[0]))
-                            # print(int(info.Confirmed_new_cases_short_avg.values[0]))
-                            # print(int(info.Confirmed_new_cases_medium_avg.values[0]))
-                            # print(int(info.Confirmed_new_cases_long_avg.values[0]))
-                            # print(int(info.Deaths.values[0]))
-                            # print(int(info.Deaths_new_cases.values[0]))
-                            # print(int(info.Deaths_new_cases_short_avg.values[0]))
-                            # print(int(info.Deaths_new_cases_medium_avg.values[0]))
-                            # print(int(info.Deaths_new_cases_long_avg.values[0]))
-                            # print(int(info.Active.values[0]))
-                            # print(int(info.Active_new_cases.values[0]))
-                            # print(float(info.active_pct.values[0]))
-                            # print(float(info.mortality.values[0]))
 
                             entry = DailyReport.objects.get_or_create(country=country[0],
                                                                       date=info.Date.values[0],
@@ -126,14 +120,19 @@ def main():
                                                                       confirmed_new_short_avg=int(info.Confirmed_new_cases_short_avg.values[0]),
                                                                       confirmed_new_medium_avg=int(info.Confirmed_new_cases_medium_avg.values[0]),
                                                                       confirmed_new_long_avg=int(info.Confirmed_new_cases_long_avg.values[0]),
+                                                                      confirmed_by_hundreds=int(info.Confirmed.values[0]*0.1/pop),
+                                                                      confirmed_new_by_hundreds=int(info.Confirmed_new_cases.values[0]*0.1/pop),
                                                                       deaths=int(info.Deaths.values[0]),
                                                                       deaths_new=int(info.Deaths_new_cases.values[0]),
                                                                       deaths_new_short_avg=int(info.Deaths_new_cases_short_avg.values[0]),
                                                                       deaths_new_medium_avg=int(info.Deaths_new_cases_medium_avg.values[0]),
                                                                       deaths_new_long_avg=int(info.Deaths_new_cases_long_avg.values[0]),
+                                                                      deaths_by_hundreds=int(info.Deaths.values[0]*0.1/pop),
+                                                                      deaths_new_by_hundreds=int(info.Deaths_new_cases.values[0]*0.1/pop),
                                                                       active=int(info.Active.values[0]),
                                                                       active_new=int(info.Active_new_cases.values[0]),
                                                                       active_pct=float(info.active_pct.values[0]),
+                                                                      active_by_hundreds=int(info.Active.values[0]*0.1/pop),
                                                                       mortality=float(info.mortality.values[0]),)[0]
 
                             entry.save()
