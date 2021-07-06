@@ -93,7 +93,7 @@ def quantiles_model(quantiles,end_of_scale=1):
 
 
 def population(x):
-    exception_list = ['Cruise Ship','Taiwan']
+    exception_list = ['Cruise Ship','Taiwan','Summer Olympics 2020']
     if x in exception_list:
         population=1e10
     else:

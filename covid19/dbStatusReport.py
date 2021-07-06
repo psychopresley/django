@@ -58,7 +58,7 @@ def main():
 
             # Columns calculated specificly for Status Report model db:
             df_aux['active_pct'] = df_aux['Active'] / df_aux['Confirmed']
-            df_aux['mortality'] = df_aux['Deaths'] / df_aux['Confirmed']
+            df_aux['mortality'] = (df_aux['Deaths'] / df_aux['Confirmed']).fillna(0)
             df_aux['mortality_rank_region'] = df_aux.groupby(['Date','region'])['mortality'].rank(method='min',ascending=False)
             df_aux['mortality_rank_world'] = df_aux.groupby('Date')['mortality'].rank(method='min',ascending=False)
 
@@ -85,7 +85,6 @@ def main():
                 df_aux[column+'_new_cases_by_100k'] = df_aux[column+'_new_cases']*0.1/df_aux['population']
                 df_aux[column+'_new_cases_by_100k_rank_world'] = df_aux.groupby('Date')[column+'_new_cases_by_100k'].rank(method='min',ascending=False)
 
-
             # Defining quartile intervals for confirmed/100k and deaths/100k habitants:
             columns = ['Confirmed_by_100k','Deaths_by_100k']
             for item in columns:
@@ -107,93 +106,97 @@ def main():
                 print('updating all entries in models.StatusReport')
 
                 for item in countries_list:
-                    info = status_report.loc[status_report['Country/Region']==item]
-                    previous_info = previous_report.loc[previous_report['Country/Region']==item]
-                    country = StatusReport.objects.get(country__name=item)
+                    country = Country.objects.filter(name=item)
 
-                    if previous_info.Confirmed_new_cases.values[0] == 0:
-                        confirmed_new_pct_change = 0
-                    else:
-                        confirmed_new_pct_change = (info.Confirmed_new_cases.values[0] - previous_info.Confirmed_new_cases.values[0])*100/previous_info.Confirmed_new_cases.values[0]
+                    if country.exists():
 
-                    if previous_info.Deaths_new_cases.values[0] == 0:
-                        deaths_new_pct_change = 0
-                    else:
-                        deaths_new_pct_change = (info.Deaths_new_cases.values[0] - previous_info.Deaths_new_cases.values[0])*100/previous_info.Deaths_new_cases.values[0]
+                        info = status_report.loc[status_report['Country/Region']==item]
+                        previous_info = previous_report.loc[previous_report['Country/Region']==item]
+                        country = StatusReport.objects.get(country__name=item)
 
-                    country.date=info.Date.values[0]
-                    country.db_update=date.today()
-                    country.confirmed=int(info.Confirmed.values[0])
-                    country.confirmed_new=int(info.Confirmed_new_cases.values[0])
-                    country.confirmed_new_short_avg=float(info.Confirmed_new_cases_short_avg.values[0])
-                    country.confirmed_new_medium_avg=float(info.Confirmed_new_cases_medium_avg.values[0])
-                    country.confirmed_new_long_avg=float(info.Confirmed_new_cases_long_avg.values[0])
-                    country.confirmed_new_pct_change=float(confirmed_new_pct_change)
-                    country.confirmed_pct_change=float(info['Confirmed_daily_%inc_by_country'].values[0])
-                    country.confirmed_rank_region=int(info.Confirmed_rank_in_region.values[0])
-                    country.confirmed_rank_world=int(info.Confirmed_rank_in_world.values[0])
-                    country.confirmed_new_rank_region=int(info.Confirmed_new_cases_rank_in_region.values[0])
-                    country.confirmed_new_rank_world=int(info.Confirmed_new_cases_rank_in_world.values[0])
-                    country.confirmed_by_hundreds=float(info['Confirmed_by_100k'].values[0])
-                    country.confirmed_by_hundreds_quartile=info['Confirmed_by_100k_quartile'].values[0]
-                    country.confirmed_by_hundreds_quartile_position=float(info['Confirmed_by_100k_quartile_position'].values[0])
-                    country.confirmed_by_hundreds_rank_region=int(info['Confirmed_by_100k_rank_region'].values[0])
-                    country.confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0])
-                    country.confirmed_new_by_hundreds=int(info['Confirmed_new_cases_by_100k'].values[0])
-                    country.confirmed_new_by_hundreds_rank_world=int(info['Confirmed_new_cases_by_100k_rank_world'].values[0])
-                    country.deaths=int(info.Deaths.values[0])
-                    country.deaths_new=int(info.Deaths_new_cases.values[0])
-                    country.deaths_new_short_avg=float(info.Deaths_new_cases_short_avg.values[0])
-                    country.deaths_new_medium_avg=float(info.Deaths_new_cases_medium_avg.values[0])
-                    country.deaths_new_long_avg=float(info.Deaths_new_cases_long_avg.values[0])
-                    country.deaths_new_pct_change=float(deaths_new_pct_change)
-                    country.deaths_pct_change=float(info['Deaths_daily_%inc_by_country'].values[0])
-                    country.deaths_rank_region=int(info.Deaths_rank_in_region.values[0])
-                    country.deaths_rank_world=int(info.Deaths_rank_in_world.values[0])
-                    country.deaths_new_rank_region=int(info.Deaths_new_cases_rank_in_region.values[0])
-                    country.deaths_new_rank_world=int(info.Deaths_new_cases_rank_in_world.values[0])
-                    country.deaths_by_hundreds=float(info['Deaths_by_100k'].values[0])
-                    country.deaths_by_hundreds_quartile=info['Deaths_by_100k_quartile'].values[0]
-                    country.deaths_by_hundreds_quartile_position=float(info['Deaths_by_100k_quartile_position'].values[0])
-                    country.deaths_by_hundreds_rank_region=int(info['Deaths_by_100k_rank_region'].values[0])
-                    country.deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0])
-                    country.deaths_new_by_hundreds=int(info['Deaths_new_cases_by_100k'].values[0])
-                    country.deaths_new_by_hundreds_rank_world=int(info['Deaths_new_cases_by_100k_rank_world'].values[0])
-                    country.recovered=int(info.Recovered.values[0])
-                    country.recovered_new=int(info.Recovered_new_cases.values[0])
-                    country.recovered_new_short_avg=float(info.Recovered_new_cases_short_avg.values[0])
-                    country.recovered_new_medium_avg=float(info.Recovered_new_cases_medium_avg.values[0])
-                    country.recovered_new_long_avg=float(info.Recovered_new_cases_long_avg.values[0])
-                    country.recovered_pct_change=float(info['Recovered_daily_%inc_by_country'].values[0])
-                    country.recovered_rank_region=int(info.Recovered_rank_in_region.values[0])
-                    country.recovered_rank_world=int(info.Recovered_rank_in_world.values[0])
-                    country.recovered_new_rank_region=int(info.Recovered_new_cases_rank_in_region.values[0])
-                    country.recovered_new_rank_world=int(info.Recovered_new_cases_rank_in_world.values[0])
-                    country.recovered_by_hundreds=float(info['Recovered_by_100k'].values[0])
-                    country.recovered_by_hundreds_rank_region=int(info['Recovered_by_100k_rank_region'].values[0])
-                    country.recovered_by_hundreds_rank_world=int(info['Recovered_by_100k_rank_world'].values[0])
-                    country.active=int(info.Active.values[0])
-                    country.active_new=int(info.Active_new_cases.values[0])
-                    country.active_new_short_avg=float(info.Active_new_cases_short_avg.values[0])
-                    country.active_new_medium_avg=float(info.Active_new_cases_medium_avg.values[0])
-                    country.active_new_long_avg=float(info.Active_new_cases_long_avg.values[0])
-                    country.active_pct=float(info.active_pct.values[0])
-                    country.active_pct_change=float(info['Active_daily_%inc_by_country'].values[0])
-                    country.active_rank_region=int(info.Active_rank_in_region.values[0])
-                    country.active_rank_world=int(info.Active_rank_in_world.values[0])
-                    country.active_new_rank_region=int(info.Active_new_cases_rank_in_region.values[0])
-                    country.active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0])
-                    country.active_by_hundreds=float(info['Active_by_100k'].values[0])
-                    country.active_by_hundreds_rank_region=int(info['Active_by_100k_rank_region'].values[0])
-                    country.active_by_hundreds_rank_world=int(info['Active_by_100k_rank_world'].values[0])
-                    country.mortality=float(info.mortality.values[0])
-                    country.mortality_quartile=info.mortality_quartile.values[0]
-                    country.mortality_quartile_position=info.mortality_quartile_position.values[0]
-                    country.mortality_rank_region=int(info.mortality_rank_region.values[0])
-                    country.mortality_rank_world=int(info.mortality_rank_world.values[0])
+                        if previous_info.Confirmed_new_cases.values[0] == 0:
+                            confirmed_new_pct_change = 0
+                        else:
+                            confirmed_new_pct_change = (info.Confirmed_new_cases.values[0] - previous_info.Confirmed_new_cases.values[0])*100/previous_info.Confirmed_new_cases.values[0]
 
-                    country.save()
-                    print('{} updated in models.StatusReport'.format(item))
+                        if previous_info.Deaths_new_cases.values[0] == 0:
+                            deaths_new_pct_change = 0
+                        else:
+                            deaths_new_pct_change = (info.Deaths_new_cases.values[0] - previous_info.Deaths_new_cases.values[0])*100/previous_info.Deaths_new_cases.values[0]
+
+                        country.date=info.Date.values[0]
+                        country.db_update=date.today()
+                        country.confirmed=int(info.Confirmed.values[0])
+                        country.confirmed_new=int(info.Confirmed_new_cases.values[0])
+                        country.confirmed_new_short_avg=float(info.Confirmed_new_cases_short_avg.values[0])
+                        country.confirmed_new_medium_avg=float(info.Confirmed_new_cases_medium_avg.values[0])
+                        country.confirmed_new_long_avg=float(info.Confirmed_new_cases_long_avg.values[0])
+                        country.confirmed_new_pct_change=float(confirmed_new_pct_change)
+                        country.confirmed_pct_change=float(info['Confirmed_daily_%inc_by_country'].values[0])
+                        country.confirmed_rank_region=int(info.Confirmed_rank_in_region.values[0])
+                        country.confirmed_rank_world=int(info.Confirmed_rank_in_world.values[0])
+                        country.confirmed_new_rank_region=int(info.Confirmed_new_cases_rank_in_region.values[0])
+                        country.confirmed_new_rank_world=int(info.Confirmed_new_cases_rank_in_world.values[0])
+                        country.confirmed_by_hundreds=float(info['Confirmed_by_100k'].values[0])
+                        country.confirmed_by_hundreds_quartile=info['Confirmed_by_100k_quartile'].values[0]
+                        country.confirmed_by_hundreds_quartile_position=float(info['Confirmed_by_100k_quartile_position'].values[0])
+                        country.confirmed_by_hundreds_rank_region=int(info['Confirmed_by_100k_rank_region'].values[0])
+                        country.confirmed_by_hundreds_rank_world=int(info['Confirmed_by_100k_rank_world'].values[0])
+                        country.confirmed_new_by_hundreds=int(info['Confirmed_new_cases_by_100k'].values[0])
+                        country.confirmed_new_by_hundreds_rank_world=int(info['Confirmed_new_cases_by_100k_rank_world'].values[0])
+                        country.deaths=int(info.Deaths.values[0])
+                        country.deaths_new=int(info.Deaths_new_cases.values[0])
+                        country.deaths_new_short_avg=float(info.Deaths_new_cases_short_avg.values[0])
+                        country.deaths_new_medium_avg=float(info.Deaths_new_cases_medium_avg.values[0])
+                        country.deaths_new_long_avg=float(info.Deaths_new_cases_long_avg.values[0])
+                        country.deaths_new_pct_change=float(deaths_new_pct_change)
+                        country.deaths_pct_change=float(info['Deaths_daily_%inc_by_country'].values[0])
+                        country.deaths_rank_region=int(info.Deaths_rank_in_region.values[0])
+                        country.deaths_rank_world=int(info.Deaths_rank_in_world.values[0])
+                        country.deaths_new_rank_region=int(info.Deaths_new_cases_rank_in_region.values[0])
+                        country.deaths_new_rank_world=int(info.Deaths_new_cases_rank_in_world.values[0])
+                        country.deaths_by_hundreds=float(info['Deaths_by_100k'].values[0])
+                        country.deaths_by_hundreds_quartile=info['Deaths_by_100k_quartile'].values[0]
+                        country.deaths_by_hundreds_quartile_position=float(info['Deaths_by_100k_quartile_position'].values[0])
+                        country.deaths_by_hundreds_rank_region=int(info['Deaths_by_100k_rank_region'].values[0])
+                        country.deaths_by_hundreds_rank_world=int(info['Deaths_by_100k_rank_world'].values[0])
+                        country.deaths_new_by_hundreds=int(info['Deaths_new_cases_by_100k'].values[0])
+                        country.deaths_new_by_hundreds_rank_world=int(info['Deaths_new_cases_by_100k_rank_world'].values[0])
+                        country.recovered=int(info.Recovered.values[0])
+                        country.recovered_new=int(info.Recovered_new_cases.values[0])
+                        country.recovered_new_short_avg=float(info.Recovered_new_cases_short_avg.values[0])
+                        country.recovered_new_medium_avg=float(info.Recovered_new_cases_medium_avg.values[0])
+                        country.recovered_new_long_avg=float(info.Recovered_new_cases_long_avg.values[0])
+                        country.recovered_pct_change=float(info['Recovered_daily_%inc_by_country'].values[0])
+                        country.recovered_rank_region=int(info.Recovered_rank_in_region.values[0])
+                        country.recovered_rank_world=int(info.Recovered_rank_in_world.values[0])
+                        country.recovered_new_rank_region=int(info.Recovered_new_cases_rank_in_region.values[0])
+                        country.recovered_new_rank_world=int(info.Recovered_new_cases_rank_in_world.values[0])
+                        country.recovered_by_hundreds=float(info['Recovered_by_100k'].values[0])
+                        country.recovered_by_hundreds_rank_region=int(info['Recovered_by_100k_rank_region'].values[0])
+                        country.recovered_by_hundreds_rank_world=int(info['Recovered_by_100k_rank_world'].values[0])
+                        country.active=int(info.Active.values[0])
+                        country.active_new=int(info.Active_new_cases.values[0])
+                        country.active_new_short_avg=float(info.Active_new_cases_short_avg.values[0])
+                        country.active_new_medium_avg=float(info.Active_new_cases_medium_avg.values[0])
+                        country.active_new_long_avg=float(info.Active_new_cases_long_avg.values[0])
+                        country.active_pct=float(info.active_pct.values[0])
+                        country.active_pct_change=float(info['Active_daily_%inc_by_country'].values[0])
+                        country.active_rank_region=int(info.Active_rank_in_region.values[0])
+                        country.active_rank_world=int(info.Active_rank_in_world.values[0])
+                        country.active_new_rank_region=int(info.Active_new_cases_rank_in_region.values[0])
+                        country.active_new_rank_world=int(info.Active_new_cases_rank_in_world.values[0])
+                        country.active_by_hundreds=float(info['Active_by_100k'].values[0])
+                        country.active_by_hundreds_rank_region=int(info['Active_by_100k_rank_region'].values[0])
+                        country.active_by_hundreds_rank_world=int(info['Active_by_100k_rank_world'].values[0])
+                        country.mortality=float(info.mortality.values[0])
+                        country.mortality_quartile=info.mortality_quartile.values[0]
+                        country.mortality_quartile_position=info.mortality_quartile_position.values[0]
+                        country.mortality_rank_region=int(info.mortality_rank_region.values[0])
+                        country.mortality_rank_world=int(info.mortality_rank_world.values[0])
+
+                        country.save()
+                        print('{} updated in models.StatusReport'.format(item))
             else:
                 db_del(StatusReport,confirm_before=dbconfig.confirm_delete)
 
